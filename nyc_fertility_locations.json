@@ -27,12 +27,28 @@
           {"name":"Little Beet Table (GF-friendly)","address":"333 Park Ave S, New York, NY","phone":"(212) 729-1810","website":"https://www.littlebeettablenyc.com"},
           {"name":"Senza Gluten (100% GF)","address":"206 Sullivan St, New York, NY","phone":"(212) 475-7775","website":"https://senzaglutennyc.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Times Square (under the Red Steps)",
+            "address":"200 W 47th St, New York, NY 10036",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"Same-day discounts; ~15–20 min by subway/cab from NYU Langone."
+          },
           {"name":"Gotham Comedy Club","address":"208 W 23rd St, New York, NY","phone":"(212) 367-9000","website":"https://gothamcomedyclub.com"}
         ],
         "activities": [
           {"name":"Bryant Park","address":"6th Ave at 41st St, New York, NY","website":"https://bryantpark.org"},
           {"name":"New York Public Library (Main)","address":"476 5th Ave, New York, NY","website":"https://nypl.org"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -62,12 +78,28 @@
           {"name":"Magnolia Bakery (Rockefeller Center)","address":"1240 6th Ave, New York, NY","phone":"(212) 767-1123","website":"https://www.magnoliabakery.com"},
           {"name":"Modern Bread & Bagel (100% GF)","address":"472 Columbus Ave, New York, NY","phone":"(646) 998-4600","website":"https://modernbreadandbagel.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Times Square (under the Red Steps)",
+            "address":"200 W 47th St, New York, NY 10036",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"5–10 minutes’ walk from CCRM; same-day discounts."
+          },
           {"name":"Broadway Comedy Club","address":"318 W 53rd St, New York, NY","phone":"(212) 757-2323","website":"https://www.broadwaycomedyclub.com"}
         ],
         "activities": [
           {"name":"Rockefeller Center","address":"30 Rockefeller Plaza, New York, NY","website":"https://rockefellercenter.com"},
           {"name":"Times Square","address":"Broadway & 7th Ave, New York, NY","website":"https://timessquarenyc.org"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -98,12 +130,28 @@
           {"name":"Modern Bread & Bagel (100% GF)","address":"472 Columbus Ave, New York, NY","phone":"(646) 998-4600","website":"https://modernbreadandbagel.com"},
           {"name":"Senza Gluten Café & Bakery (100% GF)","address":"171 Sullivan St, New York, NY","phone":"(646) 692-6424","website":"https://senzaglutennyc.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Lincoln Center (David Rubenstein Atrium)",
+            "address":"61 W 62nd St, New York, NY 10023",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"Closest TKTS to UES; easy walk/cab."
+          },
           {"name":"Comic Strip Live","address":"1568 2nd Ave, New York, NY","phone":"(212) 861-9386","website":"https://comicstriplive.com"}
         ],
         "activities": [
           {"name":"Central Park (South Entrances)","address":"59th St at 5th Ave, New York, NY","website":"https://www.centralparknyc.org"},
           {"name":"The Plaza Food Hall","address":"1 W 59th St (Lower Level), New York, NY","website":"https://www.theplazany.com"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -133,12 +181,28 @@
           {"name":"Dominique Ansel Bakery (SoHo)","address":"189 Spring St, New York, NY","phone":"(212) 219-2773","website":"https://dominiqueanselny.com"},
           {"name":"Modern Bread & Bagel (100% GF)","address":"472 Columbus Ave, New York, NY","phone":"(646) 998-4600","website":"https://modernbreadandbagel.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Times Square (under the Red Steps)",
+            "address":"200 W 47th St, New York, NY 10036",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"5–8 minutes’ walk from Spring; same-day deals."
+          },
           {"name":"Broadway Comedy Club","address":"318 W 53rd St, New York, NY","phone":"(212) 757-2323","website":"https://www.broadwaycomedyclub.com"}
         ],
         "activities": [
           {"name":"Bryant Park Winter Village (seasonal)","address":"6th Ave at 41st St, New York, NY","website":"https://bryantpark.org"},
           {"name":"Broadway Theatres / Tickets","address":"Times Sq & Theatre District, New York, NY","website":"https://www.broadway.org"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -166,12 +230,28 @@
           {"name":"Levain Bakery (Rockefeller Center)","address":"30 Rockefeller Plaza (Concourse), New York, NY","phone":"(212) 834-2100","website":"https://levainbakery.com"},
           {"name":"Friedmans (Chelsea Market) – GF-friendly","address":"75 9th Ave, New York, NY","phone":"(212) 929-7100","website":"https://www.friedmansrestaurant.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Times Square (under the Red Steps)",
+            "address":"200 W 47th St, New York, NY 10036",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"2–4 minutes’ walk; check live board for discounts."
+          },
           {"name":"Gotham Comedy Club","address":"208 W 23rd St, New York, NY","phone":"(212) 367-9000","website":"https://gothamcomedyclub.com"}
         ],
         "activities": [
           {"name":"Radio City Music Hall","address":"1260 6th Ave, New York, NY","website":"https://radiocity.com"},
           {"name":"Top of the Rock (Observation Deck)","address":"30 Rockefeller Plaza, New York, NY","website":"https://rockefellercenter.com"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -200,12 +280,28 @@
           {"name":"Magnolia Bakery (Fulton Center)","address":"200 Broadway, New York, NY","phone":"(212) 350-0978","website":"https://www.magnoliabakery.com"},
           {"name":"Erin McKenna’s Bakery NYC (100% GF)","address":"248 Broome St, New York, NY","phone":"(855) 462-2292","website":"https://www.erinmckennasbakery.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Times Square (under the Red Steps)",
+            "address":"200 W 47th St, New York, NY 10036",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"Closest active TKTS (~20–25 min by subway)."
+          },
           {"name":"New York Comedy Club – East Village","address":"85 E 4th St, New York, NY","phone":"(212) 477-5233","website":"https://newyorkcomedyclub.com"}
         ],
         "activities": [
           {"name":"Battery Park","address":"State St & Battery Pl, New York, NY","website":"https://www.nycgovparks.org/parks/battery-park"},
           {"name":"One World Observatory","address":"117 West St, New York, NY","website":"https://oneworldobservatory.com"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -233,12 +329,28 @@
           {"name":"Levain Bakery (UES)","address":"1484 3rd Ave, New York, NY","phone":"(917) 470-9041","website":"https://levainbakery.com"},
           {"name":"Modern Bread & Bagel (100% GF)","address":"472 Columbus Ave, New York, NY","phone":"(646) 998-4600","website":"https://modernbreadandbagel.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Lincoln Center (David Rubenstein Atrium)",
+            "address":"61 W 62nd St, New York, NY 10023",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"~1 mile from 1305 York; easy crosstown."
+          },
           {"name":"Comic Strip Live","address":"1568 2nd Ave, New York, NY","phone":"(212) 861-9386","website":"https://comicstriplive.com"}
         ],
         "activities": [
           {"name":"The Met Museum","address":"1000 5th Ave, New York, NY","website":"https://metmuseum.org"},
           {"name":"Guggenheim Museum","address":"1071 5th Ave, New York, NY","website":"https://guggenheim.org"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -267,12 +379,28 @@
           {"name":"Levain Bakery (Rockefeller Center)","address":"30 Rockefeller Plaza (Concourse), New York, NY","phone":"(212) 834-2100","website":"https://levainbakery.com"},
           {"name":"Senza Gluten Café & Bakery (100% GF)","address":"171 Sullivan St, New York, NY","phone":"(646) 692-6424","website":"https://senzaglutennyc.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Lincoln Center (David Rubenstein Atrium)",
+            "address":"61 W 62nd St, New York, NY 10023",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"Closest TKTS; quick crosstown ride."
+          },
           {"name":"The Stand NYC","address":"116 E 16th St, New York, NY","phone":"(212) 677-2600","website":"https://thestandnyc.com"}
         ],
         "activities": [
           {"name":"Park Avenue Armory","address":"643 Park Ave, New York, NY","website":"https://armoryonpark.org"},
           {"name":"Central Park (East)","address":"5th Ave & 60th St Entrances, New York, NY","website":"https://centralparknyc.org"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     },
@@ -301,12 +429,28 @@
           {"name":"Magnolia Bakery (Rockefeller Center)","address":"1240 6th Ave, New York, NY","phone":"(212) 767-1123","website":"https://www.magnoliabakery.com"},
           {"name":"Modern Bread & Bagel (100% GF)","address":"472 Columbus Ave, New York, NY","phone":"(646) 998-4600","website":"https://modernbreadandbagel.com"}
         ],
-        "comedy": [
+        "broadway_comedy": [
+          {
+            "name":"TKTS Lincoln Center (David Rubenstein Atrium)",
+            "address":"61 W 62nd St, New York, NY 10023",
+            "phone":"(212) 912-9770",
+            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
+            "note":"Quick ride or 15–20 min walk from Madison/63rd."
+          },
           {"name":"Stand Up NY","address":"236 W 78th St, New York, NY","phone":"(212) 595-0850","website":"https://standupny.com"}
         ],
         "activities": [
           {"name":"Central Park Zoo","address":"E 64th St, New York, NY","website":"https://centralparkzoo.com"},
           {"name":"Bloomingdale’s Flagship","address":"1000 3rd Ave, New York, NY","website":"https://bloomingdales.com"}
+        ],
+        "iconic": [
+          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
+          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
+          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
+          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
+          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
+          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
         ]
       }
     }
