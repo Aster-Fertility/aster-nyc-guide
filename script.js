@@ -1,32 +1,25 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Consolidated, Robust, Distance Mode ON
-   - Loads JSON with fallback sample + diagnostics banner
-   - New categories: Cafés & Bakeries, NYC Shopping, Broadway & Comedy, Iconic NYC Must Sees, Navigating NYC
+   script.js — Consolidated + Fixed (remapClinicCategories hoisted & global)
    - Directions links (Apple/Google) clinic -> place
-   - Live distance from clinic (walking & driving) via public OSRM (no key)
+   - Optional distance from clinic (toggle ENABLE_DISTANCES)
+   - New categories & robust JSON loading with fallback + diagnostics
 */
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // toggle to false to disable distances
+const ENABLE_DISTANCES = true; // set to false to disable distance lookups (useful for rate limits)
 
-// ================= DOM refs =================
-const $q = (sel) => document.querySelector(sel);
-const $results = $q('#results');
-const $input = $q('#query');
-const $suggestions = $q('#suggestions');
-const $searchBtn = $q('#searchBtn');
-const $showAllBtn = $q('#showAllBtn');
-
-// ================= Diagnostics banner =================
+// ================== Diagnostics banner ==================
 function banner(msg, type = 'info'){
   const id = 'diagnostic-banner';
+  const results = document.querySelector('#results');
+  if(!results) return;
   let el = document.getElementById(id);
   if(!el){
     el = document.createElement('div');
     el.id = id;
     el.style.cssText = 'margin:12px 0;padding:10px;border-radius:8px;font-size:14px';
-    $results.parentElement.insertBefore(el, $results);
+    results.parentElement.insertBefore(el, results);
   }
   const bg = type === 'error' ? '#fde2e1' : '#e7f3ff';
   const fg = type === 'error' ? '#912018' : '#0b69a3';
@@ -34,16 +27,10 @@ function banner(msg, type = 'info'){
   el.style.color = fg;
   el.innerText = msg;
 }
-function showError(msg){
-  banner(msg, 'error');
-  $results.innerHTML = `<div class="card"><p>${msg}</p></div>`;
-  console.error(msg);
-}
+function showError(msg){ banner(msg, 'error'); console.error(msg); }
 
-// ================= Maps helpers =================
-function isAppleMapsPreferred(){
-  return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-}
+// ================== Maps helpers ==================
+function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
 function mapsLink(address){
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
@@ -56,68 +43,54 @@ function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ================= Geocode + Routing (no key) =================
+// ================== Distances (no API key; optional) ==================
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
 const OSRM = 'https://router.project-osrm.org/route/v1';
-
-function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 async function geocode(address){
-  if(!ENABLE_DISTANCES) return null;
+  if(!ENABLE_DISTANCES || !address) return null;
   try{
-    if(!address) return null;
     const key = 'geo:' + address;
     const cached = localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
-    await sleep(120); // be gentle to free service
-    const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers: { 'Accept-Language':'en' }});
+    await sleep(120); // be kind to the free service
+    const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers:{'Accept-Language':'en'} });
     if(!res.ok) return null;
-    const data = await res.json();
-    const pt = data && data[0] ? {lat:+data[0].lat, lon:+data[0].lon} : null;
+    const d = await res.json();
+    const pt = d && d[0] ? {lat:+d[0].lat, lon:+d[0].lon} : null;
     if(pt) localStorage.setItem(key, JSON.stringify(pt));
     return pt;
-  }catch(e){ return null; }
+  }catch{ return null; }
 }
-
 async function osrmDuration(profile, from, to){
-  if(!ENABLE_DISTANCES) return null;
+  if(!ENABLE_DISTANCES || !from || !to) return null;
   try{
-    if(!from || !to) return null;
     const url = `${OSRM}/${profile}/${from.lon},${from.lat};${to.lon},${to.lat}?overview=false`;
     const res = await fetch(url);
     if(!res.ok) return null;
     const json = await res.json();
     const r = json.routes && json.routes[0];
-    if(!r) return null;
-    return { seconds: r.duration, meters: r.distance };
-  }catch(e){ return null; }
+    return r ? { seconds:r.duration, meters:r.distance } : null;
+  }catch{ return null; }
 }
-
-function fmtMiles(meters){
-  const mi = meters / 1609.344;
-  return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`;
-}
-function fmtMins(seconds){ return `${Math.round(seconds/60)} min`; }
-
-async function computeDistanceLines(clinicAddr, placeAddr){
-  if(!ENABLE_DISTANCES) return '';
+function fmtMiles(m){ const mi = m/1609.344; return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
+function fmtMins(s){ return `${Math.round(s/60)} min`; }
+async function computeDistanceLine(fromAddr, toAddr){
   try{
-    const [cPt, pPt] = await Promise.all([geocode(clinicAddr), geocode(placeAddr)]);
-    if(!cPt || !pPt) return '';
-    const [walk, drive] = await Promise.all([
-      osrmDuration('foot', cPt, pPt),
-      osrmDuration('driving', cPt, pPt)
-    ]);
-    const dist = (walk || drive) ? (walk?.meters ?? drive?.meters) : null;
-    const distStr = dist ? fmtMiles(dist) : '';
-    const walkStr = walk ? `${fmtMins(walk.seconds)} walk` : '';
-    const driveStr = drive ? `${fmtMins(drive.seconds)} drive` : '';
-    const parts = [distStr, walkStr, driveStr].filter(Boolean).join(' • ');
+    const [a,b] = await Promise.all([geocode(fromAddr), geocode(toAddr)]);
+    if(!a || !b) return '';
+    const [walk, drive] = await Promise.all([osrmDuration('foot', a, b), osrmDuration('driving', a, b)]);
+    const meters = (walk || drive) ? (walk?.meters ?? drive?.meters) : null;
+    const dist = meters ? fmtMiles(meters) : '';
+    const w = walk ? `${fmtMins(walk.seconds)} walk` : '';
+    const d = drive ? `${fmtMins(drive.seconds)} drive` : '';
+    const parts = [dist, w, d].filter(Boolean).join(' • ');
     return parts ? `<div class="distance">Distance from clinic: <em>${parts}</em></div>` : '';
-  }catch(e){ return ''; }
+  }catch{ return ''; }
 }
 
-// ================= Fallback SAMPLE (if JSON missing) =================
+// ================== Fallback SAMPLE (used if JSON missing/invalid) ==================
 const SAMPLE = {
   clinics: [
     {
@@ -126,26 +99,24 @@ const SAMPLE = {
       website: "https://weillcornell.org",
       categories: {
         cafes: [
-          {"name":"Maman UES","address":"1424 3rd Ave, New York, NY","phone":"(917) 675-7667","website":"https://mamannyc.com"},
-          {"name":"Bluestone Lane (UES Café)","address":"2 E 90th St, New York, NY","phone":"(718) 374-6858","website":"https://bluestonelane.com"}
+          {"name":"Maman UES","address":"1424 3rd Ave, New York, NY","website":"https://mamannyc.com"},
+          {"name":"Bluestone Lane (UES Café)","address":"2 E 90th St, New York, NY","website":"https://bluestonelane.com"}
         ],
         restaurants: [
-          {"name":"Finestra","address":"1370 York Ave, New York, NY","phone":"(212) 249-2941","website":"https://finestrarestaurant.com"}
+          {"name":"Finestra","address":"1370 York Ave, New York, NY","website":"https://finestrarestaurant.com"}
         ],
         pizza_bagels: [
-          {"name":"Patsy’s Pizzeria (UES)","address":"206 E 60th St, New York, NY","phone":"(212) 688-9707","website":"https://patsyspizzeria.us"}
+          {"name":"Patsy’s Pizzeria (UES)","address":"206 E 60th St, New York, NY","website":"https://patsyspizzeria.us"}
         ],
         hidden_gems: [
-          {"name":"Levain Bakery (UES)","address":"1484 3rd Ave, New York, NY","phone":"(917) 470-9041","website":"https://levainbakery.com"},
-          {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","phone":"(212) 767-1050","website":"https://store.moma.org"}
+          {"name":"Levain Bakery (UES)","address":"1484 3rd Ave, New York, NY","website":"https://levainbakery.com"},
+          {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","website":"https://store.moma.org"}
         ],
         broadway_comedy: [
-          {"name":"TKTS Lincoln Center (David Rubenstein Atrium)","address":"61 W 62nd St, New York, NY 10023","phone":"(212) 912-9770","website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/","note":"Closest TKTS to 1305 York."},
-          {"name":"Comic Strip Live","address":"1568 2nd Ave, New York, NY","phone":"(212) 861-9386","website":"https://comicstriplive.com"}
+          {"name":"TKTS Lincoln Center (David Rubenstein Atrium)","address":"61 W 62nd St, New York, NY 10023","website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/"}
         ],
         activities: [
-          {"name":"The Met Museum","address":"1000 5th Ave, New York, NY","website":"https://metmuseum.org"},
-          {"name":"Guggenheim Museum","address":"1071 5th Ave, New York, NY","website":"https://guggenheim.org"}
+          {"name":"The Met Museum","address":"1000 5th Ave, New York, NY","website":"https://metmuseum.org"}
         ],
         iconic: [
           {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"}
@@ -155,15 +126,15 @@ const SAMPLE = {
   ]
 };
 
-// ================= Category mapping constants =================
-const BAKERY_KEYWORDS = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
-const SHOPPING_KEYWORDS = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
+// ================== Category constants ==================
+const BAKERY_RE  = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
+const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
 const ICONIC_GLOBAL = [
   {name:"Statue of Liberty & Ellis Island (Statue City Cruises)", address:"Battery Park, New York, NY", website:"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
   {name:"9/11 Memorial & Museum (World Trade Center)", address:"180 Greenwich St, New York, NY", website:"https://www.911memorial.org"},
   {name:"NYC Ferry (Harbor sightseeing)", address:"Multiple piers citywide", website:"https://www.ferry.nyc"},
-  {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops (Times Sq, Downtown, Uptown)", website:"https://www.bigbustours.com/new-york"},
+  {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops", website:"https://www.bigbustours.com/new-york"},
   {name:"TopView Sightseeing (Hop-on Hop-off)", address:"Citywide stops", website:"https://topviewnyc.com"}
 ];
 
@@ -174,17 +145,17 @@ const NAVIGATING = [
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ================= Category helpers =================
+// ================== Dedupe helper ==================
 function dedupeByName(list){
-  if(!Array.isArray(list)) return [];
   const seen = new Set(); const out = [];
-  for(const x of list){
-    const k = (x?.name||'').toLowerCase();
+  for(const x of (list || [])){
+    const k = (x?.name || '').toLowerCase();
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
   return out;
 }
 
+// ================== IMPORTANT: remapClinicCategories (hoisted & global) ==================
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -194,13 +165,12 @@ function remapClinicCategories(c){
   const broadway = cats.broadway_comedy || [];
   const iconicExisting = cats.iconic || cats.activities || [];
 
-  const bakeriesFromHidden = hidden.filter(x => BAKERY_KEYWORDS.test(x?.name||''));
-  const shoppingFromHidden = hidden.filter(x => SHOPPING_KEYWORDS.test(x?.name||''));
+  const bakeriesFromHidden = hidden.filter(x => BAKERY_RE.test(x?.name || ''));
+  const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name || ''));
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
   const nyc_shopping = dedupeByName(shoppingFromHidden);
   const iconic_mustsees = dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
-  const navigating = NAVIGATING;
 
   return {
     cafes_bakeries,
@@ -209,25 +179,158 @@ function remapClinicCategories(c){
     nyc_shopping,
     broadway_comedy: broadway,
     iconic_mustsees,
-    navigating
+    navigating: NAVIGATING
   };
 }
+window.remapClinicCategories = remapClinicCategories; // extra safety for module scopes
 
-// ================= Rendering =================
-function itemHTMLBase(it, clinicAddress){
+// ================== Data loading ==================
+async function loadData(){
+  try{
+    let res = await fetch('nyc_fertility_locations.json');
+    if(!res.ok) res = await fetch('/nyc_fertility_locations.json');
+    if(!res.ok){
+      DATA = SAMPLE; LOADED = true;
+      banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
+      return;
+    }
+    const json = await res.json();
+    if(!json || !Array.isArray(json.clinics)){
+      DATA = SAMPLE; LOADED = true;
+      banner('Loaded SAMPLE data (JSON format issue). Expect { "clinics": [...] }', 'error');
+      return;
+    }
+    DATA = json; LOADED = true;
+    banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
+  }catch(e){
+    DATA = SAMPLE; LOADED = true;
+    banner('Loaded SAMPLE data (unexpected fetch error). See console for details.', 'error');
+    console.error(e);
+  }
+}
+
+// ================== Rendering helpers ==================
+function itemHTML(it, clinicAddress){
   const name = it?.name || 'Unnamed';
   const addr = it?.address || '';
   const phone = it?.phone || '';
   const site = it?.website || '';
   const note = it?.note || '';
 
-  const hasAddr = !!addr;
-  const dirDrive = hasAddr ? mapsDirectionsLink(clinicAddress, addr, 'driving') : '';
-  const dirWalk  = hasAddr ? mapsDirectionsLink(clinicAddress, addr, 'walking') : '';
-
-  const line1 = addr ? `<p>${addr}${phone ? ` • ${phone}`:''}</p>` : (phone ? `<p>${phone}</p>`:'');
   const links = [
     site ? `<a href="${site}" target="_blank" rel="noopener">Website</a>` : '',
-    hasAddr ? `<a href="${mapsLink(addr)}" target="_blank" rel="noopener">Open in Maps</a>` : '',
-    hasAddr ? `<a href="${dirDrive}" target="_blank" rel="noopener">Directions (Drive)</a>` : '',
-    hasAddr ? `<a href="${dirWalk}" target="_blank" rel_
+    addr ? `<a href="${mapsLink(addr)}" target="_blank" rel="noopener">Open in Maps</a>` : '',
+    addr ? `<a href="${mapsDirectionsLink(clinicAddress, addr, 'driving')}" target="_blank" rel="noopener">Directions (Drive)</a>` : '',
+    addr ? `<a href="${mapsDirectionsLink(clinicAddress, addr, 'walking')}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''
+  ].filter(Boolean).join(' • ');
+
+  const distanceDiv = (ENABLE_DISTANCES && addr)
+    ? `<div class="distance" data-dist-for="${encodeURIComponent(addr)}"></div>`
+    : '';
+
+  return `
+    <div class="item card">
+      <h4>${name}</h4>
+      ${addr ? `<p>${addr}${phone ? ` • ${phone}` : ''}</p>` : (phone ? `<p>${phone}</p>` : '')}
+      ${links ? `<p>${links}</p>` : ''}
+      ${note ? `<p>${note}</p>` : ''}
+      ${distanceDiv}
+    </div>
+  `;
+}
+function sectionHTML(title, list, clinicAddress){
+  if(!list || !list.length) return '';
+  return `
+    <div class="card">
+      <h3 class="section-title">${title}</h3>
+      <div class="grid">
+        ${list.map(it => itemHTML(it, clinicAddress)).join('')}
+      </div>
+    </div>
+  `;
+}
+function renderClinic(clinic){
+  const m = remapClinicCategories(clinic); // <- guaranteed defined
+  const head = `
+    <div class="card">
+      <h2>${clinic.name} <span class="badge">Clinic</span></h2>
+      <p>${clinic.address} • <a href="${clinic.website}" target="_blank" rel="noopener">Website</a> • <a href="${mapsLink(clinic.address)}" target="_blank" rel="noopener">Open in Maps</a></p>
+    </div>
+  `;
+  return head + [
+    sectionHTML('Cafés & Bakeries', m.cafes_bakeries, clinic.address),
+    sectionHTML('Restaurants', m.restaurants, clinic.address),
+    sectionHTML('Pizza & Bagels', m.pizza_bagels, clinic.address),
+    sectionHTML('NYC Shopping', m.nyc_shopping, clinic.address),
+    sectionHTML('Broadway & Comedy', m.broadway_comedy, clinic.address),
+    sectionHTML('Iconic NYC Must Sees', m.iconic_mustsees, clinic.address),
+    sectionHTML('Navigating NYC', m.navigating, clinic.address),
+  ].join('');
+}
+async function fillDistancesFor(clinic){
+  if(!ENABLE_DISTANCES) return;
+  const nodes = document.querySelectorAll('.distance[data-dist-for]');
+  for(const el of nodes){
+    const addr = decodeURIComponent(el.getAttribute('data-dist-for') || '');
+    if(!addr){ el.remove(); continue; }
+    const line = await computeDistanceLine(clinic.address, addr);
+    el.outerHTML = line || '';
+  }
+}
+
+// ================== Search / UI ==================
+async function ensureLoaded(){ if(!LOADED) await loadData(); }
+
+async function doSearch(){
+  await ensureLoaded();
+  const results = document.querySelector('#results');
+  const input = document.querySelector('#query');
+  if(!results) return;
+
+  const q = (input?.value || '').trim().toLowerCase();
+  let list = DATA.clinics || [];
+  if(q){
+    list = list.filter(c =>
+      (c?.name || '').toLowerCase().includes(q) ||
+      (c?.address || '').toLowerCase().includes(q)
+    );
+  }
+  if(!list.length){
+    results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or an address like “1305 York”.</p></div>`;
+    return;
+  }
+  results.innerHTML = list.map(renderClinic).join('');
+  for(const clinic of list) await fillDistancesFor(clinic);
+}
+
+async function showAll(){
+  await ensureLoaded();
+  const results = document.querySelector('#results');
+  const suggestions = document.querySelector('#suggestions');
+  if(suggestions) suggestions.textContent = `Clinics: ${DATA.clinics.map(c=>c.name).join(' · ')}`;
+  if(!results) return;
+  const list = DATA.clinics || [];
+  results.innerHTML = list.map(renderClinic).join('');
+  for(const clinic of list) await fillDistancesFor(clinic);
+}
+
+// ================== Init ==================
+window.addEventListener('DOMContentLoaded', async () => {
+  const btnSearch = document.querySelector('#searchBtn');
+  const btnAll = document.querySelector('#showAllBtn');
+
+  if(btnSearch) btnSearch.disabled = true;
+  if(btnAll) btnAll.disabled = true;
+
+  await ensureLoaded();
+
+  if(btnSearch) btnSearch.disabled = false;
+  if(btnAll) btnAll.disabled = false;
+
+  await showAll();
+
+  if(btnSearch) btnSearch.addEventListener('click', doSearch);
+  if(btnAll) btnAll.addEventListener('click', showAll);
+  const input = document.querySelector('#query');
+  if(input) input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
+});
