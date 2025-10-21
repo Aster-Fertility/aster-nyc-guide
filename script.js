@@ -1,8 +1,8 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — FIX for “remapClinicCategories is not defined”
+   script.js — Fix for “remapClinicCategories is not defined”
    - remapClinicCategories is defined FIRST (hoisted) and attached to window
-   - Robust data loading with fallback sample + small diagnostics banner
-   - Directions links (clinic -> place); optional distance lines (toggle)
+   - Robust data load with sample fallback + small diagnostics banner
+   - Directions links (clinic → place); optional distance lines (toggle)
 */
 
 'use strict';
@@ -11,7 +11,7 @@ let DATA = null;
 let LOADED = false;
 const ENABLE_DISTANCES = true; // set false to disable distance lookups
 
-// ---------------- UI helpers ----------------
+// ---------- DOM ----------
 const $ = (s) => document.querySelector(s);
 const $results     = $('#results');
 const $input       = $('#query');
@@ -19,6 +19,7 @@ const $searchBtn   = $('#searchBtn');
 const $showAllBtn  = $('#showAllBtn');
 const $suggestions = $('#suggestions');
 
+// ---------- Diagnostics banner ----------
 function banner(msg, type='info'){
   if(!$results) return;
   let el = document.getElementById('diagnostic-banner');
@@ -33,7 +34,7 @@ function banner(msg, type='info'){
   el.textContent = msg;
 }
 
-// ---------------- Maps helpers ----------------
+// ---------- Maps helpers ----------
 function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
 function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
 function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
@@ -45,16 +46,15 @@ function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ---------------- Distance helpers (optional; no API key) ----------------
+// ---------- Optional distances (no API key) ----------
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
 const OSRM      = 'https://router.project-osrm.org/route/v1';
 const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
-
 async function geocode(address){
   if(!ENABLE_DISTANCES || !address) return null;
   try{
     const key='geo:'+address;
-    const cached = localStorage.getItem(key);
+    const cached=localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
     await sleep(120);
     const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers:{'Accept-Language':'en'} });
@@ -92,7 +92,7 @@ async function computeDistanceLine(fromAddr, toAddr){
   }catch{ return ''; }
 }
 
-// ---------------- Fallback SAMPLE ----------------
+// ---------- SAMPLE fallback ----------
 const SAMPLE = {
   clinics: [{
     name: "Weill Cornell Medicine (1305 York Ave)",
@@ -110,7 +110,7 @@ const SAMPLE = {
   }]
 };
 
-// ---------------- Categorization constants ----------------
+// ---------- Category constants ----------
 const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -129,7 +129,7 @@ const NAVIGATING = [
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ---------------- Dedupe helper ----------------
+// ---------- Dedupe ----------
 function dedupeByName(list){
   const out=[]; const seen=new Set();
   for(const x of (list||[])){
@@ -139,9 +139,9 @@ function dedupeByName(list){
   return out;
 }
 
-// ====================================================================
-// IMPORTANT: Define remapClinicCategories *first* (hoisted) & global.
-// ====================================================================
+// ===================================================================
+// IMPORTANT: Define remapClinicCategories BEFORE renderClinic (hoisted)
+// ===================================================================
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -168,9 +168,9 @@ function remapClinicCategories(c){
     navigating: NAVIGATING
   };
 }
-window.remapClinicCategories = remapClinicCategories; // safety for scope/module
+window.remapClinicCategories = remapClinicCategories; // extra safety for scope/module
 
-// ---------------- Rendering ----------------
+// ---------- Rendering ----------
 function itemHTML(it, clinicAddress){
   const name = it?.name || 'Unnamed';
   const addr = it?.address || '';
@@ -209,7 +209,7 @@ function sectionHTML(title, list, clinicAddress){
   `;
 }
 function renderClinic(clinic){
-  // remapClinicCategories is hoisted and attached to window, so it's available here.
+  // remapClinicCategories is hoisted & global, so it’s available here
   const m = remapClinicCategories(clinic);
   const head = `
     <div class="card">
@@ -231,14 +231,14 @@ async function fillDistancesFor(clinic){
   if(!ENABLE_DISTANCES) return;
   const nodes = document.querySelectorAll('.distance[data-dist-for]');
   for(const el of nodes){
-    const addr = decodeURIComponent(el.getAttribute('data-dist-for') || '');
+    const addr = decodeURIComponent(el.getAttribute('data-dist-for')||'');
     if(!addr){ el.remove(); continue; }
     const line = await computeDistanceLine(clinic.address, addr);
     el.outerHTML = line || '';
   }
 }
 
-// ---------------- Data loading ----------------
+// ---------- Data loading ----------
 async function loadData(){
   try{
     let res = await fetch('nyc_fertility_locations.json');
@@ -263,7 +263,7 @@ async function loadData(){
   }
 }
 
-// ---------------- Search / UI ----------------
+// ---------- Search / UI ----------
 function filterClinics(q){
   const needle = q.toLowerCase();
   return (DATA.clinics || []).filter(c =>
@@ -294,7 +294,7 @@ async function showAll(){
   for(const clinic of list){ await fillDistancesFor(clinic); }
 }
 
-// ---------------- Init ----------------
+// ---------- Init ----------
 window.addEventListener('DOMContentLoaded', async () => {
   if($searchBtn) $searchBtn.disabled = true;
   if($showAllBtn) $showAllBtn.disabled = true;
