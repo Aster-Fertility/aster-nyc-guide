@@ -39,41 +39,53 @@ function byQuery(clinic, q){
 
 function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
 
-function itemHTML(it){
-  const noteLine = it.note ? `<p>${it.note}</p>` : '';
+function itemHTMLBase(it, clinicAddress){
+  const hasAddr = !!it.address;
+  const dirDrive = hasAddr ? mapsDirectionsLink(clinicAddress, it.address, 'driving') : '';
+  const dirWalk  = hasAddr ? mapsDirectionsLink(clinicAddress, it.address, 'walking') : '';
   const lines = [
     it.address ? `<p>${it.address}${it.phone ? ` • ${it.phone}`:''}</p>` : (it.phone ? `<p>${it.phone}</p>`:''),
-    it.website ? `<p><a href="${it.website}" target="_blank" rel="noopener">Website</a>${it.address ? ` • <a href="${mapsLink(it.address)}" target="_blank" rel="noopener">Open in Maps</a>`:''}</p>` : '',
-    noteLine
+    // Links row: Website • Open in Maps • Directions (Drive/Walk)
+    `<p>
+      ${it.website ? `<a href="${it.website}" target="_blank" rel="noopener">Website</a>` : ''}
+      ${hasAddr ? `${it.website ? ' • ' : ''}<a href="${mapsLink(it.address)}" target="_blank" rel="noopener">Open in Maps</a>` : ''}
+      ${hasAddr ? ` • <a href="${dirDrive}" target="_blank" rel="noopener">Directions (Drive)</a> • <a href="${dirWalk}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''}
+    </p>`,
+    it.note ? `<p>${it.note}</p>` : ''
   ].join('');
-  return `<div class="item card"><h4>${it.name}</h4>${lines}</div>`;
+  return `<div class="item card"><h4>${it.name}</h4>${lines}<div class="distance" data-dist-for="${encodeURIComponent(it.address||'')}"></div></div>`;
 }
 
-function sectionHTML(title, arr){
+
+function sectionHTML(title, arr, clinicAddress){
   if(!arr || !arr.length) return '';
   return `
     <div class="card">
       <h3 class="section-title">${title}</h3>
-      <div class="grid">${arr.map(itemHTML).join('')}</div>
+      <div class="grid">${arr.map(it => itemHTMLBase(it, clinicAddress)).join('')}</div>
     </div>
   `;
 }
 
 function renderClinic(clinic){
-  return `
+  const mapped = remapClinicCategories(clinic);
+  const header = `
     <div class="card">
       <h2>${clinic.name} <span class="badge">Clinic</span></h2>
       <p>${clinic.address} • <a href="${clinic.website}" target="_blank" rel="noopener">Website</a> • <a href="${mapsLink(clinic.address)}" target="_blank" rel="noopener">Open in Maps</a></p>
     </div>
-    ${sectionHTML('Cafés', clinic.categories.cafes)}
-    ${sectionHTML('Restaurants', clinic.categories.restaurants)}
-    ${sectionHTML('Pizza & Bagels', clinic.categories.pizza_bagels)}
-    ${sectionHTML('Hidden Gems & Local Favorites', clinic.categories.hidden_gems)}
-    ${sectionHTML('Broadway & Comedy Shows', clinic.categories.broadway_comedy)}
-    ${sectionHTML('Nearby Activities & Landmarks', clinic.categories.activities)}
-    ${sectionHTML('Iconic NYC Things to Do', clinic.categories.iconic)}
   `;
+  return header + [
+    sectionHTML('Cafés & Bakeries', mapped.cafes_bakeries, clinic.address),
+    sectionHTML('Restaurants', mapped.restaurants, clinic.address),
+    sectionHTML('Pizza & Bagels', mapped.pizza_bagels, clinic.address),
+    sectionHTML('NYC Shopping', mapped.nyc_shopping, clinic.address),
+    sectionHTML('Broadway & Comedy', mapped.broadway_comedy, clinic.address),
+    sectionHTML('Iconic NYC Must Sees', mapped.iconic_mustsees, clinic.address),
+    sectionHTML('Navigating NYC', mapped.navigating, clinic.address),
+  ].join('');
 }
+
 
 function search(){
   const q = $input.value.trim();
