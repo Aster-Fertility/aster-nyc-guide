@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aster Fertility • NYC Clinic Concierge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Aster Fertility • NYC Clinic Concierge</h1>
+    <p class="tagline">Decidedly different, warm, and easy. Enter your clinic to find calm cafés, nourishing meals, treats, and gentle activities nearby.</p>
+  </header>
+
+  <main class="container">
+    <section class="search">
+      <label for="query">Search by clinic name or address</label>
+      <input id="query" type="text" placeholder="e.g., 1305 York Avenue or Weill Cornell" />
+      <button id="searchBtn">Search</button>
+      <button id="showAllBtn" class="secondary">Show all clinics</button>
+      <div id="suggestions" class="suggestions"></div>
+    </section>
+
+    <section id="results"></section>
+  </main>
+
+  <footer class="footer">
+    <p>Curated for Aster Fertility clients • Eataly is an Aster favorite • Be kind to yourself 🌿</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
