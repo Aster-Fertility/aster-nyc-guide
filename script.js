@@ -1,42 +1,34 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Fix for “remapClinicCategories is not defined”
-   - remapClinicCategories is defined FIRST (hoisted) and attached to window
-   - Robust data load with sample fallback + small diagnostics banner
-   - Directions links (clinic → place); optional distance lines (toggle)
+   script.js — Search Fix + No Auto ShowAll + Hoisted Mapper + Optional Distances
 */
 
 'use strict';
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // set false to disable distance lookups
+const ENABLE_DISTANCES = true; // toggle if rate-limited
 
-// ---------- DOM ----------
-const $ = (s) => document.querySelector(s);
-const $results     = $('#results');
-const $input       = $('#query');
-const $searchBtn   = $('#searchBtn');
-const $showAllBtn  = $('#showAllBtn');
-const $suggestions = $('#suggestions');
-
-// ---------- Diagnostics banner ----------
+// ============ Diagnostics banner ============
 function banner(msg, type='info'){
-  if(!$results) return;
+  const results = document.querySelector('#results');
+  if(!results) return;
   let el = document.getElementById('diagnostic-banner');
   if(!el){
     el = document.createElement('div');
     el.id = 'diagnostic-banner';
     el.style.cssText = 'margin:12px 0;padding:10px;border-radius:8px;font-size:14px';
-    $results.parentElement.insertBefore(el, $results);
+    results.parentElement.insertBefore(el, results);
   }
   el.style.background = type==='error' ? '#fde2e1' : '#e7f3ff';
   el.style.color      = type==='error' ? '#912018' : '#0b69a3';
   el.textContent = msg;
 }
 
-// ---------- Maps helpers ----------
+// ============ Maps helpers ============
 function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
-function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
+function mapsLink(address){
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
 function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   if(!originAddress || !destAddress) return '';
   if(isAppleMapsPreferred()){
@@ -46,15 +38,16 @@ function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ---------- Optional distances (no API key) ----------
+// ============ Distances (optional; no API key) ============
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
 const OSRM      = 'https://router.project-osrm.org/route/v1';
 const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+
 async function geocode(address){
   if(!ENABLE_DISTANCES || !address) return null;
   try{
     const key='geo:'+address;
-    const cached=localStorage.getItem(key);
+    const cached = localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
     await sleep(120);
     const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers:{'Accept-Language':'en'} });
@@ -76,7 +69,7 @@ async function osrmDuration(profile, from, to){
     return r ? {seconds:r.duration, meters:r.distance} : null;
   }catch{ return null; }
 }
-function fmtMiles(m){ const mi=m/1609.344; return mi<0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
+function fmtMiles(m){ const mi = m/1609.344; return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
 function fmtMins(s){ return `${Math.round(s/60)} min`; }
 async function computeDistanceLine(fromAddr, toAddr){
   try{
@@ -92,7 +85,7 @@ async function computeDistanceLine(fromAddr, toAddr){
   }catch{ return ''; }
 }
 
-// ---------- SAMPLE fallback ----------
+// ============ SAMPLE fallback ============
 const SAMPLE = {
   clinics: [{
     name: "Weill Cornell Medicine (1305 York Ave)",
@@ -110,7 +103,7 @@ const SAMPLE = {
   }]
 };
 
-// ---------- Category constants ----------
+// ============ Category constants ============
 const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -129,19 +122,17 @@ const NAVIGATING = [
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ---------- Dedupe ----------
+// ============ Dedupe ============
 function dedupeByName(list){
-  const out=[]; const seen=new Set();
-  for(const x of (list||[])){
-    const k=(x?.name||'').toLowerCase();
+  const seen = new Set(); const out = [];
+  for(const x of (list || [])){
+    const k = (x?.name || '').toLowerCase();
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
   return out;
 }
 
-// ===================================================================
-// IMPORTANT: Define remapClinicCategories BEFORE renderClinic (hoisted)
-// ===================================================================
+// ============ HOISTED + GLOBAL: remapClinicCategories ============
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -151,8 +142,8 @@ function remapClinicCategories(c){
   const broadway = cats.broadway_comedy || [];
   const iconicExisting = cats.iconic || cats.activities || [];
 
-  const bakeriesFromHidden = hidden.filter(x => BAKERY_RE.test(x?.name||''));
-  const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name||''));
+  const bakeriesFromHidden = hidden.filter(x => BAKERY_RE.test(x?.name || ''));
+  const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name || ''));
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
   const nyc_shopping   = dedupeByName(shoppingFromHidden);
@@ -168,15 +159,15 @@ function remapClinicCategories(c){
     navigating: NAVIGATING
   };
 }
-window.remapClinicCategories = remapClinicCategories; // extra safety for scope/module
+window.remapClinicCategories = remapClinicCategories; // extra safety
 
-// ---------- Rendering ----------
+// ============ Rendering ============
 function itemHTML(it, clinicAddress){
-  const name = it?.name || 'Unnamed';
-  const addr = it?.address || '';
-  const phone= it?.phone || '';
-  const site = it?.website || '';
-  const note = it?.note || '';
+  const name  = it?.name || 'Unnamed';
+  const addr  = it?.address || '';
+  const phone = it?.phone || '';
+  const site  = it?.website || '';
+  const note  = it?.note || '';
 
   const links = [
     site ? `<a href="${site}" target="_blank" rel="noopener">Website</a>` : '',
@@ -192,7 +183,7 @@ function itemHTML(it, clinicAddress){
   return `
     <div class="item card">
       <h4>${name}</h4>
-      ${addr ? `<p>${addr}${phone ? ` • ${phone}`:''}</p>` : (phone ? `<p>${phone}</p>`:'')}
+      ${addr ? `<p>${addr}${phone ? ` • ${phone}` : ''}</p>` : (phone ? `<p>${phone}</p>` : '')}
       ${links ? `<p>${links}</p>` : ''}
       ${note ? `<p>${note}</p>` : ''}
       ${distanceDiv}
@@ -204,12 +195,13 @@ function sectionHTML(title, list, clinicAddress){
   return `
     <div class="card">
       <h3 class="section-title">${title}</h3>
-      <div class="grid">${list.map(it => itemHTML(it, clinicAddress)).join('')}</div>
+      <div class="grid">
+        ${list.map(it => itemHTML(it, clinicAddress)).join('')}
+      </div>
     </div>
   `;
 }
 function renderClinic(clinic){
-  // remapClinicCategories is hoisted & global, so it’s available here
   const m = remapClinicCategories(clinic);
   const head = `
     <div class="card">
@@ -227,18 +219,19 @@ function renderClinic(clinic){
     sectionHTML('Navigating NYC', m.navigating, clinic.address),
   ].join('');
 }
-async function fillDistancesFor(clinic){
+
+async function fillDistancesFor(clinic, container){
   if(!ENABLE_DISTANCES) return;
-  const nodes = document.querySelectorAll('.distance[data-dist-for]');
+  const nodes = container.querySelectorAll('.distance[data-dist-for]');
   for(const el of nodes){
-    const addr = decodeURIComponent(el.getAttribute('data-dist-for')||'');
+    const addr = decodeURIComponent(el.getAttribute('data-dist-for') || '');
     if(!addr){ el.remove(); continue; }
     const line = await computeDistanceLine(clinic.address, addr);
     el.outerHTML = line || '';
   }
 }
 
-// ---------- Data loading ----------
+// ============ Data load ============
 async function loadData(){
   try{
     let res = await fetch('nyc_fertility_locations.json');
@@ -251,19 +244,19 @@ async function loadData(){
     const json = await res.json();
     if(!json || !Array.isArray(json.clinics)){
       DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (JSON format issue). Expect { "clinics": [...] }', 'error');
+      banner('Loaded SAMPLE data (JSON must be { "clinics": [...] }).', 'error');
       return;
     }
     DATA = json; LOADED = true;
     banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
   }catch(e){
     DATA = SAMPLE; LOADED = true;
-    banner('Loaded SAMPLE data (unexpected fetch error). See console for details.', 'error');
+    banner('Loaded SAMPLE data (unexpected fetch error). See console.', 'error');
     console.error(e);
   }
 }
 
-// ---------- Search / UI ----------
+// ============ Search / UI ============
 function filterClinics(q){
   const needle = q.toLowerCase();
   return (DATA.clinics || []).filter(c =>
@@ -272,43 +265,104 @@ function filterClinics(q){
   );
 }
 
-async function search(){
+async function doSearch(){
   if(!LOADED) await loadData();
-  const q = ($input?.value || '').trim();
+  const input = document.querySelector('#query');
+  const results = document.querySelector('#results');
+  if(!results) return;
+
+  const q = (input?.value || '').trim();
   let list = DATA.clinics || [];
   if(q) list = filterClinics(q);
-  if(!$results) return;
-  if(!list.length){
-    $results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or “1305 York”.</p></div>`;
+  if(!q){
+    // empty query: show nothing (keeps homepage clean)
+    results.innerHTML = `<div class="card"><p>Type a clinic name (e.g., “Weill Cornell”, “RMA”, “CCRM”) or an address, then press Enter or Search.</p></div>`;
     return;
   }
-  $results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list){ await fillDistancesFor(clinic); }
+  if(!list.length){
+    results.innerHTML = `<div class="card"><p>No clinics matched “${q}”. Try “1305 York” or “NYU Langone”.</p></div>`;
+    return;
+  }
+
+  // Render results
+  results.innerHTML = list.map(renderClinic).join('');
+
+  // Fill distances only for the newly rendered results container
+  for(const clinic of list){
+    await fillDistancesFor(clinic, results);
+  }
 }
 
 async function showAll(){
   if(!LOADED) await loadData();
+  const results = document.querySelector('#results');
+  if(!results) return;
   const list = DATA.clinics || [];
-  if(!$results) return;
-  $results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list){ await fillDistancesFor(clinic); }
+  results.innerHTML = list.map(renderClinic).join('');
+  for(const clinic of list){
+    await fillDistancesFor(clinic, results);
+  }
 }
 
-// ---------- Init ----------
+// ============ Init ============
 window.addEventListener('DOMContentLoaded', async () => {
-  if($searchBtn) $searchBtn.disabled = true;
-  if($showAllBtn) $showAllBtn.disabled = true;
+  // Don’t auto-show all; present a calm empty state
+  const results = document.querySelector('#results');
+  if(results){
+    results.innerHTML = `<div class="card"><p>Enter your clinic to find cafés, restaurants, treats, and gentle activities nearby.</p></div>`;
+  }
 
+  // Load data up front
   await loadData();
 
-  if($suggestions && DATA?.clinics) $suggestions.textContent = `Clinics: ${DATA.clinics.map(c=>c.name).join(' · ')}`;
+  // Wire Search button robustly (prevents form submit reload)
+  const searchBtn = document.querySelector('#searchBtn');
+  if(searchBtn){
+    searchBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      doSearch();
+    });
+    // If button type isn't set, make sure it acts like a button
+    if(!searchBtn.getAttribute('type')) searchBtn.setAttribute('type','button');
+  }
 
-  if($searchBtn) $searchBtn.disabled = false;
-  if($showAllBtn)  $showAllBtn.disabled = false;
+  // If the input is inside a <form>, intercept submit
+  const form = document.querySelector('form') || document.querySelector('#searchForm');
+  if(form){
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      doSearch();
+      return false;
+    });
+  }
 
-  await showAll();
+  // Enter key on input triggers search
+  const input = document.querySelector('#query');
+  if(input){
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        doSearch();
+      }
+    });
+  }
 
-  if($searchBtn) $searchBtn.addEventListener('click', search);
-  if($showAllBtn) $showAllBtn.addEventListener('click', showAll);
-  if($input) $input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') search(); });
+  // Optional: keep “Show All” for browsing
+  const showAllBtn = document.querySelector('#showAllBtn');
+  if(showAllBtn){
+    showAllBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      showAll();
+    });
+    if(!showAllBtn.getAttribute('type')) showAllBtn.setAttribute('type','button');
+  }
+
+  // Suggestions line
+  const suggestions = document.querySelector('#suggestions');
+  if(suggestions && DATA?.clinics){
+    suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
+  }
 });
