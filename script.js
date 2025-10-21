@@ -7,7 +7,6 @@ const $suggestions = $q('#suggestions');
 async function loadData(){
   const res = await fetch('nyc_fertility_locations.json');
   DATA = await res.json();
-  // preload suggestions
   $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
 }
 
@@ -19,9 +18,11 @@ function byQuery(clinic, q){
 function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
 
 function itemHTML(it){
+  const noteLine = it.note ? `<p>${it.note}</p>` : '';
   const lines = [
     it.address ? `<p>${it.address}${it.phone ? ` • ${it.phone}`:''}</p>` : (it.phone ? `<p>${it.phone}</p>`:''),
-    it.website ? `<p><a href="${it.website}" target="_blank" rel="noopener">Website</a>${it.address ? ` • <a href="${mapsLink(it.address)}" target="_blank" rel="noopener">Open in Maps</a>`:''}</p>` : ''
+    it.website ? `<p><a href="${it.website}" target="_blank" rel="noopener">Website</a>${it.address ? ` • <a href="${mapsLink(it.address)}" target="_blank" rel="noopener">Open in Maps</a>`:''}</p>` : '',
+    noteLine
   ].join('');
   return `<div class="item card"><h4>${it.name}</h4>${lines}</div>`;
 }
@@ -46,8 +47,9 @@ function renderClinic(clinic){
     ${sectionHTML('Restaurants', clinic.categories.restaurants)}
     ${sectionHTML('Pizza & Bagels', clinic.categories.pizza_bagels)}
     ${sectionHTML('Hidden Gems & Local Favorites', clinic.categories.hidden_gems)}
-    ${sectionHTML('Comedy', clinic.categories.comedy)}
+    ${sectionHTML('Broadway & Comedy Shows', clinic.categories.broadway_comedy)}
     ${sectionHTML('Nearby Activities & Landmarks', clinic.categories.activities)}
+    ${sectionHTML('Iconic NYC Things to Do', clinic.categories.iconic)}
   `;
 }
 
