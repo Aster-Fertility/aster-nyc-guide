@@ -1,34 +1,41 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Search Fix + No Auto ShowAll + Hoisted Mapper + Optional Distances
+   script.js — Geocode Bias + Distance Guard (fixes OSRM 400s)
+   - Bias Nominatim to US + clinic state (NY/NJ/CT)
+   - If a place geocodes >300 km from clinic, retry with state hint; if still far, skip distances
+   - Keeps directions links (Apple/Google), categories, and optional distance lines (toggle)
 */
 
 'use strict';
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // toggle if rate-limited
+const ENABLE_DISTANCES = true; // set false to disable distance lookups
 
-// ============ Diagnostics banner ============
+// ---------------- UI helpers ----------------
+const $ = (s) => document.querySelector(s);
+const $results = $('#results');
+const $input = $('#query');
+const $searchBtn = $('#searchBtn');
+const $showAllBtn = $('#showAllBtn');
+const $suggestions = $('#suggestions');
+
 function banner(msg, type='info'){
-  const results = document.querySelector('#results');
-  if(!results) return;
+  if(!$results) return;
   let el = document.getElementById('diagnostic-banner');
   if(!el){
     el = document.createElement('div');
     el.id = 'diagnostic-banner';
     el.style.cssText = 'margin:12px 0;padding:10px;border-radius:8px;font-size:14px';
-    results.parentElement.insertBefore(el, results);
+    $results.parentElement.insertBefore(el, $results);
   }
   el.style.background = type==='error' ? '#fde2e1' : '#e7f3ff';
   el.style.color      = type==='error' ? '#912018' : '#0b69a3';
   el.textContent = msg;
 }
 
-// ============ Maps helpers ============
+// ---------------- Maps helpers ----------------
 function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
-function mapsLink(address){
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-}
+function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
 function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   if(!originAddress || !destAddress) return '';
   if(isAppleMapsPreferred()){
@@ -38,54 +45,119 @@ function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ============ Distances (optional; no API key) ============
-const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
-const OSRM      = 'https://router.project-osrm.org/route/v1';
+// ---------------- Distances (OSRM) with geocode bias ----------------
+const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/search';
+const OSRM = 'https://router.project-osrm.org/route/v1';
 const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
 
-async function geocode(address){
+// simple haversine (km)
+function haversineKm(a, b){
+  const toRad = d => d * Math.PI/180;
+  const R=6371;
+  const dLat = toRad((b.lat - a.lat));
+  const dLon = toRad((b.lon - a.lon));
+  const s1 = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s1));
+}
+
+// infer a state hint from the clinic address
+function inferState(addr){
+  if(!addr) return null;
+  const m = addr.match(/\b(NY|NJ|CT)\b/i);
+  return m ? m[1].toUpperCase() : null;
+}
+
+// Build a Nominatim URL with US bias and optional state hint
+function nominatimUrl(q, stateHint){
+  const params = new URLSearchParams({
+    format: 'json',
+    limit: '1',
+    addressdetails: '0',
+    countrycodes: 'us',
+    q
+  });
+  // If we have a state hint, append to the query to bias the result
+  if(stateHint && !q.match(/\b(NY|NJ|CT)\b/i)){
+    params.set('q', `${q}, ${stateHint}, USA`);
+  }
+  return `${NOMINATIM_BASE}?${params.toString()}`;
+}
+
+async function geocodeBiased(address, stateHint){
   if(!ENABLE_DISTANCES || !address) return null;
   try{
-    const key='geo:'+address;
+    const key = `geo2:${address}|${stateHint||''}`;
     const cached = localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
-    await sleep(120);
-    const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers:{'Accept-Language':'en'} });
+
+    await sleep(120); // be gentle to free service
+    const res = await fetch(nominatimUrl(address, stateHint), { headers:{'Accept-Language':'en'} });
     if(!res.ok) return null;
-    const j = await res.json();
-    const pt = j && j[0] ? {lat:+j[0].lat, lon:+j[0].lon} : null;
+    const data = await res.json();
+    const pt = data && data[0] ? {lat:+data[0].lat, lon:+data[0].lon} : null;
     if(pt) localStorage.setItem(key, JSON.stringify(pt));
     return pt;
   }catch{ return null; }
 }
+
 async function osrmDuration(profile, from, to){
-  if(!ENABLE_DISTANCES || !from || !to) return null;
+  if(!from || !to) return null;
   try{
     const url = `${OSRM}/${profile}/${from.lon},${from.lat};${to.lon},${to.lat}?overview=false`;
     const res = await fetch(url);
-    if(!res.ok) return null;
-    const j = await res.json();
-    const r = j.routes && j.routes[0];
-    return r ? {seconds:r.duration, meters:r.distance} : null;
+    if(!res.ok) return null; // avoid throwing; just skip
+    const json = await res.json();
+    const r = json.routes && json.routes[0];
+    return r ? { seconds: r.duration, meters: r.distance } : null;
   }catch{ return null; }
 }
+
 function fmtMiles(m){ const mi = m/1609.344; return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
 function fmtMins(s){ return `${Math.round(s/60)} min`; }
-async function computeDistanceLine(fromAddr, toAddr){
+
+async function computeDistanceLine(clinicAddr, placeAddr){
   try{
-    const [a,b] = await Promise.all([geocode(fromAddr), geocode(toAddr)]);
-    if(!a || !b) return '';
-    const [walk, drive] = await Promise.all([osrmDuration('foot', a, b), osrmDuration('driving', a, b)]);
+    const clinicState = inferState(clinicAddr) || 'NY'; // default bias to NY
+    const clinicPt = await geocodeBiased(clinicAddr, clinicState);
+    if(!clinicPt) return '';
+
+    // 1st attempt: bias by clinic state
+    let placePt = await geocodeBiased(placeAddr, clinicState);
+    if(!placePt) return '';
+
+    // If the place is unreasonably far (>300 km), retry with a stronger hint
+    let km = haversineKm(clinicPt, placePt);
+    if(km > 300){
+      // Retry: if clinic is NJ/CT, keep that; otherwise force NY
+      const retryState = clinicState || 'NY';
+      placePt = await geocodeBiased(`${placeAddr}`, retryState);
+      if(!placePt) return '';
+      km = haversineKm(clinicPt, placePt);
+      if(km > 300){
+        // Still far (e.g., matched Melbourne) -> skip routing to avoid OSRM 400
+        return '';
+      }
+    }
+
+    // Now safe to query OSRM
+    const [walk, drive] = await Promise.all([
+      osrmDuration('foot', clinicPt, placePt),
+      osrmDuration('driving', clinicPt, placePt)
+    ]);
+
     const meters = (walk || drive) ? (walk?.meters ?? drive?.meters) : null;
     const dist = meters ? fmtMiles(meters) : '';
     const w = walk ? `${fmtMins(walk.seconds)} walk` : '';
     const d = drive ? `${fmtMins(drive.seconds)} drive` : '';
     const parts = [dist, w, d].filter(Boolean).join(' • ');
+
     return parts ? `<div class="distance">Distance from clinic: <em>${parts}</em></div>` : '';
-  }catch{ return ''; }
+  }catch{
+    return '';
+  }
 }
 
-// ============ SAMPLE fallback ============
+// ---------------- SAMPLE fallback ----------------
 const SAMPLE = {
   clinics: [{
     name: "Weill Cornell Medicine (1305 York Ave)",
@@ -103,7 +175,7 @@ const SAMPLE = {
   }]
 };
 
-// ============ Category constants ============
+// ---------------- Category constants + helpers ----------------
 const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -116,13 +188,12 @@ const ICONIC_GLOBAL = [
 ];
 
 const NAVIGATING = [
-  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"OMNY tap-to-pay works on all subways & buses."},
+  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"OMNY contactless works on all subways and buses."},
   {name:"MTA Bus Map & Service", address:"Citywide", website:"https://new.mta.info/maps/bus"},
   {name:"Grand Central Terminal", address:"89 E 42nd St, New York, NY", website:"https://www.grandcentralterminal.com"},
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ============ Dedupe ============
 function dedupeByName(list){
   const seen = new Set(); const out = [];
   for(const x of (list || [])){
@@ -132,7 +203,7 @@ function dedupeByName(list){
   return out;
 }
 
-// ============ HOISTED + GLOBAL: remapClinicCategories ============
+// ---------------- remapClinicCategories (hoisted & global) ----------------
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -159,9 +230,9 @@ function remapClinicCategories(c){
     navigating: NAVIGATING
   };
 }
-window.remapClinicCategories = remapClinicCategories; // extra safety
+window.remapClinicCategories = remapClinicCategories;
 
-// ============ Rendering ============
+// ---------------- Rendering ----------------
 function itemHTML(it, clinicAddress){
   const name  = it?.name || 'Unnamed';
   const addr  = it?.address || '';
@@ -231,7 +302,7 @@ async function fillDistancesFor(clinic, container){
   }
 }
 
-// ============ Data load ============
+// ---------------- Data loading ----------------
 async function loadData(){
   try{
     let res = await fetch('nyc_fertility_locations.json');
@@ -256,7 +327,7 @@ async function loadData(){
   }
 }
 
-// ============ Search / UI ============
+// ---------------- Search / UI ----------------
 function filterClinics(q){
   const needle = q.toLowerCase();
   return (DATA.clinics || []).filter(c =>
@@ -274,8 +345,8 @@ async function doSearch(){
   const q = (input?.value || '').trim();
   let list = DATA.clinics || [];
   if(q) list = filterClinics(q);
+
   if(!q){
-    // empty query: show nothing (keeps homepage clean)
     results.innerHTML = `<div class="card"><p>Type a clinic name (e.g., “Weill Cornell”, “RMA”, “CCRM”) or an address, then press Enter or Search.</p></div>`;
     return;
   }
@@ -284,13 +355,8 @@ async function doSearch(){
     return;
   }
 
-  // Render results
   results.innerHTML = list.map(renderClinic).join('');
-
-  // Fill distances only for the newly rendered results container
-  for(const clinic of list){
-    await fillDistancesFor(clinic, results);
-  }
+  for(const clinic of list){ await fillDistancesFor(clinic, results); }
 }
 
 async function showAll(){
@@ -299,70 +365,41 @@ async function showAll(){
   if(!results) return;
   const list = DATA.clinics || [];
   results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list){
-    await fillDistancesFor(clinic, results);
-  }
+  for(const clinic of list){ await fillDistancesFor(clinic, results); }
 }
 
-// ============ Init ============
+// ---------------- Init ----------------
 window.addEventListener('DOMContentLoaded', async () => {
-  // Don’t auto-show all; present a calm empty state
   const results = document.querySelector('#results');
   if(results){
     results.innerHTML = `<div class="card"><p>Enter your clinic to find cafés, restaurants, treats, and gentle activities nearby.</p></div>`;
   }
 
-  // Load data up front
   await loadData();
 
-  // Wire Search button robustly (prevents form submit reload)
   const searchBtn = document.querySelector('#searchBtn');
   if(searchBtn){
-    searchBtn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      doSearch();
-    });
-    // If button type isn't set, make sure it acts like a button
+    searchBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); doSearch(); });
     if(!searchBtn.getAttribute('type')) searchBtn.setAttribute('type','button');
   }
 
-  // If the input is inside a <form>, intercept submit
   const form = document.querySelector('form') || document.querySelector('#searchForm');
   if(form){
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      doSearch();
-      return false;
-    });
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); e.stopPropagation(); doSearch(); return false; });
   }
 
-  // Enter key on input triggers search
   const input = document.querySelector('#query');
   if(input){
-    input.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        doSearch();
-      }
-    });
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(); } });
   }
 
-  // Optional: keep “Show All” for browsing
   const showAllBtn = document.querySelector('#showAllBtn');
   if(showAllBtn){
-    showAllBtn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      showAll();
-    });
+    showAllBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); showAll(); });
     if(!showAllBtn.getAttribute('type')) showAllBtn.setAttribute('type','button');
   }
 
-  // Suggestions line
-  const suggestions = document.querySelector('#suggestions');
-  if(suggestions && DATA?.clinics){
-    suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
+  if($suggestions && DATA?.clinics){
+    $suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
   }
 });
