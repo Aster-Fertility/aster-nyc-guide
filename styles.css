@@ -1,0 +1,24 @@
+:root{
+  --brand:#244c66; --ink:#1f2937; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff; --accent:#d7e8f1;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.header{padding:28px 16px;background:linear-gradient(90deg,var(--accent),#f0f7fb)}
+.header h1{margin:0 0 8px;font-size:28px;color:var(--brand)}
+.header .tagline{margin:0;color:var(--muted)}
+.container{max-width:980px;margin:24px auto;padding:0 16px}
+.search{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.search label{display:block;margin-bottom:8px;font-weight:600}
+.search input{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:10px}
+.search button{padding:10px 14px;border:none;border-radius:10px;background:var(--brand);color:white;cursor:pointer}
+.search .secondary{background:#e5eef4;color:#14384b;margin-left:6px}
+.suggestions{margin-top:6px;color:var(--muted);font-size:14px}
+.section-title{margin:18px 0 10px;font-size:18px;color:var(--brand)}
+.card{background:var(--card);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.card h3{margin:0 0 4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.item h4{margin:0 0 4px;font-size:15px}
+.item p{margin:2px 0;color:var(--muted);font-size:14px}
+.item a{color:#0b69a3;text-decoration:none}
+.footer{padding:24px 16px;text-align:center;color:var(--muted)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef6fb;color:#0b69a3;font-size:12px;margin-left:6px}
