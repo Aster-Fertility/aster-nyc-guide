@@ -292,6 +292,61 @@ function sectionHTML(title, arr, clinicAddress){
   `;
 }
 
+// --- SAFETY SHIM: ensure remapClinicCategories exists in global scope ---
+const BAKERY_KEYWORDS = BAKERY_KEYWORDS || /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
+const SHOPPING_KEYWORDS = SHOPPING_KEYWORDS || /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
+
+const ICONIC_GLOBAL = typeof ICONIC_GLOBAL !== 'undefined' ? ICONIC_GLOBAL : [
+  {name:"Statue of Liberty & Ellis Island (Statue City Cruises)", address:"Battery Park, New York, NY", website:"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
+  {name:"9/11 Memorial & Museum (World Trade Center)", address:"180 Greenwich St, New York, NY", website:"https://www.911memorial.org"},
+  {name:"NYC Ferry (Harbor sightseeing)", address:"Multiple piers citywide", website:"https://www.ferry.nyc"},
+  {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops (Times Sq, Downtown, Uptown)", website:"https://www.bigbustours.com/new-york"},
+  {name:"TopView Sightseeing (Hop-on Hop-off)", address:"Citywide stops", website:"https://topviewnyc.com"}
+];
+
+const NAVIGATING = typeof NAVIGATING !== 'undefined' ? NAVIGATING : [
+  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"Tip: OMNY contactless works on all subways and buses."},
+  {name:"MTA Bus Map & Service", address:"Citywide", website:"https://new.mta.info/maps/bus"},
+  {name:"Grand Central Terminal", address:"89 E 42nd St, New York, NY", website:"https://www.grandcentralterminal.com"},
+  {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
+];
+
+if (typeof window.remapClinicCategories !== 'function') {
+  window.remapClinicCategories = function remapClinicCategories(c){
+    const cats = (c && c.categories) || {};
+    const cafes = cats.cafes || [];
+    const restaurants = cats.restaurants || [];
+    const pizza = cats.pizza_bagels || [];
+    const hidden = cats.hidden_gems || [];
+    const broadway = cats.broadway_comedy || [];
+    const iconicExisting = cats.iconic || cats.activities || [];
+
+    const bakeriesFromHidden = hidden.filter(x => (x?.name||'').match(BAKERY_KEYWORDS));
+    const shoppingFromHidden = hidden.filter(x => (x?.name||'').match(SHOPPING_KEYWORDS));
+
+    // simple dedupe by name
+    const dedupe = (arr) => {
+      const seen = new Set();
+      return (arr||[]).filter(x => {
+        const k = (x?.name||'').toLowerCase();
+        if(!k || seen.has(k)) return false;
+        seen.add(k); return true;
+      });
+    };
+
+    return {
+      cafes_bakeries: dedupe([...(cafes||[]), ...(bakeriesFromHidden||[])]),
+      restaurants: dedupe(restaurants),
+      pizza_bagels: dedupe(pizza),
+      nyc_shopping: dedupe(shoppingFromHidden),
+      broadway_comedy: dedupe(broadway),
+      iconic_mustsees: dedupe([...(iconicExisting||[]), ...ICONIC_GLOBAL]),
+      navigating: NAVIGATING
+    };
+  };
+}
+// ------------------------------------------------------------------------
+
 function renderClinic(clinic){
   const mapped = remapClinicCategories(clinic);
   const header = `
