@@ -1,15 +1,21 @@
 /* Aster Fertility • NYC Clinic Concierge
-   Full script.js (drop-in)
-   - Category remap (runtime; no JSON rewrite needed)
-   - Directions links (Apple/Google)
-   - Live walking/driving distance via open OSRM routing (no key)
+   Robust script.js (with load guards + clear errors)
 */
 
 let DATA = null;
+let LOADED = false;
+
 const $q = (sel) => document.querySelector(sel);
 const $results = $q('#results');
 const $input = $q('#query');
 const $suggestions = $q('#suggestions');
+const $searchBtn = $q('#searchBtn');
+const $showAllBtn = $q('#showAllBtn');
+
+function showError(msg){
+  $results.innerHTML = `<div class="card"><p>${msg}</p></div>`;
+  console.error(msg);
+}
 
 // -----------------------------
 // Maps Helpers
@@ -17,21 +23,15 @@ const $suggestions = $q('#suggestions');
 function isAppleMapsPreferred(){
   return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
 }
-
-// Single-place map link (kept for quick open)
 function mapsLink(address){
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
-
-// Directions link from clinic -> place
 function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
   if(!originAddress || !destAddress) return '';
   if(isAppleMapsPreferred()){
-    // Apple Maps dirflg: w (walking), d (driving)
     const flag = mode === 'walking' ? 'w' : 'd';
     return `http://maps.apple.com/?saddr=${encodeURIComponent(originAddress)}&daddr=${encodeURIComponent(destAddress)}&dirflg=${flag}`;
   }
-  // Google Maps
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
@@ -39,36 +39,38 @@ function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
 // Geocoding & Routing (no API key)
 // -----------------------------
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
-const OSRM = 'https://router.project-osrm.org/route/v1'; // public OSRM
+const OSRM = 'https://router.project-osrm.org/route/v1';
 
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// cache geocodes locally to avoid rate limits
 async function geocode(address){
-  if(!address) return null;
-  const key = 'geo:' + address;
-  const cached = localStorage.getItem(key);
-  if(cached) return JSON.parse(cached);
-  // be gentle to Nominatim
-  await sleep(120);
-  const res = await fetch(NOMINATIM + encodeURIComponent(address));
-  if(!res.ok) return null;
-  const data = await res.json();
-  const pt = data && data[0] ? {lat:+data[0].lat, lon:+data[0].lon} : null;
-  if(pt) localStorage.setItem(key, JSON.stringify(pt));
-  return pt;
+  try{
+    if(!address) return null;
+    const key = 'geo:' + address;
+    const cached = localStorage.getItem(key);
+    if(cached) return JSON.parse(cached);
+    // be gentle to Nominatim
+    await sleep(120);
+    const res = await fetch(NOMINATIM + encodeURIComponent(address));
+    if(!res.ok) return null;
+    const data = await res.json();
+    const pt = data && data[0] ? {lat:+data[0].lat, lon:+data[0].lon} : null;
+    if(pt) localStorage.setItem(key, JSON.stringify(pt));
+    return pt;
+  }catch(e){ return null; }
 }
 
 async function osrmDuration(profile, from, to){
-  // profile: 'foot' or 'driving'
-  if(!from || !to) return null;
-  const url = `${OSRM}/${profile}/${from.lon},${from.lat};${to.lon},${to.lat}?overview=false`;
-  const res = await fetch(url);
-  if(!res.ok) return null;
-  const json = await res.json();
-  const r = json.routes && json.routes[0];
-  if(!r) return null;
-  return { seconds: r.duration, meters: r.distance };
+  try{
+    if(!from || !to) return null;
+    const url = `${OSRM}/${profile}/${from.lon},${from.lat};${to.lon},${to.lat}?overview=false`;
+    const res = await fetch(url);
+    if(!res.ok) return null;
+    const json = await res.json();
+    const r = json.routes && json.routes[0];
+    if(!r) return null;
+    return { seconds: r.duration, meters: r.distance };
+  }catch(e){ return null; }
 }
 
 function fmtMiles(meters){
@@ -91,31 +93,42 @@ async function computeDistanceLines(clinicAddr, placeAddr){
     const driveStr = drive ? `${fmtMins(drive.seconds)} drive` : '';
     const parts = [distStr, walkStr, driveStr].filter(Boolean).join(' • ');
     return parts ? `<div class="distance">Distance from clinic: <em>${parts}</em></div>` : '';
-  }catch(e){
-    return '';
-  }
+  }catch(e){ return ''; }
 }
 
 // -----------------------------
-// Data loading
+// Data loading (with guards)
 // -----------------------------
 async function loadData(){
-  const res = await fetch('nyc_fertility_locations.json');
-  DATA = await res.json();
-  $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
-}
-
-// Search helpers
-function byQuery(clinic, q){
-  const needle = q.toLowerCase();
-  return clinic.name.toLowerCase().includes(needle) || clinic.address.toLowerCase().includes(needle);
+  try{
+    // Try relative path first
+    let res = await fetch('nyc_fertility_locations.json');
+    if(!res.ok){
+      // Fallback to root (in case the site is served from a subpath)
+      res = await fetch('/nyc_fertility_locations.json');
+    }
+    if(!res.ok){
+      showError('Could not load data (nyc_fertility_locations.json not found). Make sure the file is in the site root.');
+      return;
+    }
+    DATA = await res.json();
+    if(!DATA || !Array.isArray(DATA.clinics)){
+      showError('Data format error: expected { "clinics": [...] }');
+      return;
+    }
+    LOADED = true;
+    $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
+    // Optionally show all on load:
+    // $results.innerHTML = DATA.clinics.map(renderClinic).join('');
+  }catch(err){
+    console.error(err);
+    showError('Unexpected error loading data. Check the browser console for details.');
+  }
 }
 
 // -----------------------------
 // Category remapping (runtime)
 // -----------------------------
-// We derive new buckets from your existing JSON keys, so you don’t have to rewrite the data file.
-
 const BAKERY_KEYWORDS = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_KEYWORDS = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -135,10 +148,11 @@ const NAVIGATING = [
 ];
 
 function dedupeByName(list){
+  if(!Array.isArray(list)) return [];
   const seen = new Set(); const out = [];
   for(const x of list){
-    const k = (x.name||'').toLowerCase();
-    if(!seen.has(k)){ seen.add(k); out.push(x); }
+    const k = (x?.name||'').toLowerCase();
+    if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
   return out;
 }
@@ -150,20 +164,14 @@ function remapClinicCategories(c){
   const pizza = cats.pizza_bagels || [];
   const hidden = cats.hidden_gems || [];
   const broadway = cats.broadway_comedy || [];
-  // existing activities or iconic lists (from earlier steps)
   const iconicExisting = cats.iconic || cats.activities || [];
 
-  const bakeriesFromHidden = hidden.filter(x => BAKERY_KEYWORDS.test(x.name||''));
-  const shoppingFromHidden = hidden.filter(x => SHOPPING_KEYWORDS.test(x.name||''));
+  const bakeriesFromHidden = hidden.filter(x => BAKERY_KEYWORDS.test(x?.name||''));
+  const shoppingFromHidden = hidden.filter(x => SHOPPING_KEYWORDS.test(x?.name||''));
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
   const nyc_shopping = dedupeByName(shoppingFromHidden);
-
-  const iconicMustSees = dedupeByName([
-    ...iconicExisting,
-    ...ICONIC_GLOBAL
-  ]);
-
+  const iconicMustSees = dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
   const navigatingNYC = NAVIGATING;
 
   return {
@@ -181,20 +189,33 @@ function remapClinicCategories(c){
 // Rendering
 // -----------------------------
 function itemHTMLBase(it, clinicAddress){
-  const hasAddr = !!it.address;
-  const dirDrive = hasAddr ? mapsDirectionsLink(clinicAddress, it.address, 'driving') : '';
-  const dirWalk  = hasAddr ? mapsDirectionsLink(clinicAddress, it.address, 'walking') : '';
-  const lines = [
-    it.address ? `<p>${it.address}${it.phone ? ` • ${it.phone}`:''}</p>` : (it.phone ? `<p>${it.phone}</p>`:''),
-    `<p>
-      ${it.website ? `<a href="${it.website}" target="_blank" rel="noopener">Website</a>` : ''}
-      ${hasAddr ? `${it.website ? ' • ' : ''}<a href="${mapsLink(it.address)}" target="_blank" rel="noopener">Open in Maps</a>` : ''}
-      ${hasAddr ? ` • <a href="${dirDrive}" target="_blank" rel="noopener">Directions (Drive)</a> • <a href="${dirWalk}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''}
-    </p>`,
-    it.note ? `<p>${it.note}</p>` : ''
-  ].join('');
-  // distance placeholder (filled async)
-  return `<div class="item card"><h4>${it.name}</h4>${lines}<div class="distance" data-dist-for="${encodeURIComponent(it.address||'')}"></div></div>`;
+  const name = it?.name || 'Unnamed';
+  const addr = it?.address || '';
+  const phone = it?.phone || '';
+  const site = it?.website || '';
+  const note = it?.note || '';
+
+  const hasAddr = !!addr;
+  const dirDrive = hasAddr ? mapsDirectionsLink(clinicAddress, addr, 'driving') : '';
+  const dirWalk  = hasAddr ? mapsDirectionsLink(clinicAddress, addr, 'walking') : '';
+
+  const line1 = addr ? `<p>${addr}${phone ? ` • ${phone}`:''}</p>` : (phone ? `<p>${phone}</p>`:'');
+  const links = [
+    site ? `<a href="${site}" target="_blank" rel="noopener">Website</a>` : '',
+    hasAddr ? `<a href="${mapsLink(addr)}" target="_blank" rel="noopener">Open in Maps</a>` : '',
+    hasAddr ? `<a href="${dirDrive}" target="_blank" rel="noopener">Directions (Drive)</a>` : '',
+    hasAddr ? `<a href="${dirWalk}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''
+  ].filter(Boolean).join(' • ');
+
+  return `
+    <div class="item card">
+      <h4>${name}</h4>
+      ${line1}
+      ${links ? `<p>${links}</p>` : ''}
+      ${note ? `<p>${note}</p>` : ''}
+      <div class="distance" data-dist-for="${encodeURIComponent(addr)}"></div>
+    </div>
+  `;
 }
 
 function sectionHTML(title, arr, clinicAddress){
@@ -202,7 +223,9 @@ function sectionHTML(title, arr, clinicAddress){
   return `
     <div class="card">
       <h3 class="section-title">${title}</h3>
-      <div class="grid">${arr.map(it => itemHTMLBase(it, clinicAddress)).join('')}</div>
+      <div class="grid">
+        ${arr.map(it => itemHTMLBase(it, clinicAddress)).join('')}
+      </div>
     </div>
   `;
 }
@@ -238,36 +261,53 @@ async function fillAllDistancesForClinic(clinic){
 }
 
 // -----------------------------
-// Search / UI
+// Search / UI (with load guards)
 // -----------------------------
-function search(){
-  const q = $input.value.trim();
+async function doSearch(){
+  if(!LOADED){
+    await loadData();
+    if(!LOADED) return; // load failed; message already shown
+  }
+  const q = ($input.value||'').trim();
   let list = DATA.clinics;
-  if(q) list = list.filter(c => byQuery(c, q));
+  if(q) list = list.filter(c => {
+    const needle = q.toLowerCase();
+    return (c.name||'').toLowerCase().includes(needle) || (c.address||'').toLowerCase().includes(needle);
+  });
+
   if(!list.length){
     $results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or an address like “1305 York”.</p></div>`;
     return;
   }
   $results.innerHTML = list.map(renderClinic).join('');
-  (async () => {
-    // compute distances for each rendered clinic’s items
-    for(const clinic of list){
-      await fillAllDistancesForClinic(clinic);
-    }
-  })();
+  // compute distances after render (async)
+  for(const clinic of list){
+    await fillAllDistancesForClinic(clinic);
+  }
+}
+
+async function showAll(){
+  if(!LOADED){
+    await loadData();
+    if(!LOADED) return;
+  }
+  $results.innerHTML = DATA.clinics.map(renderClinic).join('');
+  for(const clinic of DATA.clinics){
+    await fillAllDistancesForClinic(clinic);
+  }
 }
 
 // Init
-$q('#searchBtn').addEventListener('click', search);
-$q('#showAllBtn').addEventListener('click', () => {
-  $input.value = '';
-  $results.innerHTML = DATA.clinics.map(renderClinic).join('');
-  (async () => {
-    for(const clinic of DATA.clinics){
-      await fillAllDistancesForClinic(clinic);
-    }
-  })();
+window.addEventListener('DOMContentLoaded', async () => {
+  // Disable buttons until data loads (prevents null errors)
+  $searchBtn.disabled = true;
+  $showAllBtn.disabled = true;
+  await loadData();
+  // Enable UI
+  $searchBtn.disabled = false;
+  $showAllBtn.disabled = false;
 });
-$input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') search(); });
 
-loadData();
+$searchBtn.addEventListener('click', doSearch);
+$showAllBtn.addEventListener('click', showAll);
+$input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doSearch(); });
