@@ -1,35 +1,41 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Consolidated + Fixed (remapClinicCategories hoisted & global)
-   - Directions links (Apple/Google) clinic -> place
-   - Optional distance from clinic (toggle ENABLE_DISTANCES)
-   - New categories & robust JSON loading with fallback + diagnostics
+   script.js — FIX for “remapClinicCategories is not defined”
+   - Define remapClinicCategories FIRST (hoisted) and attach to window
+   - Robust data loading with sample fallback
+   - Directions links (clinic -> place)
+   - Optional distance lines (toggle ENABLE_DISTANCES)
 */
+
+'use strict';
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // set to false to disable distance lookups (useful for rate limits)
+const ENABLE_DISTANCES = true; // set to false to disable distance lookups
 
-// ================== Diagnostics banner ==================
+// ---------- DOM helpers ----------
+const $ = (s) => document.querySelector(s);
+const $results      = $('#results');
+const $input        = $('#query');
+const $searchBtn    = $('#searchBtn');
+const $showAllBtn   = $('#showAllBtn');
+const $suggestions  = $('#suggestions');
+
+// ---------- Small banner for quick diagnostics ----------
 function banner(msg, type = 'info'){
-  const id = 'diagnostic-banner';
-  const results = document.querySelector('#results');
-  if(!results) return;
-  let el = document.getElementById(id);
+  if (!$results) return;
+  let el = document.getElementById('diagnostic-banner');
   if(!el){
     el = document.createElement('div');
-    el.id = id;
+    el.id = 'diagnostic-banner';
     el.style.cssText = 'margin:12px 0;padding:10px;border-radius:8px;font-size:14px';
-    results.parentElement.insertBefore(el, results);
+    $results.parentElement.insertBefore(el, $results);
   }
-  const bg = type === 'error' ? '#fde2e1' : '#e7f3ff';
-  const fg = type === 'error' ? '#912018' : '#0b69a3';
-  el.style.background = bg;
-  el.style.color = fg;
-  el.innerText = msg;
+  el.style.background = type === 'error' ? '#fde2e1' : '#e7f3ff';
+  el.style.color = type === 'error' ? '#912018' : '#0b69a3';
+  el.textContent = msg;
 }
-function showError(msg){ banner(msg, 'error'); console.error(msg); }
 
-// ================== Maps helpers ==================
+// ---------- Maps helpers ----------
 function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
 function mapsLink(address){
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
@@ -43,22 +49,21 @@ function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ================== Distances (no API key; optional) ==================
+// ---------- Distance helpers (optional; no API key) ----------
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
 const OSRM = 'https://router.project-osrm.org/route/v1';
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
 async function geocode(address){
   if(!ENABLE_DISTANCES || !address) return null;
   try{
-    const key = 'geo:' + address;
+    const key='geo:'+address;
     const cached = localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
-    await sleep(120); // be kind to the free service
+    await sleep(120);
     const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers:{'Accept-Language':'en'} });
     if(!res.ok) return null;
-    const d = await res.json();
-    const pt = d && d[0] ? {lat:+d[0].lat, lon:+d[0].lon} : null;
+    const j = await res.json();
+    const pt = j && j[0] ? {lat:+j[0].lat, lon:+j[0].lon} : null;
     if(pt) localStorage.setItem(key, JSON.stringify(pt));
     return pt;
   }catch{ return null; }
@@ -69,9 +74,9 @@ async function osrmDuration(profile, from, to){
     const url = `${OSRM}/${profile}/${from.lon},${from.lat};${to.lon},${to.lat}?overview=false`;
     const res = await fetch(url);
     if(!res.ok) return null;
-    const json = await res.json();
-    const r = json.routes && json.routes[0];
-    return r ? { seconds:r.duration, meters:r.distance } : null;
+    const j = await res.json();
+    const r = j.routes && j.routes[0];
+    return r ? {seconds:r.duration, meters:r.distance} : null;
   }catch{ return null; }
 }
 function fmtMiles(m){ const mi = m/1609.344; return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
@@ -90,44 +95,26 @@ async function computeDistanceLine(fromAddr, toAddr){
   }catch{ return ''; }
 }
 
-// ================== Fallback SAMPLE (used if JSON missing/invalid) ==================
+// ---------- SAMPLE (fallback if JSON missing/invalid) ----------
 const SAMPLE = {
-  clinics: [
-    {
-      name: "Weill Cornell Medicine (1305 York Ave)",
-      address: "1305 York Ave, New York, NY 10021",
-      website: "https://weillcornell.org",
-      categories: {
-        cafes: [
-          {"name":"Maman UES","address":"1424 3rd Ave, New York, NY","website":"https://mamannyc.com"},
-          {"name":"Bluestone Lane (UES Café)","address":"2 E 90th St, New York, NY","website":"https://bluestonelane.com"}
-        ],
-        restaurants: [
-          {"name":"Finestra","address":"1370 York Ave, New York, NY","website":"https://finestrarestaurant.com"}
-        ],
-        pizza_bagels: [
-          {"name":"Patsy’s Pizzeria (UES)","address":"206 E 60th St, New York, NY","website":"https://patsyspizzeria.us"}
-        ],
-        hidden_gems: [
-          {"name":"Levain Bakery (UES)","address":"1484 3rd Ave, New York, NY","website":"https://levainbakery.com"},
-          {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","website":"https://store.moma.org"}
-        ],
-        broadway_comedy: [
-          {"name":"TKTS Lincoln Center (David Rubenstein Atrium)","address":"61 W 62nd St, New York, NY 10023","website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/"}
-        ],
-        activities: [
-          {"name":"The Met Museum","address":"1000 5th Ave, New York, NY","website":"https://metmuseum.org"}
-        ],
-        iconic: [
-          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"}
-        ]
-      }
+  clinics: [{
+    name: "Weill Cornell Medicine (1305 York Ave)",
+    address: "1305 York Ave, New York, NY 10021",
+    website: "https://weillcornell.org",
+    categories: {
+      cafes: [{ name:"Maman UES", address:"1424 3rd Ave, New York, NY", website:"https://mamannyc.com" }],
+      restaurants: [{ name:"Finestra", address:"1370 York Ave, New York, NY", website:"https://finestrarestaurant.com" }],
+      pizza_bagels: [{ name:"Patsy’s Pizzeria (UES)", address:"206 E 60th St, New York, NY", website:"https://patsyspizzeria.us" }],
+      hidden_gems: [{ name:"Levain Bakery (UES)", address:"1484 3rd Ave, New York, NY", website:"https://levainbakery.com" }],
+      broadway_comedy: [{ name:"TKTS Lincoln Center (David Rubenstein Atrium)", address:"61 W 62nd St, New York, NY 10023", website:"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/" }],
+      activities: [{ name:"The Met Museum", address:"1000 5th Ave, New York, NY", website:"https://metmuseum.org" }],
+      iconic: [{ name:"MoMA – Museum of Modern Art", address:"11 W 53rd St, New York, NY", website:"https://www.moma.org" }]
     }
-  ]
+  }]
 };
 
-// ================== Category constants ==================
-const BAKERY_RE  = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
+// ---------- Categorization constants ----------
+const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
 const ICONIC_GLOBAL = [
@@ -137,17 +124,16 @@ const ICONIC_GLOBAL = [
   {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops", website:"https://www.bigbustours.com/new-york"},
   {name:"TopView Sightseeing (Hop-on Hop-off)", address:"Citywide stops", website:"https://topviewnyc.com"}
 ];
-
 const NAVIGATING = [
-  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"Tip: OMNY contactless works on all subways and buses."},
+  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"OMNY tap-to-pay works on all subways & buses."},
   {name:"MTA Bus Map & Service", address:"Citywide", website:"https://new.mta.info/maps/bus"},
   {name:"Grand Central Terminal", address:"89 E 42nd St, New York, NY", website:"https://www.grandcentralterminal.com"},
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ================== Dedupe helper ==================
+// ---------- Dedupe helper ----------
 function dedupeByName(list){
-  const seen = new Set(); const out = [];
+  const out = []; const seen = new Set();
   for(const x of (list || [])){
     const k = (x?.name || '').toLowerCase();
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
@@ -155,7 +141,10 @@ function dedupeByName(list){
   return out;
 }
 
-// ================== IMPORTANT: remapClinicCategories (hoisted & global) ==================
+// ===================================================================
+// IMPORTANT: Define remapClinicCategories *before* any call to it.
+// Use a hoisted function declaration and also attach to window.
+// ===================================================================
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -169,8 +158,8 @@ function remapClinicCategories(c){
   const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name || ''));
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
-  const nyc_shopping = dedupeByName(shoppingFromHidden);
-  const iconic_mustsees = dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
+  const nyc_shopping   = dedupeByName(shoppingFromHidden);
+  const iconic_mustsees= dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
 
   return {
     cafes_bakeries,
@@ -182,34 +171,9 @@ function remapClinicCategories(c){
     navigating: NAVIGATING
   };
 }
-window.remapClinicCategories = remapClinicCategories; // extra safety for module scopes
+window.remapClinicCategories = remapClinicCategories; // guard against scope/module issues
 
-// ================== Data loading ==================
-async function loadData(){
-  try{
-    let res = await fetch('nyc_fertility_locations.json');
-    if(!res.ok) res = await fetch('/nyc_fertility_locations.json');
-    if(!res.ok){
-      DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
-      return;
-    }
-    const json = await res.json();
-    if(!json || !Array.isArray(json.clinics)){
-      DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (JSON format issue). Expect { "clinics": [...] }', 'error');
-      return;
-    }
-    DATA = json; LOADED = true;
-    banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
-  }catch(e){
-    DATA = SAMPLE; LOADED = true;
-    banner('Loaded SAMPLE data (unexpected fetch error). See console for details.', 'error');
-    console.error(e);
-  }
-}
-
-// ================== Rendering helpers ==================
+// ---------- Rendering ----------
 function itemHTML(it, clinicAddress){
   const name = it?.name || 'Unnamed';
   const addr = it?.address || '';
@@ -250,7 +214,8 @@ function sectionHTML(title, list, clinicAddress){
   `;
 }
 function renderClinic(clinic){
-  const m = remapClinicCategories(clinic); // <- guaranteed defined
+  // remapClinicCategories is DEFINITELY defined here (hoisted above)
+  const m = remapClinicCategories(clinic);
   const head = `
     <div class="card">
       <h2>${clinic.name} <span class="badge">Clinic</span></h2>
@@ -278,59 +243,77 @@ async function fillDistancesFor(clinic){
   }
 }
 
-// ================== Search / UI ==================
-async function ensureLoaded(){ if(!LOADED) await loadData(); }
-
-async function doSearch(){
-  await ensureLoaded();
-  const results = document.querySelector('#results');
-  const input = document.querySelector('#query');
-  if(!results) return;
-
-  const q = (input?.value || '').trim().toLowerCase();
-  let list = DATA.clinics || [];
-  if(q){
-    list = list.filter(c =>
-      (c?.name || '').toLowerCase().includes(q) ||
-      (c?.address || '').toLowerCase().includes(q)
-    );
+// ---------- Data loading ----------
+async function loadData(){
+  try{
+    let res = await fetch('nyc_fertility_locations.json');
+    if(!res.ok) res = await fetch('/nyc_fertility_locations.json');
+    if(!res.ok){
+      DATA = SAMPLE; LOADED = true;
+      banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
+      return;
+    }
+    const json = await res.json();
+    if(!json || !Array.isArray(json.clinics)){
+      DATA = SAMPLE; LOADED = true;
+      banner('Loaded SAMPLE data (JSON format issue). Expect { "clinics": [...] }', 'error');
+      return;
+    }
+    DATA = json; LOADED = true;
+    banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
+  }catch(e){
+    DATA = SAMPLE; LOADED = true;
+    banner('Loaded SAMPLE data (unexpected fetch error). See console for details.', 'error');
+    console.error(e);
   }
+}
+
+// ---------- Search / UI ----------
+function filterClinics(q){
+  const needle = q.toLowerCase();
+  return (DATA.clinics || []).filter(c =>
+    (c?.name || '').toLowerCase().includes(needle) ||
+    (c?.address || '').toLowerCase().includes(needle)
+  );
+}
+
+async function search(){
+  if(!LOADED) await loadData();
+  const q = ($input?.value || '').trim();
+  let list = DATA.clinics || [];
+  if(q) list = filterClinics(q);
+  if(!$results) return;
   if(!list.length){
-    results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or an address like “1305 York”.</p></div>`;
+    $results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or “1305 York”.</p></div>`;
     return;
   }
-  results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list) await fillDistancesFor(clinic);
+  $results.innerHTML = list.map(renderClinic).join('');
+  for(const clinic of list){ await fillDistancesFor(clinic); }
 }
 
 async function showAll(){
-  await ensureLoaded();
-  const results = document.querySelector('#results');
-  const suggestions = document.querySelector('#suggestions');
-  if(suggestions) suggestions.textContent = `Clinics: ${DATA.clinics.map(c=>c.name).join(' · ')}`;
-  if(!results) return;
+  if(!LOADED) await loadData();
   const list = DATA.clinics || [];
-  results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list) await fillDistancesFor(clinic);
+  if(!$results) return;
+  $results.innerHTML = list.map(renderClinic).join('');
+  for(const clinic of list){ await fillDistancesFor(clinic); }
 }
 
-// ================== Init ==================
+// ---------- Init ----------
 window.addEventListener('DOMContentLoaded', async () => {
-  const btnSearch = document.querySelector('#searchBtn');
-  const btnAll = document.querySelector('#showAllBtn');
+  if($searchBtn) $searchBtn.disabled = true;
+  if($showAllBtn) $showAllBtn.disabled = true;
 
-  if(btnSearch) btnSearch.disabled = true;
-  if(btnAll) btnAll.disabled = true;
+  await loadData();
 
-  await ensureLoaded();
+  if($suggestions && DATA?.clinics) $suggestions.textContent = `Clinics: ${DATA.clinics.map(c=>c.name).join(' · ')}`;
 
-  if(btnSearch) btnSearch.disabled = false;
-  if(btnAll) btnAll.disabled = false;
+  if($searchBtn) $searchBtn.disabled = false;
+  if($showAllBtn)  $showAllBtn.disabled = false;
 
   await showAll();
 
-  if(btnSearch) btnSearch.addEventListener('click', doSearch);
-  if(btnAll) btnAll.addEventListener('click', showAll);
-  const input = document.querySelector('#query');
-  if(input) input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
+  if($searchBtn) $searchBtn.addEventListener('click', search);
+  if($showAllBtn) $showAllBtn.addEventListener('click', showAll);
+  if($input) $input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') search(); });
 });
