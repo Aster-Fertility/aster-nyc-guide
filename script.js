@@ -1,28 +1,26 @@
 /* Aster Fertility • NYC Clinic Concierge
    script.js — FIX for “remapClinicCategories is not defined”
-   - Define remapClinicCategories FIRST (hoisted) and attach to window
-   - Robust data loading with sample fallback
-   - Directions links (clinic -> place)
-   - Optional distance lines (toggle ENABLE_DISTANCES)
+   - remapClinicCategories is defined FIRST (hoisted) and attached to window
+   - Robust data loading with fallback sample + small diagnostics banner
+   - Directions links (clinic -> place); optional distance lines (toggle)
 */
 
 'use strict';
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // set to false to disable distance lookups
+const ENABLE_DISTANCES = true; // set false to disable distance lookups
 
-// ---------- DOM helpers ----------
+// ---------------- UI helpers ----------------
 const $ = (s) => document.querySelector(s);
-const $results      = $('#results');
-const $input        = $('#query');
-const $searchBtn    = $('#searchBtn');
-const $showAllBtn   = $('#showAllBtn');
-const $suggestions  = $('#suggestions');
+const $results     = $('#results');
+const $input       = $('#query');
+const $searchBtn   = $('#searchBtn');
+const $showAllBtn  = $('#showAllBtn');
+const $suggestions = $('#suggestions');
 
-// ---------- Small banner for quick diagnostics ----------
-function banner(msg, type = 'info'){
-  if (!$results) return;
+function banner(msg, type='info'){
+  if(!$results) return;
   let el = document.getElementById('diagnostic-banner');
   if(!el){
     el = document.createElement('div');
@@ -30,17 +28,15 @@ function banner(msg, type = 'info'){
     el.style.cssText = 'margin:12px 0;padding:10px;border-radius:8px;font-size:14px';
     $results.parentElement.insertBefore(el, $results);
   }
-  el.style.background = type === 'error' ? '#fde2e1' : '#e7f3ff';
-  el.style.color = type === 'error' ? '#912018' : '#0b69a3';
+  el.style.background = type==='error' ? '#fde2e1' : '#e7f3ff';
+  el.style.color      = type==='error' ? '#912018' : '#0b69a3';
   el.textContent = msg;
 }
 
-// ---------- Maps helpers ----------
+// ---------------- Maps helpers ----------------
 function isAppleMapsPreferred(){ return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent); }
-function mapsLink(address){
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-}
-function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
+function mapsLink(address){ return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; }
+function mapsDirectionsLink(originAddress, destAddress, mode='driving'){
   if(!originAddress || !destAddress) return '';
   if(isAppleMapsPreferred()){
     const flag = mode === 'walking' ? 'w' : 'd';
@@ -49,10 +45,11 @@ function mapsDirectionsLink(originAddress, destAddress, mode = 'driving'){
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
 }
 
-// ---------- Distance helpers (optional; no API key) ----------
+// ---------------- Distance helpers (optional; no API key) ----------------
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
-const OSRM = 'https://router.project-osrm.org/route/v1';
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const OSRM      = 'https://router.project-osrm.org/route/v1';
+const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+
 async function geocode(address){
   if(!ENABLE_DISTANCES || !address) return null;
   try{
@@ -79,7 +76,7 @@ async function osrmDuration(profile, from, to){
     return r ? {seconds:r.duration, meters:r.distance} : null;
   }catch{ return null; }
 }
-function fmtMiles(m){ const mi = m/1609.344; return mi < 0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
+function fmtMiles(m){ const mi=m/1609.344; return mi<0.1 ? `${(mi*5280).toFixed(0)} ft` : `${mi.toFixed(1)} mi`; }
 function fmtMins(s){ return `${Math.round(s/60)} min`; }
 async function computeDistanceLine(fromAddr, toAddr){
   try{
@@ -95,7 +92,7 @@ async function computeDistanceLine(fromAddr, toAddr){
   }catch{ return ''; }
 }
 
-// ---------- SAMPLE (fallback if JSON missing/invalid) ----------
+// ---------------- Fallback SAMPLE ----------------
 const SAMPLE = {
   clinics: [{
     name: "Weill Cornell Medicine (1305 York Ave)",
@@ -113,7 +110,7 @@ const SAMPLE = {
   }]
 };
 
-// ---------- Categorization constants ----------
+// ---------------- Categorization constants ----------------
 const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -124,6 +121,7 @@ const ICONIC_GLOBAL = [
   {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops", website:"https://www.bigbustours.com/new-york"},
   {name:"TopView Sightseeing (Hop-on Hop-off)", address:"Citywide stops", website:"https://topviewnyc.com"}
 ];
+
 const NAVIGATING = [
   {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"OMNY tap-to-pay works on all subways & buses."},
   {name:"MTA Bus Map & Service", address:"Citywide", website:"https://new.mta.info/maps/bus"},
@@ -131,20 +129,19 @@ const NAVIGATING = [
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
-// ---------- Dedupe helper ----------
+// ---------------- Dedupe helper ----------------
 function dedupeByName(list){
-  const out = []; const seen = new Set();
-  for(const x of (list || [])){
-    const k = (x?.name || '').toLowerCase();
+  const out=[]; const seen=new Set();
+  for(const x of (list||[])){
+    const k=(x?.name||'').toLowerCase();
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
   return out;
 }
 
-// ===================================================================
-// IMPORTANT: Define remapClinicCategories *before* any call to it.
-// Use a hoisted function declaration and also attach to window.
-// ===================================================================
+// ====================================================================
+// IMPORTANT: Define remapClinicCategories *first* (hoisted) & global.
+// ====================================================================
 function remapClinicCategories(c){
   const cats = c?.categories || {};
   const cafes = cats.cafes || [];
@@ -154,8 +151,8 @@ function remapClinicCategories(c){
   const broadway = cats.broadway_comedy || [];
   const iconicExisting = cats.iconic || cats.activities || [];
 
-  const bakeriesFromHidden = hidden.filter(x => BAKERY_RE.test(x?.name || ''));
-  const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name || ''));
+  const bakeriesFromHidden = hidden.filter(x => BAKERY_RE.test(x?.name||''));
+  const shoppingFromHidden = hidden.filter(x => SHOPPING_RE.test(x?.name||''));
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
   const nyc_shopping   = dedupeByName(shoppingFromHidden);
@@ -171,13 +168,13 @@ function remapClinicCategories(c){
     navigating: NAVIGATING
   };
 }
-window.remapClinicCategories = remapClinicCategories; // guard against scope/module issues
+window.remapClinicCategories = remapClinicCategories; // safety for scope/module
 
-// ---------- Rendering ----------
+// ---------------- Rendering ----------------
 function itemHTML(it, clinicAddress){
   const name = it?.name || 'Unnamed';
   const addr = it?.address || '';
-  const phone = it?.phone || '';
+  const phone= it?.phone || '';
   const site = it?.website || '';
   const note = it?.note || '';
 
@@ -195,7 +192,7 @@ function itemHTML(it, clinicAddress){
   return `
     <div class="item card">
       <h4>${name}</h4>
-      ${addr ? `<p>${addr}${phone ? ` • ${phone}` : ''}</p>` : (phone ? `<p>${phone}</p>` : '')}
+      ${addr ? `<p>${addr}${phone ? ` • ${phone}`:''}</p>` : (phone ? `<p>${phone}</p>`:'')}
       ${links ? `<p>${links}</p>` : ''}
       ${note ? `<p>${note}</p>` : ''}
       ${distanceDiv}
@@ -207,14 +204,12 @@ function sectionHTML(title, list, clinicAddress){
   return `
     <div class="card">
       <h3 class="section-title">${title}</h3>
-      <div class="grid">
-        ${list.map(it => itemHTML(it, clinicAddress)).join('')}
-      </div>
+      <div class="grid">${list.map(it => itemHTML(it, clinicAddress)).join('')}</div>
     </div>
   `;
 }
 function renderClinic(clinic){
-  // remapClinicCategories is DEFINITELY defined here (hoisted above)
+  // remapClinicCategories is hoisted and attached to window, so it's available here.
   const m = remapClinicCategories(clinic);
   const head = `
     <div class="card">
@@ -243,7 +238,7 @@ async function fillDistancesFor(clinic){
   }
 }
 
-// ---------- Data loading ----------
+// ---------------- Data loading ----------------
 async function loadData(){
   try{
     let res = await fetch('nyc_fertility_locations.json');
@@ -268,7 +263,7 @@ async function loadData(){
   }
 }
 
-// ---------- Search / UI ----------
+// ---------------- Search / UI ----------------
 function filterClinics(q){
   const needle = q.toLowerCase();
   return (DATA.clinics || []).filter(c =>
@@ -299,7 +294,7 @@ async function showAll(){
   for(const clinic of list){ await fillDistancesFor(clinic); }
 }
 
-// ---------- Init ----------
+// ---------------- Init ----------------
 window.addEventListener('DOMContentLoaded', async () => {
   if($searchBtn) $searchBtn.disabled = true;
   if($showAllBtn) $showAllBtn.disabled = true;
