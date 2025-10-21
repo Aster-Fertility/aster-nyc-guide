@@ -4,6 +4,28 @@ const $results = $q('#results');
 const $input = $q('#query');
 const $suggestions = $q('#suggestions');
 
+function isAppleMapsPreferred(){
+  return /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+}
+
+// Single-place map link (unchanged)
+function mapsLink(address){
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
+
+// NEW: directions link from clinic -> place
+function mapsDirectionsLink(originAddress, destAddress, mode /* 'walking' | 'driving' */ = 'driving'){
+  if(!originAddress || !destAddress) return '';
+  if(isAppleMapsPreferred()){
+    // Apple Maps: dirflg=w (walking) or d (driving)
+    const flag = mode === 'walking' ? 'w' : 'd';
+    return `http://maps.apple.com/?saddr=${encodeURIComponent(originAddress)}&daddr=${encodeURIComponent(destAddress)}&dirflg=${flag}`;
+  }
+  // Google Maps Directions
+  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destAddress)}&travelmode=${mode}`;
+}
+
+
 async function loadData(){
   const res = await fetch('nyc_fertility_locations.json');
   DATA = await res.json();
