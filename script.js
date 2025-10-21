@@ -1,15 +1,16 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Distance Mode ON (robust)
-   - Loads JSON with fallback + diagnostics banner
-   - Live distance from clinic (walking & driving) via public OSRM (no key)
-   - Apple/Google directions links prefilled clinic -> place
+   script.js — Consolidated, Robust, Distance Mode ON
+   - Loads JSON with fallback sample + diagnostics banner
    - New categories: Cafés & Bakeries, NYC Shopping, Broadway & Comedy, Iconic NYC Must Sees, Navigating NYC
+   - Directions links (Apple/Google) clinic -> place
+   - Live distance from clinic (walking & driving) via public OSRM (no key)
 */
 
 let DATA = null;
 let LOADED = false;
-const ENABLE_DISTANCES = true; // <-- toggle here if you ever want to disable
+const ENABLE_DISTANCES = true; // toggle to false to disable distances
 
+// ================= DOM refs =================
 const $q = (sel) => document.querySelector(sel);
 const $results = $q('#results');
 const $input = $q('#query');
@@ -68,11 +69,8 @@ async function geocode(address){
     const key = 'geo:' + address;
     const cached = localStorage.getItem(key);
     if(cached) return JSON.parse(cached);
-    // gentle rate limiting for free service
-    await sleep(120);
-    const res = await fetch(NOMINATIM + encodeURIComponent(address), {
-      headers: { 'Accept-Language': 'en' }
-    });
+    await sleep(120); // be gentle to free service
+    const res = await fetch(NOMINATIM + encodeURIComponent(address), { headers: { 'Accept-Language':'en' }});
     if(!res.ok) return null;
     const data = await res.json();
     const pt = data && data[0] ? {lat:+data[0].lat, lon:+data[0].lon} : null;
@@ -119,7 +117,7 @@ async function computeDistanceLines(clinicAddr, placeAddr){
   }catch(e){ return ''; }
 }
 
-// ================= Data loading (with fallback sample) =================
+// ================= Fallback SAMPLE (if JSON missing) =================
 const SAMPLE = {
   clinics: [
     {
@@ -157,37 +155,7 @@ const SAMPLE = {
   ]
 };
 
-async function loadData(){
-  try{
-    let res = await fetch('nyc_fertility_locations.json');
-    if(!res.ok){
-      res = await fetch('/nyc_fertility_locations.json');
-    }
-    if(!res.ok){
-      DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
-      $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
-      return;
-    }
-    const json = await res.json();
-    if(!json || !Array.isArray(json.clinics)){
-      DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (JSON format issue). Expect { "clinics": [...] }', 'error');
-      $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
-      return;
-    }
-    DATA = json; LOADED = true;
-    banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
-    $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
-  }catch(e){
-    DATA = SAMPLE; LOADED = true;
-    banner('Loaded SAMPLE data (unexpected fetch error). See console for details.', 'error');
-    console.error(e);
-    $suggestions.innerHTML = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
-  }
-}
-
-// ================= Category remap (runtime) =================
+// ================= Category mapping constants =================
 const BAKERY_KEYWORDS = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
 const SHOPPING_KEYWORDS = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
 
@@ -206,6 +174,7 @@ const NAVIGATING = [
   {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
 ];
 
+// ================= Category helpers =================
 function dedupeByName(list){
   if(!Array.isArray(list)) return [];
   const seen = new Set(); const out = [];
@@ -217,7 +186,7 @@ function dedupeByName(list){
 }
 
 function remapClinicCategories(c){
-  const cats = c.categories || {};
+  const cats = c?.categories || {};
   const cafes = cats.cafes || [];
   const restaurants = cats.restaurants || [];
   const pizza = cats.pizza_bagels || [];
@@ -230,8 +199,8 @@ function remapClinicCategories(c){
 
   const cafes_bakeries = dedupeByName([...cafes, ...bakeriesFromHidden]);
   const nyc_shopping = dedupeByName(shoppingFromHidden);
-  const iconicMustSees = dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
-  const navigatingNYC = NAVIGATING;
+  const iconic_mustsees = dedupeByName([...iconicExisting, ...ICONIC_GLOBAL]);
+  const navigating = NAVIGATING;
 
   return {
     cafes_bakeries,
@@ -239,8 +208,8 @@ function remapClinicCategories(c){
     pizza_bagels: pizza,
     nyc_shopping,
     broadway_comedy: broadway,
-    iconic_mustsees: iconicMustSees,
-    navigating: navigatingNYC
+    iconic_mustsees,
+    navigating
   };
 }
 
@@ -261,167 +230,4 @@ function itemHTMLBase(it, clinicAddress){
     site ? `<a href="${site}" target="_blank" rel="noopener">Website</a>` : '',
     hasAddr ? `<a href="${mapsLink(addr)}" target="_blank" rel="noopener">Open in Maps</a>` : '',
     hasAddr ? `<a href="${dirDrive}" target="_blank" rel="noopener">Directions (Drive)</a>` : '',
-    hasAddr ? `<a href="${dirWalk}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''
-  ].filter(Boolean).join(' • ');
-
-  // include a placeholder for distance if enabled
-  const distanceDiv = (ENABLE_DISTANCES && hasAddr)
-    ? `<div class="distance" data-dist-for="${encodeURIComponent(addr)}"></div>`
-    : '';
-
-  return `
-    <div class="item card">
-      <h4>${name}</h4>
-      ${line1}
-      ${links ? `<p>${links}</p>` : ''}
-      ${note ? `<p>${note}</p>` : ''}
-      ${distanceDiv}
-    </div>
-  `;
-}
-
-function sectionHTML(title, arr, clinicAddress){
-  if(!arr || !arr.length) return '';
-  return `
-    <div class="card">
-      <h3 class="section-title">${title}</h3>
-      <div class="grid">
-        ${arr.map(it => itemHTMLBase(it, clinicAddress)).join('')}
-      </div>
-    </div>
-  `;
-}
-
-// --- SAFETY SHIM: ensure remapClinicCategories exists in global scope ---
-const BAKERY_KEYWORDS = BAKERY_KEYWORDS || /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
-const SHOPPING_KEYWORDS = SHOPPING_KEYWORDS || /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
-
-const ICONIC_GLOBAL = typeof ICONIC_GLOBAL !== 'undefined' ? ICONIC_GLOBAL : [
-  {name:"Statue of Liberty & Ellis Island (Statue City Cruises)", address:"Battery Park, New York, NY", website:"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
-  {name:"9/11 Memorial & Museum (World Trade Center)", address:"180 Greenwich St, New York, NY", website:"https://www.911memorial.org"},
-  {name:"NYC Ferry (Harbor sightseeing)", address:"Multiple piers citywide", website:"https://www.ferry.nyc"},
-  {name:"Big Bus Tours NYC (Hop-on Hop-off)", address:"Citywide stops (Times Sq, Downtown, Uptown)", website:"https://www.bigbustours.com/new-york"},
-  {name:"TopView Sightseeing (Hop-on Hop-off)", address:"Citywide stops", website:"https://topviewnyc.com"}
-];
-
-const NAVIGATING = typeof NAVIGATING !== 'undefined' ? NAVIGATING : [
-  {name:"MTA Subway Map & Guide", address:"Citywide", website:"https://new.mta.info/maps/subway", note:"Tip: OMNY contactless works on all subways and buses."},
-  {name:"MTA Bus Map & Service", address:"Citywide", website:"https://new.mta.info/maps/bus"},
-  {name:"Grand Central Terminal", address:"89 E 42nd St, New York, NY", website:"https://www.grandcentralterminal.com"},
-  {name:"Penn Station (LIRR/Amtrak/NJ Transit)", address:"421 8th Ave, New York, NY", website:"https://www.amtrak.com/stations/nyp"}
-];
-
-if (typeof window.remapClinicCategories !== 'function') {
-  window.remapClinicCategories = function remapClinicCategories(c){
-    const cats = (c && c.categories) || {};
-    const cafes = cats.cafes || [];
-    const restaurants = cats.restaurants || [];
-    const pizza = cats.pizza_bagels || [];
-    const hidden = cats.hidden_gems || [];
-    const broadway = cats.broadway_comedy || [];
-    const iconicExisting = cats.iconic || cats.activities || [];
-
-    const bakeriesFromHidden = hidden.filter(x => (x?.name||'').match(BAKERY_KEYWORDS));
-    const shoppingFromHidden = hidden.filter(x => (x?.name||'').match(SHOPPING_KEYWORDS));
-
-    // simple dedupe by name
-    const dedupe = (arr) => {
-      const seen = new Set();
-      return (arr||[]).filter(x => {
-        const k = (x?.name||'').toLowerCase();
-        if(!k || seen.has(k)) return false;
-        seen.add(k); return true;
-      });
-    };
-
-    return {
-      cafes_bakeries: dedupe([...(cafes||[]), ...(bakeriesFromHidden||[])]),
-      restaurants: dedupe(restaurants),
-      pizza_bagels: dedupe(pizza),
-      nyc_shopping: dedupe(shoppingFromHidden),
-      broadway_comedy: dedupe(broadway),
-      iconic_mustsees: dedupe([...(iconicExisting||[]), ...ICONIC_GLOBAL]),
-      navigating: NAVIGATING
-    };
-  };
-}
-// ------------------------------------------------------------------------
-
-function renderClinic(clinic){
-  const mapped = remapClinicCategories(clinic);
-  const header = `
-    <div class="card">
-      <h2>${clinic.name} <span class="badge">Clinic</span></h2>
-      <p>${clinic.address} • <a href="${clinic.website}" target="_blank" rel="noopener">Website</a> • <a href="${mapsLink(clinic.address)}" target="_blank" rel="noopener">Open in Maps</a></p>
-    </div>
-  `;
-  return header + [
-    sectionHTML('Cafés & Bakeries', mapped.cafes_bakeries, clinic.address),
-    sectionHTML('Restaurants', mapped.restaurants, clinic.address),
-    sectionHTML('Pizza & Bagels', mapped.pizza_bagels, clinic.address),
-    sectionHTML('NYC Shopping', mapped.nyc_shopping, clinic.address),
-    sectionHTML('Broadway & Comedy', mapped.broadway_comedy, clinic.address),
-    sectionHTML('Iconic NYC Must Sees', mapped.iconic_mustsees, clinic.address),
-    sectionHTML('Navigating NYC', mapped.navigating, clinic.address),
-  ].join('');
-}
-
-async function fillAllDistancesForClinic(clinic){
-  if(!ENABLE_DISTANCES) return;
-  const distTargets = document.querySelectorAll('.distance[data-dist-for]');
-  const cAddr = clinic.address;
-  for(const el of distTargets){
-    const placeAddr = decodeURIComponent(el.getAttribute('data-dist-for')||'');
-    if(!placeAddr){ el.remove(); continue; }
-    const line = await computeDistanceLines(cAddr, placeAddr);
-    el.outerHTML = line || '';
-  }
-}
-
-// ================= Search / UI =================
-async function ensureLoaded(){
-  if(LOADED) return;
-  await loadData();
-}
-async function doSearch(){
-  await ensureLoaded();
-  const q = ($input.value||'').trim();
-  let list = DATA.clinics || [];
-  if(q){
-    const needle = q.toLowerCase();
-    list = list.filter(c =>
-      (c?.name||'').toLowerCase().includes(needle) ||
-      (c?.address||'').toLowerCase().includes(needle)
-    );
-  }
-  if(!list.length){
-    $results.innerHTML = `<div class="card"><p>No clinics matched. Try “Weill Cornell” or an address like “1305 York”.</p></div>`;
-    return;
-  }
-  $results.innerHTML = list.map(renderClinic).join('');
-  // compute distances after render (async)
-  for(const clinic of list){
-    await fillAllDistancesForClinic(clinic);
-  }
-}
-async function showAll(){
-  await ensureLoaded();
-  const list = DATA.clinics || [];
-  $results.innerHTML = list.map(renderClinic).join('');
-  for(const clinic of list){
-    await fillAllDistancesForClinic(clinic);
-  }
-}
-
-// ================= Init =================
-window.addEventListener('DOMContentLoaded', async () => {
-  $searchBtn.disabled = true;
-  $showAllBtn.disabled = true;
-  await ensureLoaded();
-  $searchBtn.disabled = false;
-  $showAllBtn.disabled = false;
-  await showAll(); // show everything on load so you can verify quickly
-});
-$searchBtn.addEventListener('click', doSearch);
-$showAllBtn.addEventListener('click', showAll);
-$input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doSearch(); });
+    hasAddr ? `<a href="${dirWalk}" target="_blank" rel_
