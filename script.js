@@ -1,5 +1,6 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Geocode Bias + Distance Guard (fixes OSRM 400s) + In-App Updates
+   script.js — Robust JSON Loader + Geocode Bias + Distance Guard + In-App Updates
+   - Loads nyc_fertility_locations.json as TEXT, sanitizes, then parses (fixes common JSON issues)
    - Bias Nominatim to US + clinic state (NY/NJ/CT)
    - If a place geocodes >300 km from clinic, retry with state hint; if still far, skip distances
    - Replaces NYU Langone entry and adds shopping/iconic items to all other clinics (de-duped)
@@ -383,6 +384,32 @@ async function fillDistancesFor(clinic, container){
   }
 }
 
+// ---------------- JSON sanitizer ----------------
+function sanitizeJsonText(text){
+  if(typeof text !== 'string') return text;
+  // Remove BOM
+  let t = text.replace(/^\uFEFF/, '');
+  // Remove /* block comments */ and // line comments
+  t = t.replace(/\/\*[\s\S]*?\*\//g, '');
+  t = t.replace(/(^|\s)\/\/[^\n\r]*/g, '$1');
+  // Remove trailing commas before } or ]
+  t = t.replace(/,\s*([}\]])/g, '$1');
+  // Trim whitespace
+  return t.trim();
+}
+
+function safeParseJson(text){
+  try{
+    return JSON.parse(text);
+  }catch(e){
+    console.warn('JSON.parse failed, attempting sanitization:', e?.message);
+    const cleaned = sanitizeJsonText(text);
+    const parsed = JSON.parse(cleaned); // throws if still bad
+    console.warn('JSON required sanitization (comments/trailing commas removed).');
+    return parsed;
+  }
+}
+
 // ---------------- Data loading ----------------
 async function loadData(){
   try{
@@ -396,7 +423,21 @@ async function loadData(){
       applyGlobalEnhancements(DATA);
       return;
     }
-    const json = await res.json();
+
+    // Read as TEXT so we can sanitize common JSON issues
+    const rawText = await res.text();
+    let json;
+    try{
+      json = safeParseJson(rawText);
+    }catch(parseErr){
+      console.error('Sanitized JSON still invalid:', parseErr);
+      DATA = SAMPLE; LOADED = true;
+      banner('Your nyc_fertility_locations.json has a formatting error. Loaded SAMPLE data so the app still works. Open console for details.', 'error');
+      applyNYUUpdate(DATA);
+      applyGlobalEnhancements(DATA);
+      return;
+    }
+
     if(!json || !Array.isArray(json.clinics)){
       DATA = SAMPLE; LOADED = true;
       banner('Loaded SAMPLE data (JSON must be { "clinics": [...] }).', 'error');
