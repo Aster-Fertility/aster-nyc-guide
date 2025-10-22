@@ -396,7 +396,4 @@ window.addEventListener('DOMContentLoaded', async () => {
     showAllBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); showAll(); });
     if(!showAllBtn.getAttribute('type')) showAllBtn.setAttribute('type','button');
   }
-
-  `;
-  }
 });
