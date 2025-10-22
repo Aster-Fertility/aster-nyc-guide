@@ -1,5 +1,11 @@
 :root{
-  --brand:#244c66; --ink:#1f2937; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff; --accent:#d7e8f1;
+  --brand:#4a1e16;           /* deep cocoa (from petals) */
+  --accent:#f6a21a;          /* marigold (from center)  */
+  --ink:#2e2522;             /* body text */
+  --muted:#6d5e57;           /* muted text */
+  --bg:#fff7ee;              /* neutral cream page background */
+  --card:#ffffff;            /* card background */
+  --accent-soft:#fde9c9;     /* soft wash using accent */
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -26,3 +32,14 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Aria
 /* NEW */
 .distance{margin-top:4px;font-size:12px;color:#475569}
 .distance em{font-style:normal;color:#0b69a3}
+
+
+/* Branding tweaks */
+.header{background:linear-gradient(90deg,var(--bg),#fff7f0)}
+.header h1{color:var(--brand)}
+.section-title{color:var(--brand)}
+.search button{background:var(--brand)}
+.search .secondary{background:#f0e6de;color:var(--brand)}
+.item a{color:#7a2d0b}
+.badge{background:#fff1dd;color:#7a2d0b}
+.card{border:1px solid #f0e6de}
