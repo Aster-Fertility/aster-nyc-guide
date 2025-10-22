@@ -17,8 +17,6 @@ const $results = $('#results');
 const $input = $('#query');
 const $searchBtn = $('#searchBtn');
 const $showAllBtn = $('#showAllBtn');
-const $suggestions = $('#suggestions');
-
 function banner(msg, type='info'){
   if(!$results) return;
   let el = document.getElementById('diagnostic-banner');
@@ -399,7 +397,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     if(!showAllBtn.getAttribute('type')) showAllBtn.setAttribute('type','button');
   }
 
-  if($suggestions && DATA?.clinics){
-    $suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
+  `;
   }
 });
