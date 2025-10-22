@@ -317,7 +317,6 @@ async function loadData(){
       return;
     }
     DATA = json; LOADED = true;
-    banner(ON' : 'OFF'}`, 'info');
   }catch(e){
     DATA = SAMPLE; LOADED = true;
     banner('Loaded SAMPLE data (unexpected fetch error). See console.', 'error');
@@ -370,7 +369,7 @@ async function showAll(){
 window.addEventListener('DOMContentLoaded', async () => {
   const results = document.querySelector('#results');
   if(results){
-    results.innerHTML = `<div class="card"><p>Enter your clinic address or name to find cafés, restaurants, treats, and activities nearby.</p></div>`;
+    results.innerHTML = `<div class="card"><p>Enter your clinic to find cafés, restaurants, treats, and gentle activities nearby.</p></div>`;
   }
 
   await loadData();
