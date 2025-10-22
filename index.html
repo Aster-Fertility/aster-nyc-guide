@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
 </head>
 <body>
   <header class="header">
+    <img src="assets/aster-logo.png" alt="Aster Concierge Fertility" style="height:54px;vertical-align:middle;display:block;margin-bottom:10px">
     <h1>Aster Fertility • NYC Clinic Concierge</h1>
     <p class="tagline">A "Decidedly Different" approach to surrogacy support. Enter your clinic to find cafés, restaurants, treats, and activities nearby while you are in NYC for your medical screening and IVF transfer.</p>
   </header>
@@ -19,14 +21,22 @@
       <input id="query" type="text" placeholder="e.g., 1305 York Avenue or Weill Cornell" />
       <button id="searchBtn">Search</button>
       <button id="showAllBtn" class="secondary">Show all clinics</button>
-      <div id="suggestions" class="suggestions"></div>
+      <div class="card" id="howto" style="margin-top:10px">
+        <h3 class="section-title" style="margin-top:0">How to use</h3>
+        <ol style="margin:6px 0 0 18px; padding-left: 4px;">
+          <li>type your NYC clinic into the search bar</li>
+          <li>find local restaurants and things to do within a 15 minute walk of your clinic</li>
+          <li>decide where to go for some NYC fun!</li>
+        </ol>
+      </div>
+
     </section>
 
     <section id="results"></section>
   </main>
 
   <footer class="footer">
-    <p>Curated for Aster Fertility</p>
+    <p>Copyright 2026 | Curated for Aster Concierge Fertility</p>
   </footer>
 
   <script src="script.js"></script>
