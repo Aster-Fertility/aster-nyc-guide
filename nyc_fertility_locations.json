@@ -1,4 +1,4 @@
-{
+ {
   "clinics": [
     {
       "name": "NYU Langone Fertility Center (Kips Bay)",
@@ -109,21 +109,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "Same-day Broadway discounts; quickest by subway or cab from Kips Bay."
-          },
-          {
-            "name": "Amateur Comedy Club",
-            "address": "2150 E 36th St, New York, NY 10016",
-            "phone": "(212) 685-1032",
-            "website": "https://amateurcomedyclub.org/",
-            "note": "The oldest continuously operating theatre of its kind in the nation."
-          }
-        ],
-        "activities": [
-          {
-            "name": "Bryant Park",
-            "address": "6th Ave & W 42nd St, New York, NY 10018",
-            "website": "https://bryantpark.org"
+            "note": "Same-day discounted Broadway tickets."
           }
         ],
         "iconic": [
@@ -140,6 +126,31 @@
             "phone": "(212) 310-6600",
             "website": "https://www.centralparknyc.org/",
             "note": "NYC’s iconic 843-acre park with lawns, lakes, and scenic loops."
+          },
+          {
+            "name": "Statue of Liberty & Ellis Island (Statue City Cruises)",
+            "address": "Battery Park, New York, NY",
+            "website": "https://www.cityexperiences.com/new-york/city-cruises/statue/"
+          },
+          {
+            "name": "9/11 Memorial & Museum",
+            "address": "180 Greenwich St, New York, NY",
+            "website": "https://www.911memorial.org"
+          },
+          {
+            "name": "NYC Ferry (Harbor sightseeing)",
+            "address": "Multiple piers citywide",
+            "website": "https://www.ferry.nyc"
+          },
+          {
+            "name": "Big Bus Tours NYC (Hop-on Hop-off)",
+            "address": "Citywide stops",
+            "website": "https://www.bigbustours.com/new-york"
+          },
+          {
+            "name": "TopView Sightseeing (Hop-on Hop-off)",
+            "address": "Citywide stops",
+            "website": "https://topviewnyc.com"
           }
         ]
       }
@@ -240,7 +251,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "5–10 minutes’ walk from CCRM; same-day discounts."
+            "note": "5–10 minutes’ walk; same-day discounts."
           },
           {
             "name": "Broadway Comedy Club",
@@ -284,7 +295,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -447,7 +458,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -559,7 +570,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "5–8 minutes’ walk from Spring; same-day deals."
+            "note": "5–8 minutes’ walk; same-day deals."
           },
           {
             "name": "Broadway Comedy Club",
@@ -603,7 +614,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -747,7 +758,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -897,7 +908,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -1042,7 +1053,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -1192,7 +1203,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
@@ -1343,7 +1354,7 @@
           },
           {
             "name": "Big Bus Tours NYC (Hop-on Hop-off)",
-            "address": "Citywide stops (Times Sq, Downtown, Uptown)",
+            "address": "Citywide stops",
             "website": "https://www.bigbustours.com/new-york"
           },
           {
