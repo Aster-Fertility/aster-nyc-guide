@@ -1,57 +1,128 @@
 {
   "clinics": [
-    {
-      "name": "NYU Langone Fertility Center",
-      "address": "660 First Ave, New York, NY 10016",
-      "website": "https://nyulangone.org",
-      "categories": {
-        "cafes": [
-          {"name":"Culture Espresso","address":"72 W 38th St, New York, NY","phone":"(212) 302-0200","website":"https://www.cultureespresso.com"},
-          {"name":"Birch Coffee","address":"21 E 27th St, New York, NY","phone":"(212) 686-1444","website":"https://birchcoffee.com"}
-        ],
-        "restaurants": [
-          {"name":"La Pecora Bianca (NoMad)","address":"1133 Broadway, New York, NY","phone":"(212) 498-9696","website":"https://lapecorabianca.com"},
-          {"name":"Gemini Diner","address":"641 2nd Ave, New York, NY","phone":"(212) 532-9433","website":"https://geminidiner.com"}
-        ],
-        "pizza_bagels": [
-          {"name":"Joe’s Pizza","address":"7 Carmine St, New York, NY","phone":"(212) 366-1182","website":"https://www.joespizzanyc.com"},
-          {"name":"Ess-a-Bagel","address":"831 3rd Ave, New York, NY","phone":"(212) 980-1010","website":"https://www.ess-a-bagel.com"}
-        ],
-        "hidden_gems": [
-          {"name":"Fishs Eddy","address":"889 Broadway @ 19th St, New York, NY","phone":"(212) 420-9020","website":"https://www.fishseddy.com"},
-          {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","phone":"(212) 767-1050","website":"https://store.moma.org"},
-          {"name":"CityStore (NYC Official)","address":"1 Centre St, New York, NY","phone":"(212) 386-0000","website":"https://www.nyc.gov/citystore"},
-          {"name":"Levain Bakery (NoHo)","address":"340 Lafayette St, New York, NY","phone":"(917) 764-5705","website":"https://levainbakery.com"},
-          {"name":"Magnolia Bakery (Rockefeller Center)","address":"1240 6th Ave, New York, NY","phone":"(212) 767-1123","website":"https://www.magnoliabakery.com"},
-          {"name":"Dominique Ansel Bakery (SoHo)","address":"189 Spring St, New York, NY","phone":"(212) 219-2773","website":"https://dominiqueanselny.com"},
-          {"name":"Little Beet Table (GF-friendly)","address":"333 Park Ave S, New York, NY","phone":"(212) 729-1810","website":"https://www.littlebeettablenyc.com"},
-          {"name":"Senza Gluten (100% GF)","address":"206 Sullivan St, New York, NY","phone":"(212) 475-7775","website":"https://senzaglutennyc.com"}
-        ],
-        "broadway_comedy": [
-          {
-            "name":"TKTS Times Square (under the Red Steps)",
-            "address":"200 W 47th St, New York, NY 10036",
-            "phone":"(212) 912-9770",
-            "website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note":"Same-day discounts; ~15–20 min by subway/cab from NYU Langone."
-          },
-          {"name":"Gotham Comedy Club","address":"208 W 23rd St, New York, NY","phone":"(212) 367-9000","website":"https://gothamcomedyclub.com"}
-        ],
-        "activities": [
-          {"name":"Bryant Park","address":"6th Ave at 41st St, New York, NY","website":"https://bryantpark.org"},
-          {"name":"New York Public Library (Main)","address":"476 5th Ave, New York, NY","website":"https://nypl.org"}
-        ],
-        "iconic": [
-          {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","website":"https://www.moma.org"},
-          {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","website":"https://www.amnh.org"},
-          {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","website":"https://www.metmuseum.org"},
-          {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
-          {"name":"Big Bus Tours NYC (Hop-on Hop-off)","address":"Citywide stops (Times Sq, Downtown, Uptown)","website":"https://www.bigbustours.com/new-york"},
-          {"name":"TopView Sightseeing (Hop-on Hop-off)","address":"Citywide stops","website":"https://topviewnyc.com"},
-          {"name":"MTA Subway Guide & Map","address":"Citywide","website":"https://new.mta.info/maps/subway"}
-        ]
+   {
+  "name": "NYU Langone Fertility Center (Kips Bay)",
+  "address": "660 1st Ave, New York, NY 10016",
+  "website": "https://nyulangone.org/locations/fertility-center",
+  "categories": {
+    "cafes": [
+      {
+        "name": "Qahwah Valley Cafe",
+        "address": "630 1st Ave, New York, NY 10016",
+        "phone": "(917) 939-0628",
+        "website": "https://www.qahwahvalley.com/",
+        "note": "Yemeni coffee favorites like Sana’ani and Adani chai in a relaxed spot."
+      },
+      {
+        "name": "Charlotte Cafe",
+        "address": "605 2nd Ave, New York, NY 10016",
+        "phone": "(347) 318-7107",
+        "website": "https://www.instagram.com/charlottecafeofficial/",
+        "note": "Cozy neighborhood café for espresso drinks, pastries, and light bites."
+      },
+      {
+        "name": "Gold Coffee",
+        "address": "491 3rd Ave, New York, NY 10016",
+        "phone": "",
+        "website": "https://www.instagram.com/the_gold_coffee_official/",
+        "note": "Bright Murray Hill coffee bar; quick grab-and-go near the clinic."
       }
-    },
+    ],
+    "restaurants": [
+      {
+        "name": "Garlic New York Pizza Bar",
+        "address": "629 2nd Ave, New York, NY 10016",
+        "phone": "(646) 559-9500",
+        "website": "https://www.garlicnewyorkpizza.com/",
+        "note": "Neighborhood pizzeria known for garlicky pies and Sicilian slices."
+      },
+      {
+        "name": "Hole in the Wall – Murray Hill",
+        "address": "445 E 35th St, New York, NY 10016",
+        "phone": "(646) 858-0401",
+        "website": "https://holeinthewallnyc.com/murray-hill",
+        "note": "Australian-inspired café/restaurant at the American Copper Buildings—brunch through dinner."
+      },
+      {
+        "name": "Little Alley",
+        "address": "550 3rd Ave, New York, NY 10016",
+        "phone": "(646) 998-3976",
+        "website": "https://www.littlealley.nyc/",
+        "note": "Beloved Shanghainese spot—don’t miss the soup dumplings and noodles."
+      },
+      {
+        "name": "Lena’s Italian Kitchen (Kips Bay)",
+        "address": "551 2nd Ave, New York, NY 10016",
+        "phone": "(646) 846-5362",
+        "website": "https://www.lenasitaliankitchen.com/",
+        "note": "Comfort Italian pastas, parm heroes, and salads—easy for takeout."
+      }
+    ],
+    "pizza_bagels": [],
+    "hidden_gems": [
+      {
+        "name": "Chelsea Market",
+        "address": "75 9th Ave, New York, NY 10011",
+        "phone": "",
+        "website": "https://www.chelseamarket.com/",
+        "note": "Iconic indoor food & retail hall—perfect for grazing and gift shopping."
+      },
+      {
+        "name": "Vintage India NYC",
+        "address": "132 Lexington Ave, New York, NY 10016",
+        "phone": "(212) 213-0080",
+        "website": "https://vintageindianyc.com/",
+        "note": "South Asian formalwear, kurtas, and accessories—great for special occasions."
+      },
+      {
+        "name": "TTH Vintage Boutique (NoMad)",
+        "address": "40 W 25th St, New York, NY 10010",
+        "phone": "(212) 206-1174",
+        "website": "https://www.tthvintageboutique.org/",
+        "note": "Nonprofit vintage boutique; proceeds support programs for homeless mothers."
+      },
+      {
+        "name": "Artisans of New York (Seasonal @ Bryant Park Holiday Shops)",
+        "address": "41 W 40th St, New York, NY 10018",
+        "phone": "(631) 831-1831",
+        "website": "https://www.artisansofny.com/",
+        "note": "Glass art & gift kiosk at the Holiday Shops (typically Oct–Jan)."
+      },
+      {
+        "name": "Rizzoli Bookstore (NoMad)",
+        "address": "1133 Broadway, New York, NY 10010",
+        "phone": "(212) 759-2424",
+        "website": "https://www.rizzolibookstore.com/",
+        "note": "Gorgeous flagship bookstore for art, design, and illustrated titles."
+      },
+      {
+        "name": "Vintage Thrift Shop (Gramercy)",
+        "address": "286 3rd Ave, New York, NY 10010",
+        "phone": "(212) 871-0777",
+        "website": "https://www.vintagethriftshop.org/",
+        "note": "Nonprofit thrift with clothing, housewares, and vintage finds."
+      }
+    ],
+    "broadway_comedy": [],
+    "iconic": [
+      {
+        "name": "Edge (Hudson Yards)",
+        "address": "30 Hudson Yards, New York, NY 10001",
+        "phone": "(332) 204-8500",
+        "website": "https://www.edgenyc.com/",
+        "note": "100-story outdoor sky deck with a glass floor and sweeping views."
+      },
+      {
+        "name": "Central Park",
+        "address": "59th–110th St, Fifth Ave–Central Park West, New York, NY",
+        "phone": "(212) 310-6600",
+        "website": "https://www.centralparknyc.org/",
+        "note": "NYC’s iconic 843-acre park with lawns, lakes, and scenic loops."
+      }
+    ]
+  }
+}
+
     {
       "name": "CCRM New York",
       "address": "810 Seventh Ave, New York, NY 10019",
