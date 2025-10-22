@@ -1,7 +1,8 @@
 /* Aster Fertility • NYC Clinic Concierge
-   script.js — Geocode Bias + Distance Guard (fixes OSRM 400s)
+   script.js — Geocode Bias + Distance Guard (fixes OSRM 400s) + In-App Updates
    - Bias Nominatim to US + clinic state (NY/NJ/CT)
    - If a place geocodes >300 km from clinic, retry with state hint; if still far, skip distances
+   - Replaces NYU Langone entry and adds shopping/iconic items to all other clinics (de-duped)
    - Keeps directions links (Apple/Google), categories, and optional distance lines (toggle)
 */
 
@@ -177,7 +178,9 @@ const SAMPLE = {
 
 // ---------------- Category constants + helpers ----------------
 const BAKERY_RE   = /(Levain|Magnolia|Dominique Ansel|Senza Gluten|Modern Bread|Erin McKenna|Bakery|Bagel)/i;
-const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store)/i;
+
+// UPDATED: include Chelsea Market + boutiques so they appear in "NYC Shopping"
+const SHOPPING_RE = /(Fishs Eddy|MoMA Design Store|CityStore|Artists & Fleas|Pink Olive|Greenwich Letterpress|Mure \+ Grand|Transit Museum Store|NY Transit Museum Store|Chelsea Market|Vintage India|TTH Vintage|Artisans of New York|Rizzoli|Vintage Thrift)/i;
 
 const ICONIC_GLOBAL = [
   {name:"Statue of Liberty & Ellis Island (Statue City Cruises)", address:"Battery Park, New York, NY", website:"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
@@ -201,6 +204,84 @@ function dedupeByName(list){
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
   return out;
+}
+
+// ---------------- In-app updates (NYU + Global adds) ----------------
+function isNYUClinic(c){
+  const n = (c?.name || '').toLowerCase();
+  const a = (c?.address || '').toLowerCase();
+  return n.includes('nyu langone') || a.includes('660 1st ave');
+}
+function mergeItems(targetArr, newItems){
+  const names = new Set((targetArr || []).map(x => (x?.name || '').trim().toLowerCase()));
+  const out = targetArr ? targetArr.slice() : [];
+  for(const item of (newItems || [])){
+    const k = (item?.name || '').trim().toLowerCase();
+    if(k && !names.has(k)){ names.add(k); out.push(item); }
+  }
+  return out;
+}
+function applyNYUUpdate(db){
+  if(!db?.clinics) return;
+  const idx = db.clinics.findIndex(isNYUClinic);
+  if(idx === -1) return;
+  db.clinics[idx] = {
+    name: "NYU Langone Fertility Center (Kips Bay)",
+    address: "660 1st Ave, New York, NY 10016",
+    website: "https://nyulangone.org/locations/fertility-center",
+    categories: {
+      cafes: [
+        { name:"Qahwah Valley Cafe", address:"630 1st Ave, New York, NY 10016", phone:"(917) 939-0628", website:"https://www.qahwahvalley.com/", note:"Yemeni coffee favorites like Sana’ani and Adani chai in a relaxed spot." },
+        { name:"Charlotte Cafe", address:"605 2nd Ave, New York, NY 10016", phone:"(347) 318-7107", website:"https://www.instagram.com/charlottecafeofficial/", note:"Cozy neighborhood café for espresso drinks, pastries, and light bites." },
+        { name:"Gold Coffee", address:"491 3rd Ave, New York, NY 10016", phone:"", website:"https://www.instagram.com/the_gold_coffee_official/", note:"Bright Murray Hill coffee bar; quick grab-and-go near the clinic." }
+      ],
+      restaurants: [
+        { name:"Garlic New York Pizza Bar", address:"629 2nd Ave, New York, NY 10016", phone:"(646) 559-9500", website:"https://www.garlicnewyorkpizza.com/", note:"Neighborhood pizzeria known for garlicky pies and Sicilian slices." },
+        { name:"Hole in the Wall – Murray Hill", address:"445 E 35th St, New York, NY 10016", phone:"(646) 858-0401", website:"https://holeinthewallnyc.com/murray-hill", note:"Australian-inspired café/restaurant—brunch through dinner." },
+        { name:"Little Alley", address:"550 3rd Ave, New York, NY 10016", phone:"(646) 998-3976", website:"https://www.littlealley.nyc/", note:"Beloved Shanghainese spot—don’t miss the soup dumplings and noodles." },
+        { name:"Lena’s Italian Kitchen (Kips Bay)", address:"551 2nd Ave, New York, NY 10016", phone:"(646) 846-5362", website:"https://www.lenasitaliankitchen.com/", note:"Comfort Italian pastas, parm heroes, and salads—easy for takeout." }
+      ],
+      pizza_bagels: [],
+      hidden_gems: [
+        { name:"Chelsea Market", address:"75 9th Ave, New York, NY 10011", phone:"", website:"https://www.chelseamarket.com/", note:"Iconic indoor food & retail hall—perfect for grazing and gift shopping." },
+        { name:"Vintage India NYC", address:"132 Lexington Ave, New York, NY 10016", phone:"(212) 213-0080", website:"https://vintageindianyc.com/", note:"South Asian formalwear, kurtas, and accessories—great for special occasions." },
+        { name:"TTH Vintage Boutique (NoMad)", address:"40 W 25th St, New York, NY 10010", phone:"(212) 206-1174", website:"https://www.tthvintageboutique.org/", note:"Nonprofit vintage boutique; proceeds support programs for homeless mothers." },
+        { name:"Artisans of New York (Seasonal @ Bryant Park Holiday Shops)", address:"41 W 40th St, New York, NY 10018", phone:"(631) 831-1831", website:"https://www.artisansofny.com/", note:"Glass art & gift kiosk at the Holiday Shops (typically Oct–Jan)." },
+        { name:"Rizzoli Bookstore (NoMad)", address:"1133 Broadway, New York, NY 10010", phone:"(212) 759-2424", website:"https://www.rizzolibookstore.com/", note:"Gorgeous flagship bookstore for art, design, and illustrated titles." },
+        { name:"Vintage Thrift Shop (Gramercy)", address:"286 3rd Ave, New York, NY 10010", phone:"(212) 871-0777", website:"https://www.vintagethriftshop.org/", note:"Nonprofit thrift with clothing, housewares, and vintage finds." }
+      ],
+      broadway_comedy: [],
+      iconic: [
+        { name:"Edge (Hudson Yards)", address:"30 Hudson Yards, New York, NY 10001", phone:"(332) 204-8500", website:"https://www.edgenyc.com/", note:"100-story outdoor sky deck with a glass floor and sweeping views." },
+        { name:"Central Park", address:"59th–110th St, Fifth Ave–Central Park West, New York, NY", phone:"(212) 310-6600", website:"https://www.centralparknyc.org/", note:"NYC’s iconic 843-acre park with lawns, lakes, and scenic loops." }
+      ]
+    }
+  };
+}
+const GLOBAL_SHOPPING = [
+  { name:"Chelsea Market", address:"75 9th Ave, New York, NY 10011", phone:"", website:"https://www.chelseamarket.com/", note:"Iconic indoor food & retail hall—perfect for grazing and gift shopping." },
+  { name:"Rizzoli Bookstore (NoMad)", address:"1133 Broadway, New York, NY 10010", phone:"(212) 759-2424", website:"https://www.rizzolibookstore.com/", note:"Gorgeous flagship bookstore for art, design, and illustrated titles." },
+  { name:"Vintage Thrift Shop (Gramercy)", address:"286 3rd Ave, New York, NY 10010", phone:"(212) 871-0777", website:"https://www.vintagethriftshop.org/", note:"Nonprofit thrift with clothing, housewares, and vintage finds." },
+  { name:"Vintage India NYC", address:"132 Lexington Ave, New York, NY 10016", phone:"(212) 213-0080", website:"https://vintageindianyc.com/", note:"South Asian formalwear, kurtas, and accessories—great for special occasions." },
+  { name:"TTH Vintage Boutique (NoMad)", address:"40 W 25th St, New York, NY 10010", phone:"(212) 206-1174", website:"https://www.tthvintageboutique.org/", note:"Nonprofit vintage boutique; proceeds support programs for homeless mothers." },
+  { name:"Artisans of New York (Seasonal @ Bryant Park Holiday Shops)", address:"41 W 40th St, New York, NY 10018", phone:"(631) 831-1831", website:"https://www.artisansofny.com/", note:"Glass art & gift kiosk at the Holiday Shops (typically Oct–Jan)." }
+];
+const GLOBAL_ICONIC = [
+  { name:"Edge (Hudson Yards)", address:"30 Hudson Yards, New York, NY 10001", phone:"(332) 204-8500", website:"https://www.edgenyc.com/", note:"100-story outdoor sky deck with a glass floor and sweeping views." },
+  { name:"Central Park", address:"59th–110th St, Fifth Ave–Central Park West, New York, NY", phone:"(212) 310-6600", website:"https://www.centralparknyc.org/", note:"NYC’s iconic 843-acre park with lawns, lakes, and scenic loops." }
+];
+function applyGlobalEnhancements(db){
+  if(!db?.clinics) return;
+  for(const clinic of db.clinics){
+    if(isNYUClinic(clinic)) continue;
+    clinic.categories = clinic.categories || {};
+    clinic.categories.hidden_gems = clinic.categories.hidden_gems || [];
+    clinic.categories.iconic = clinic.categories.iconic || clinic.categories.activities || [];
+    clinic.categories.hidden_gems = mergeItems(clinic.categories.hidden_gems, GLOBAL_SHOPPING);
+    clinic.categories.iconic = mergeItems(clinic.categories.iconic, GLOBAL_ICONIC);
+    clinic.categories.hidden_gems = dedupeByName(clinic.categories.hidden_gems);
+    clinic.categories.iconic = dedupeByName(clinic.categories.iconic);
+  }
 }
 
 // ---------------- remapClinicCategories (hoisted & global) ----------------
@@ -310,20 +391,30 @@ async function loadData(){
     if(!res.ok){
       DATA = SAMPLE; LOADED = true;
       banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
+      // Apply in-app updates even to SAMPLE (if structure allows)
+      applyNYUUpdate(DATA);
+      applyGlobalEnhancements(DATA);
       return;
     }
     const json = await res.json();
     if(!json || !Array.isArray(json.clinics)){
       DATA = SAMPLE; LOADED = true;
       banner('Loaded SAMPLE data (JSON must be { "clinics": [...] }).', 'error');
+      applyNYUUpdate(DATA);
+      applyGlobalEnhancements(DATA);
       return;
     }
     DATA = json; LOADED = true;
+    // Apply updates on top of real data
+    applyNYUUpdate(DATA);
+    applyGlobalEnhancements(DATA);
     banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
   }catch(e){
     DATA = SAMPLE; LOADED = true;
     banner('Loaded SAMPLE data (unexpected fetch error). See console.', 'error');
     console.error(e);
+    applyNYUUpdate(DATA);
+    applyGlobalEnhancements(DATA);
   }
 }
 
