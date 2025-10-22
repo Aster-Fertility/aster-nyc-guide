@@ -1,4 +1,4 @@
- {
+{
   "clinics": [
     {
       "name": "NYU Langone Fertility Center (Kips Bay)",
@@ -151,6 +151,30 @@
             "name": "TopView Sightseeing (Hop-on Hop-off)",
             "address": "Citywide stops",
             "website": "https://topviewnyc.com"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -307,6 +331,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -470,6 +524,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -626,6 +710,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -770,6 +884,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -920,6 +1064,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -1065,6 +1239,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -1215,6 +1419,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
@@ -1366,6 +1600,36 @@
             "name": "MTA Subway Guide & Map",
             "address": "Citywide",
             "website": "https://new.mta.info/maps/subway"
+          },
+          {
+            "name": "High Line",
+            "address": "Gansevoort St to W 34th St, New York, NY",
+            "website": "https://www.thehighline.org",
+            "note": "Elevated park with art, gardens, and Hudson River views."
+          },
+          {
+            "name": "The Edge (Hudson Yards)",
+            "address": "30 Hudson Yards, New York, NY 10001",
+            "website": "https://www.edgenyc.com",
+            "note": "100-story outdoor sky deck with glass floor and panoramic views."
+          },
+          {
+            "name": "Times Square",
+            "address": "Broadway & 7th Ave, New York, NY",
+            "website": "https://www.timessquarenyc.org",
+            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+          },
+          {
+            "name": "Empire State Building",
+            "address": "20 W 34th St, New York, NY 10001",
+            "website": "https://www.esbnyc.com",
+            "note": "Iconic art-deco skyscraper with observation decks."
+          },
+          {
+            "name": "Rockefeller Center",
+            "address": "45 Rockefeller Plaza, New York, NY 10111",
+            "website": "https://www.rockefellercenter.com",
+            "note": "Home to Top of the Rock, Radio City, and the holiday tree."
           }
         ]
       }
