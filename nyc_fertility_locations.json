@@ -121,12 +121,61 @@
           }
         ]
       }
-    }
-    ,
+    },
     {
       "name": "CCRM New York",
       "address": "810 Seventh Ave, New York, NY 10019",
       "website": "https://www.ccrmivf.com/location/new-york",
       "categories": {
         "cafes": [
-          { "name": "Blue Bottle Coffee", "address": "1 Rockefeller Plaza, New York, NY", "phone": "(510) 653-3394", "website":
+          {
+            "name": "Blue Bottle Coffee",
+            "address": "1 Rockefeller Plaza, New York, NY",
+            "phone": "(510) 653-3394",
+            "website": "https://bluebottlecoffee.com"
+          },
+          {
+            "name": "Gregorys Coffee",
+            "address": "874 6th Ave, New York, NY",
+            "phone": "(212) 920-4252",
+            "website": "https://gregoryscoffee.com"
+          }
+        ],
+        "restaurants": [
+          {
+            "name": "Serafina (Times Square)",
+            "address": "224 W 49th St, New York, NY",
+            "phone": "(212) 247-1000",
+            "website": "https://serafinarestaurant.com"
+          },
+          {
+            "name": "Carmine’s Italian Restaurant",
+            "address": "200 W 44th St, New York, NY",
+            "phone": "(212) 221-3800",
+            "website": "https://carminesnyc.com"
+          },
+          {
+            "name": "Ellen’s Stardust Diner (Broadway-themed)",
+            "address": "1650 Broadway, New York, NY",
+            "phone": "(212) 956-5151",
+            "website": "https://www.ellensstardustdiner.com"
+          }
+        ],
+        "pizza_bagels": [
+          {
+            "name": "John’s of Times Square",
+            "address": "260 W 44th St, New York, NY",
+            "phone": "(212) 391-7560",
+            "website": "https://johnspizzerianyc.com"
+          },
+          {
+            "name": "Best Bagel & Coffee",
+            "address": "225 W 35th St, New York, NY",
+            "phone": "(212) 564-4409",
+            "website": "https://bestbagelandcoffee.com"
+          }
+        ]
+      }
+    }
+  ]
+}
