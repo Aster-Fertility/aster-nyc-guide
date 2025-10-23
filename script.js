@@ -3,6 +3,7 @@
   window.DATA = window.DATA || null;
   window.LOADED = !!window.DATA;
 
+  // ---------- Helpers ----------
   function escHtml(s){ if(s==null) return ""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
   function currentQuery(){
     var sel = document.getElementById("clinicSelect");
@@ -10,7 +11,9 @@
     var inp = document.getElementById("query");
     return inp ? (inp.value || "") : "";
   }
+  function sleep(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
 
+  // ---------- Data load ----------
   async function loadData(){
     try{
       var res = await fetch("nyc_fertility_locations.json");
@@ -29,6 +32,7 @@
     }
   }
 
+  // ---------- Clinic dropdown ----------
   function populateClinicDropdown(){
     var sel = document.getElementById("clinicSelect");
     if (!sel || !window.DATA || !Array.isArray(window.DATA.clinics)) return;
@@ -59,6 +63,7 @@
     sel._wired = true;
   }
 
+  // ---------- Render/Filter (fallback) ----------
   function filterClinics(q){
     q = (q||"").toLowerCase().trim();
     var arr = (window.DATA && window.DATA.clinics) ? window.DATA.clinics : [];
@@ -83,20 +88,16 @@
     el.innerHTML = out.join("");
   }
 
-  // ---------- Near your hotel (robust) ----------
+  // ---------- Near your hotel (throttled + progressive) ----------
   var NOMINATIM_BASE="https://nominatim.openstreetmap.org/search";
   var NYC_VIEWBOX = [-74.25909, 40.477399, -73.700272, 40.916178]; // SW lon, SW lat, NE lon, NE lat
   var GEO_CACHE=new Map();
-
-  function haversineMiles(a,b){
-    var R=3958.7613, toRad=function(d){return d*Math.PI/180;};
-    var dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
-    var s=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)*Math.sin(dLon/2);
-    return 2*R*Math.asin(Math.sqrt(s));
-  }
+  var GEOCODE_DELAY_MS = 320;      // throttle between requests
+  var GEOCODE_LIMIT = 80;          // max addresses to geocode per search
+  var RESULTS_TARGET = 30;         // stop early when we have enough
+  var ACTIVE_MATCH_TOKEN = 0;      // cancel in-flight match when a new one starts
 
   async function geocodeBiased(address){
-    // Strong NYC bias and jsonv2 results
     var p=new URLSearchParams();
     p.set("format","jsonv2");
     p.set("limit","1");
@@ -110,11 +111,9 @@
     try{
       res = await fetch(url, { headers: { "Accept":"application/json" } });
     }catch(netErr){
-      console.warn("Geocode network error", netErr);
       return { error: "network" };
     }
     if (!res.ok){
-      // capture 429 rate-limit distinctly
       if (res.status === 429) return { error: "rate" };
       return { error: "http:"+res.status };
     }
@@ -124,9 +123,11 @@
     return { lat: parseFloat(js[0].lat), lon: parseFloat(js[0].lon) };
   }
 
-  async function geocodeCached(address){
+  async function geocodeCachedThrottled(address){
     var key=(String(address||"")).toLowerCase().trim();
     if(GEO_CACHE.has(key)) return GEO_CACHE.get(key);
+    // throttle
+    await sleep(GEOCODE_DELAY_MS);
     var pt=await geocodeBiased(address);
     GEO_CACHE.set(key, pt);
     return pt;
@@ -149,25 +150,48 @@
     return out;
   }
 
-  async function findNearby(address, radiusMiles, statusCb){
+  async function findNearbyThrottled(address, radiusMiles, statusCb){
+    var myToken = (++ACTIVE_MATCH_TOKEN);
     if (typeof statusCb === "function") statusCb("geocoding");
-    var here = await geocodeCached(address);
+    var here = await geocodeCachedThrottled(address);
+    if (myToken !== ACTIVE_MATCH_TOKEN) return { cancelled: true };
     if (!here || here.error){
       return { error: here ? here.error : "no_results", results: [] };
     }
     if (typeof statusCb === "function") statusCb("matching");
-    var places=collectPlaces(), uniq={}, arr=[], i, key;
-    for(i=0;i<places.length;i++){ key=(places[i].address||"").toLowerCase().trim(); if(!uniq[key]){uniq[key]=true; arr.push(places[i]);} }
-    var results=[], pl, pt, miles;
+
+    var places=collectPlaces(), seen={}, arr=[], i, key;
+    for(i=0;i<places.length;i++){
+      key=(places[i].address||"").toLowerCase().trim();
+      if(!seen[key]){ seen[key]=true; arr.push(places[i]); }
+    }
+
+    // Hard cap the total to geocode; prefer items near borough hints first
+    var prioritized = [];
+    var boroughHints = ["Manhattan","Brooklyn","Queens","Bronx","Staten Island","NY","New York","NYC"];
     for(i=0;i<arr.length;i++){
-      pl=arr[i];
-      try{
-        pt=await geocodeCached(pl.address);
-        if(pt && !pt.error){
-          miles=haversineMiles({lat:here.lat,lon:here.lon},{lat:pt.lat,lon:pt.lon});
-          if(miles<=radiusMiles){ pl.miles=miles; results.push(pl); }
-        }
-      }catch(_){}
+      var a=(arr[i].address||""); 
+      var scored = 0;
+      for (var b=0;b<boroughHints.length;b++){
+        if (a.indexOf(boroughHints[b])>=0) { scored++; }
+      }
+      prioritized.push({score: scored, item: arr[i]});
+    }
+    prioritized.sort(function(x,y){ return y.score - x.score; });
+    var capped = prioritized.slice(0, GEOCODE_LIMIT).map(function(o){ return o.item; });
+
+    var results=[], progress=0;
+    for(i=0;i<capped.length;i++){
+      if (myToken !== ACTIVE_MATCH_TOKEN) return { cancelled: true };
+      var pl=capped[i];
+      var pt=await geocodeCachedThrottled(pl.address);
+      progress++;
+      if (typeof statusCb === "function") statusCb("progress:"+progress+"/"+capped.length);
+      if(pt && !pt.error){
+        var miles=haversineMiles({lat:here.lat,lon:here.lon},{lat:pt.lat,lon:pt.lon});
+        if(miles<=radiusMiles){ pl.miles=miles; results.push(pl); }
+      }
+      if (results.length >= RESULTS_TARGET) break; // early exit when we have enough
     }
     results.sort(function(a,b){ return a.miles - b.miles; });
     return { results: results };
@@ -203,17 +227,22 @@
       btn.disabled=true;
       if(hint) hint.textContent="Searching nearby...";
       try{
-        var resp = await findNearby(val, 0.7, function(stage){
+        var resp = await findNearbyThrottled(val, 0.7, function(stage){
           if(!hint) return;
           if(stage==="geocoding") hint.textContent="Finding that address...";
           else if(stage==="matching") hint.textContent="Matching places nearby...";
+          else if(typeof stage==="string" && stage.indexOf("progress:")===0){
+            hint.textContent = "Matching places nearby ("+stage.split(":")[1]+")...";
+          }
         });
+        if(resp.cancelled){ return; }
         if(resp.error){
           if(resp.error==="rate" && hint) hint.textContent="Temporarily rate-limited. Please try again in a minute.";
           else if(hint) hint.textContent="We couldn't find that address. Try adding the neighborhood/borough.";
           renderNearby([]);
         }else{
           renderNearby(resp.results||[]);
+          if((resp.results||[]).length===0 && hint) hint.textContent="No curated spots within ~15 min walk. Try a different address.";
         }
       }catch(e){
         console.error(e);
@@ -227,6 +256,7 @@
     input.addEventListener("keydown", function(e){ if(e.key==="Enter") handler(); });
   }
 
+  // ---------- Show all button ----------
   function attachShowAll(){
     var btn=document.getElementById("showAllBtn");
     if(!btn) return;
@@ -237,16 +267,7 @@
     });
   }
 
-  function filterClinics(q){ // (kept for completeness above)
-    q = (q||"").toLowerCase().trim();
-    var arr = (window.DATA && window.DATA.clinics) ? window.DATA.clinics : [];
-    if (!q) return arr.slice();
-    return arr.filter(function(c){
-      var n=(c.name||"").toLowerCase(), a=(c.address||"").toLowerCase();
-      return n.indexOf(q)>=0 || a.indexOf(q)>=0;
-    });
-  }
-
+  // ---------- Boot ----------
   window.addEventListener("DOMContentLoaded", function(){
     loadData();
     populateClinicDropdown();
