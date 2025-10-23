@@ -39,7 +39,7 @@
     {"name":"John’s of Times Square","address":"260 W 44th St, New York, NY","lat":40.7582345,"lon":-73.9884017,"type":"pizza_bagels","clinic":"CCRM New York","website":"https://johnspizzerianyc.com"},
     {"name":"Best Bagel & Coffee","address":"225 W 35th St, New York, NY","lat":40.7523015,"lon":-73.9910004,"type":"pizza_bagels","clinic":"CCRM New York","website":"https://bestbagelandcoffee.com"},
 
-    {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","lat":40.7611682,"lon":-73.9779863,"type":"shopping","clinic":"CCRM New York","website":"https://store.moma.org"},
+    {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","lat":40.7611682,"lon":-73.9779863,"type":"hidden_gems","clinic":"CCRM New York","website":"https://store.moma.org"},
     {"name":"NY Transit Museum Store (Grand Central)","address":"89 E 42nd St, New York, NY","lat":40.7526944,"lon":-73.977253,"type":"hidden_gems","clinic":"CCRM New York","website":"https://shop.nytransitmuseumstore.com"},
     {"name":"Magnolia Bakery (Rockefeller Center)","address":"1240 6th Ave, New York, NY","lat":40.7592602,"lon":-73.9805486,"type”:”cafes,”clinic":"CCRM New York","website":"https://www.magnoliabakery.com"},
     {"name":"Modern Bread & Bagel (UWS)","address":"472 Columbus Ave, New York, NY","lat":40.7844333,"lon":-73.9740436,"type":"hidden_gems","clinic":"CCRM New York","website":"https://modernbreadandbagel.com"},
