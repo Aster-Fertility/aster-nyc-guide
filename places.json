@@ -48,7 +48,6 @@
 
     {"name":"Rockefeller Center","address":"30 Rockefeller Plaza, New York, NY","lat":40.7591232,"lon":-73.979556,"type":"activities","clinic":"CCRM New York","website":"https://rockefellercenter.com"},
 
-    {"name":"MoMA – Museum of Modern Art","address":"11 W 53rd St, New York, NY","lat":40.7616124,"lon":-73.9774992,"type":"iconic","clinic":"CCRM New York","website":"https://www.moma.org"},
     {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","lat":40.7813974,"lon":-73.9733215,"type":"iconic","clinic":"CCRM New York","website":"https://www.amnh.org"},
     {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","lat":40.7794396,"lon":-73.9633825,"type":"iconic","clinic":"CCRM New York","website":"https://www.metmuseum.org"},
     {"name":"The Edge (Hudson Yards)","address":"30 Hudson Yards, New York, NY 10001","lat":40.7539277,"lon":-74.0005544,"type":"iconic","clinic":"CCRM New York","website":"https://www.edgenyc.com"},
@@ -80,7 +79,6 @@
     {"name":"Liberty Bagels Midtown","address":"260 W 35th St, New York, NY","lat":40.7524141,"lon":-73.9925766,"type":"pizza_bagels","clinic":"Spring Fertility NYC","website":"https://libertybagels.com"},
 
     {"name":"CityStore (NYC Official)","address":"1 Centre St, New York, NY","lat":40.7130272,"lon":-74.0034742,"type":"hidden_gems","clinic":"Spring Fertility NYC","website":"https://www.nyc.gov/citystore"},
-    {"name":"Magnolia Bakery (Bryant Park area)","address":"1095 6th Ave, New York, NY","lat":40.7546492,"lon":-73.9848112,"type":"hidden_gems","clinic":"Spring Fertility NYC","website":"https://www.magnoliabakery.com"},
     {"name":"Dominique Ansel Bakery (SoHo)","address":"189 Spring St, New York, NY","lat":40.7251997,"lon":-74.0029229,"type":"hidden_gems","clinic":"Spring Fertility NYC","website":"https://dominiqueanselny.com"},
 
     {"name":"Global Fertility Partners","address":"50 W 47th St, New York, NY 10036","lat":40.7574915,"lon":-73.9808385,"type":"clinic","clinic":"Global Fertility Partners","website":"https://globalfertilitypartners.com"},
