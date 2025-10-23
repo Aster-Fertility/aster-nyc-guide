@@ -1,8 +1,6 @@
-// Aster NYC Guide — script.js (v15)
-// Changes in v15:
-// - Robust geocoding: cleans floor/suite, tries NYC variants,
-//   and falls back to known points + clinic matching.
-// - Keeps v14 features (clinic dropdown, nearby, enrichment, fallback list).
+// Aster NYC Guide — script.js (v16)
+// Removes "Data tools (one-time)" and "Clinics" header boxes.
+// Keeps clinic dropdown, clinic detail rendering, and hotel/address nearby finder.
 
 const NYC_VIEWBOX = "-74.05,40.55,-73.70,40.95"; // W,S,E,N for NYC bias
 const WALK_MAX_KM = 1.5; // ~18 min walk
@@ -29,7 +27,7 @@ async function loadData(){
     DATA = { clinics: [], mustSees: [] };
   }
   populateClinicDropdown();
-  renderAll();
+  clearResults();
 }
 
 // -------------------- Helpers --------------------
@@ -43,6 +41,10 @@ function kmBetween(lat1,lon1,lat2,lon2){
 function safeHtml(str){
   return String(str==null?"":str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
+function clearResults(){
+  const mount = document.getElementById('results');
+  if(mount) mount.innerHTML = "";
+}
 
 // -------------------- UI: Clinic Dropdown --------------------
 function populateClinicDropdown(){
@@ -55,37 +57,17 @@ function populateClinicDropdown(){
 
   sel.onchange = () => {
     const name = sel.value;
-    if(!name){ renderAll(); return; }
+    if(!name){ clearResults(); return; }
     const clinic = DATA.clinics.find(c => c.name === name);
     renderClinic(clinic);
   };
 
+  // Optional "Show all" button; if present, clear results instead of drawing a header card
   const showAllBtn = document.getElementById('showAllBtn');
-  if(showAllBtn) showAllBtn.onclick = renderAll;
+  if(showAllBtn) showAllBtn.onclick = clearResults;
 }
 
-// -------------------- UI: Render Lists --------------------
-function renderAll(){
-  const mount = document.getElementById('results');
-  if(!mount) return;
-  mount.innerHTML = "";
-
-  const header = document.createElement('div');
-  header.className = "card";
-  header.innerHTML = `<h3 class="section-title">Clinics</h3>
-    <p class="muted">Choose a clinic above to see curated nearby picks.</p>`;
-  mount.appendChild(header);
-
-  (DATA?.clinics||[]).forEach(c => {
-    const el = document.createElement('div');
-    el.className = "card";
-    el.innerHTML = `<h4>${safeHtml(c.name)}</h4>
-      <div class="addr">${safeHtml(c.address || "")}</div>
-      <div>${c.website ? `<a href="${safeHtml(c.website)}" target="_blank" rel="noopener">Website</a>` : ""}</div>`;
-    mount.appendChild(el);
-  });
-}
-
+// -------------------- UI: Render Selected Clinic --------------------
 function renderClinic(clinic){
   const mount = document.getElementById('results');
   if(!mount) return;
@@ -121,7 +103,7 @@ function renderClinic(clinic){
 
 // -------------------- Nearby (Hotel/Address) --------------------
 
-// Known points fallback (keeps UX snappy if a free geocoder misses an address)
+// Known points fallback (handles common entries cleanly)
 const HARDCODED_POINTS = [
   { test:/\b1535\s*broadway\b/i, lat:40.758636, lon:-73.985450, label:"Marriott Marquis" },
   { test:/\b810\s*(7(th)?|seventh)\s*ave\b/i, lat:40.7628709, lon:-73.9825242, label:"CCRM New York" }
@@ -130,21 +112,13 @@ const HARDCODED_POINTS = [
 // Remove floor/suite/unit etc. and extra punctuation
 function normalizeAddress(q){
   let s = (q||"").trim();
-
-  // strip "21st Floor", "Fl", "Floor 21", "Suite 120", "Ste", "Unit"
   s = s.replace(/\b(floor|fl\.?|suite|ste\.?|unit|level)\s*[#\-\w]+/ig, "");
-
-  // collapse commas/spaces
   s = s.replace(/\s+/g," ").replace(/\s*,\s*/g,", ").trim();
-
-  // normalize ordinal 7th -> 7
   s = s.replace(/\b(\d+)(st|nd|rd|th)\b/gi, "$1");
-
   return s;
 }
 
 async function geocodeOnce(q){
-  // Nominatim (no API key). Use timeout + NYC bounding box. Do NOT set User-Agent in browser.
   const controller = new AbortController();
   const timer = setTimeout(()=>controller.abort(), 12000);
   const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&bounded=1&viewbox=${NYC_VIEWBOX}&q=${encodeURIComponent(q)}`;
@@ -160,7 +134,7 @@ function clinicFallbackFromText(q){
   const text = (q||"").toLowerCase();
   for(const c of (DATA?.clinics||[])){
     const name = (c.name||"").toLowerCase();
-    const firstLine = (c.address||"").split(",")[0].toLowerCase(); // "810 Seventh Ave"
+    const firstLine = (c.address||"").split(",")[0].toLowerCase();
     if(text.includes(name) || (firstLine && text.includes(firstLine))){
       if(typeof c.lat==="number" && typeof c.lon==="number"){
         return { lat:c.lat, lon:c.lon, via:`clinic: ${c.name}` };
@@ -169,12 +143,9 @@ function clinicFallbackFromText(q){
   }
   return null;
 }
-
 function hardcodedFallback(q){
   for(const h of HARDCODED_POINTS){
-    if(h.test.test(q)){
-      return { lat:h.lat, lon:h.lon, via:`hardcoded: ${h.label}` };
-    }
+    if(h.test.test(q)) return { lat:h.lat, lon:h.lon, via:`hardcoded: ${h.label}` };
   }
   return null;
 }
@@ -183,7 +154,6 @@ async function geocodeAddress(q){
   const raw = (q||"").trim();
   if(!raw) throw new Error("empty");
 
-  // If the text clearly matches a clinic/address we already know, use it
   const hard = hardcodedFallback(raw);
   if(hard) return hard;
 
@@ -191,33 +161,21 @@ async function geocodeAddress(q){
   if(clinicGuess) return clinicGuess;
 
   const base = normalizeAddress(raw);
-
-  // Attempt variants, most specific → more general
   const attempts = [
     base,
     `${base}, Manhattan, New York, NY`,
     `${base}, New York, NY`,
     `${base}, NYC`,
   ];
-
-  // If user typed a zip, prefer "New York, NY <zip>" variant
   const zip = (raw.match(/\b1\d{4}\b/)||[])[0];
   if(zip) attempts.unshift(`${base}, New York, NY ${zip}`);
 
-  let lastErr = null;
-  for(const variant of attempts){
-    try{
-      const pt = await geocodeOnce(variant);
-      return pt;
-    }catch(e){
-      lastErr = e;
-    }
+  let lastErr=null;
+  for(const v of attempts){
+    try{ return await geocodeOnce(v); }catch(e){ lastErr=e; }
   }
-
-  // Final fallback: if we can find any clinic on the same street/number fragment, use that
   const weakClinic = clinicFallbackFromText(base);
   if(weakClinic) return weakClinic;
-
   throw lastErr || new Error("Geocode failed");
 }
 
@@ -255,8 +213,8 @@ async function handleNearby(){
 
   try{
     const pt = await geocodeAddress(q);
-    console.log('[Nearby] Using point via', pt.via || 'geocoder', '→', {lat:pt.lat, lon:pt.lon});
     const all = collectAllPlaces().filter(p => typeof p.lat==="number" && typeof p.lon==="number");
+
     const within = all
       .map(p => ({...p, km: kmBetween(pt.lat, pt.lon, p.lat, p.lon)}))
       .filter(p => p.km <= WALK_MAX_KM)
@@ -309,67 +267,20 @@ async function handleNearby(){
   }
 }
 
-// -------------------- Enrichment / Add Coordinates --------------------
-function flattenForGeocode(){
-  const tasks = [];
-  (DATA?.clinics||[]).forEach((c,ci)=>{
-    if(c.address && (c.lat==null || c.lon==null)) tasks.push({path:`clinics[${ci}]`, name:c.name, address:c.address});
-    const cats = c.categories||{};
-    Object.keys(cats).forEach(cat => {
-      (cats[cat]||[]).forEach((i,ii)=>{
-        if(i.address && (i.lat==null || i.lon==null)){
-          tasks.push({path:`clinics[${ci}].categories.${cat}[${ii}]`, name:i.name, address:i.address});
-        }
-      });
-    });
-  });
-  (DATA?.mustSees||[]).forEach((m,mi)=>{
-    if(m.address && (m.lat==null || m.lon==null)) tasks.push({path:`mustSees[${mi}]`, name:m.name, address:m.address});
-  });
-  return tasks;
-}
-
-async function geocodeNYCAddress(address){
-  return geocodeAddress(`${address}, New York, NY`);
-}
-
-async function enrichAndDownload(){
-  const status = document.getElementById('enrichStatus');
-  if(status) status.textContent = "Scanning…";
-  const tasks = flattenForGeocode();
-  if(!tasks.length){ if(status) status.textContent = "Everything already has coordinates."; return; }
-
-  let done = 0;
-  for(const t of tasks){
-    if(status) status.textContent = `Geocoding ${done+1}/${tasks.length}: ${t.name}`;
-    try{
-      const pt = await geocodeNYCAddress(t.address);
-      const set = new Function("DATA","val",`
-        DATA.${t.path}.lat = val.lat;
-        DATA.${t.path}.lon = val.lon;
-      `);
-      set(DATA, pt);
-    }catch(e){
-      console.warn("Failed to geocode", t.name, e);
-    }
-    done++;
-    await new Promise(r=>setTimeout(r, 800)); // throttle
-  }
-
-  if(status) status.textContent = "Packaging JSON…";
-  const jsonStr = JSON.stringify(DATA, null, 2);
-  const blob = new Blob([jsonStr], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = "nyc_fertility_locations_coords.json";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  if(status) status.textContent = "Done. Check your downloads.";
-}
-
 // -------------------- Boot --------------------
 document.addEventListener("DOMContentLoaded", () => {
   loadData();
   document.getElementById('nearbyBtn')?.addEventListener('click', handleNearby);
-  document.getElementById('enrichBtn')?.addEventListener('click', enrichAndDownload);
+
+  // If any legacy "Data tools" markup exists in the HTML, remove it
+  const enrichBtn = document.getElementById('enrichBtn');
+  if(enrichBtn){
+    const card = enrichBtn.closest('.card');
+    (card || enrichBtn).remove();
+  }
+  // If there was a static "Clinics" header card in HTML, try to remove it as well
+  const possibleClinicsHeader = document.querySelector('.card .section-title');
+  if(possibleClinicsHeader && /clinics/i.test(possibleClinicsHeader.textContent||"")){
+    possibleClinicsHeader.closest('.card')?.remove();
+  }
 });
