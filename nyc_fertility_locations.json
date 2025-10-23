@@ -1,4 +1,4 @@
-{
+ {
   "clinics": [
     {
       "name": "NYU Langone Fertility Center (Kips Bay)",
@@ -11,14 +11,14 @@
             "address": "630 1st Ave, New York, NY 10016",
             "phone": "(917) 939-0628",
             "website": "https://www.qahwahvalley.com/",
-            "note": "Yemeni coffee favorites like Sana’ani and Adani chai in a relaxed spot."
+            "note": "Yemeni coffee favorites like Sana\u2019ani and Adani chai in a relaxed spot."
           },
           {
             "name": "Charlotte Cafe",
             "address": "605 2nd Ave, New York, NY 10016",
             "phone": "(347) 318-7107",
             "website": "https://www.instagram.com/charlottecafeofficial/",
-            "note": "Cozy neighborhood café for espresso drinks, pastries, and light bites."
+            "note": "Cozy neighborhood caf\u00e9 for espresso drinks, pastries, and light bites."
           },
           {
             "name": "Gold Coffee",
@@ -37,25 +37,25 @@
             "note": "Neighborhood pizzeria known for garlicky pies and Sicilian slices."
           },
           {
-            "name": "Hole in the Wall – Murray Hill",
+            "name": "Hole in the Wall \u2013 Murray Hill",
             "address": "445 E 35th St, New York, NY 10016",
             "phone": "(646) 858-0401",
             "website": "https://holeinthewallnyc.com/murray-hill",
-            "note": "Australian-inspired café/restaurant at the American Copper Buildings—brunch through dinner."
+            "note": "Australian-inspired caf\u00e9/restaurant at the American Copper Buildings\u2014brunch through dinner."
           },
           {
             "name": "Little Alley",
             "address": "550 3rd Ave, New York, NY 10016",
             "phone": "(646) 998-3976",
             "website": "https://www.littlealley.nyc/",
-            "note": "Beloved Shanghainese spot—don’t miss the soup dumplings and noodles."
+            "note": "Beloved Shanghainese spot\u2014don\u2019t miss the soup dumplings and noodles."
           },
           {
-            "name": "Lena’s Italian Kitchen (Kips Bay)",
+            "name": "Lena\u2019s Italian Kitchen (Kips Bay)",
             "address": "551 2nd Ave, New York, NY 10016",
             "phone": "(646) 846-5362",
             "website": "https://www.lenasitaliankitchen.com/",
-            "note": "Comfort Italian pastas, parm heroes, and salads—easy for takeout."
+            "note": "Comfort Italian pastas, parm heroes, and salads\u2014easy for takeout."
           }
         ],
         "pizza_bagels": [],
@@ -65,14 +65,14 @@
             "address": "75 9th Ave, New York, NY 10011",
             "phone": "",
             "website": "https://www.chelseamarket.com/",
-            "note": "Iconic indoor food & retail hall—perfect for grazing and gift shopping."
+            "note": "Iconic indoor food & retail hall\u2014perfect for grazing and gift shopping."
           },
           {
             "name": "Vintage India NYC",
             "address": "132 Lexington Ave, New York, NY 10016",
             "phone": "(212) 213-0080",
             "website": "https://vintageindianyc.com/",
-            "note": "South Asian formalwear, kurtas, and accessories—great for special occasions."
+            "note": "South Asian formalwear, kurtas, and accessories\u2014great for special occasions."
           },
           {
             "name": "TTH Vintage Boutique (NoMad)",
@@ -86,7 +86,7 @@
             "address": "41 W 40th St, New York, NY 10018",
             "phone": "(631) 831-1831",
             "website": "https://www.artisansofny.com/",
-            "note": "Glass art & gift kiosk at the Holiday Shops (typically Oct–Jan)."
+            "note": "Glass art & gift kiosk at the Holiday Shops (typically Oct\u2013Jan)."
           },
           {
             "name": "Rizzoli Bookstore (NoMad)",
@@ -122,10 +122,10 @@
           },
           {
             "name": "Central Park",
-            "address": "59th–110th St, Fifth Ave–Central Park West, New York, NY",
+            "address": "59th\u2013110th St, Fifth Ave\u2013Central Park West, New York, NY",
             "phone": "(212) 310-6600",
             "website": "https://www.centralparknyc.org/",
-            "note": "NYC’s iconic 843-acre park with lawns, lakes, and scenic loops."
+            "note": "NYC\u2019s iconic 843-acre park with lawns, lakes, and scenic loops."
           },
           {
             "name": "Statue of Liberty & Ellis Island (Statue City Cruises)",
@@ -162,7 +162,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -206,13 +206,13 @@
             "website": "https://serafinarestaurant.com"
           },
           {
-            "name": "Carmine’s Italian Restaurant",
+            "name": "Carmine\u2019s Italian Restaurant",
             "address": "200 W 44th St, New York, NY",
             "phone": "(212) 221-3800",
             "website": "https://carminesnyc.com"
           },
           {
-            "name": "Ellen’s Stardust Diner (Broadway-themed)",
+            "name": "Ellen\u2019s Stardust Diner (Broadway-themed)",
             "address": "1650 Broadway, New York, NY",
             "phone": "(212) 956-5151",
             "website": "https://www.ellensstardustdiner.com"
@@ -220,7 +220,7 @@
         ],
         "pizza_bagels": [
           {
-            "name": "John’s of Times Square",
+            "name": "John\u2019s of Times Square",
             "address": "260 W 44th St, New York, NY",
             "phone": "(212) 391-7560",
             "website": "https://johnspizzerianyc.com"
@@ -275,7 +275,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "5–10 minutes’ walk; same-day discounts."
+            "note": "5\u201310 minutes\u2019 walk; same-day discounts."
           },
           {
             "name": "Broadway Comedy Club",
@@ -298,7 +298,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -343,7 +343,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -373,7 +373,7 @@
             "website": "https://joecoffeecompany.com"
           },
           {
-            "name": "Ralph’s Coffee",
+            "name": "Ralph\u2019s Coffee",
             "address": "888 Madison Ave, New York, NY",
             "phone": "(212) 434-8000",
             "website": "https://ralphlauren.com/ralphs-coffee"
@@ -451,7 +451,7 @@
             "website": "https://modernbreadandbagel.com"
           },
           {
-            "name": "Senza Gluten Café & Bakery (100% GF)",
+            "name": "Senza Gluten Caf\u00e9 & Bakery (100% GF)",
             "address": "171 Sullivan St, New York, NY",
             "phone": "(646) 692-6424",
             "website": "https://senzaglutennyc.com"
@@ -486,7 +486,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -531,7 +531,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -644,7 +644,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "5–8 minutes’ walk; same-day deals."
+            "note": "5\u20138 minutes\u2019 walk; same-day deals."
           },
           {
             "name": "Broadway Comedy Club",
@@ -667,7 +667,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -712,7 +712,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -750,7 +750,7 @@
         ],
         "restaurants": [
           {
-            "name": "Carmine’s Italian Restaurant",
+            "name": "Carmine\u2019s Italian Restaurant",
             "address": "200 W 44th St, New York, NY",
             "phone": "(212) 221-3800",
             "website": "https://carminesnyc.com"
@@ -801,7 +801,7 @@
             "website": "https://levainbakery.com"
           },
           {
-            "name": "Friedmans (Chelsea Market) – GF-friendly",
+            "name": "Friedmans (Chelsea Market) \u2013 GF-friendly",
             "address": "75 9th Ave, New York, NY",
             "phone": "(212) 929-7100",
             "website": "https://www.friedmansrestaurant.com"
@@ -813,7 +813,7 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "2–4 minutes’ walk; check live board for discounts."
+            "note": "2\u20134 minutes\u2019 walk; check live board for discounts."
           },
           {
             "name": "Gotham Comedy Club",
@@ -836,7 +836,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -881,7 +881,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -919,13 +919,13 @@
         ],
         "restaurants": [
           {
-            "name": "Delmonico’s",
+            "name": "Delmonico\u2019s",
             "address": "56 Beaver St, New York, NY",
             "phone": "(212) 509-1144",
             "website": "https://delmonicos.com"
           },
           {
-            "name": "Luke’s Lobster FiDi",
+            "name": "Luke\u2019s Lobster FiDi",
             "address": "26 S William St, New York, NY",
             "phone": "(212) 747-1700",
             "website": "https://lukeslobster.com"
@@ -933,13 +933,13 @@
         ],
         "pizza_bagels": [
           {
-            "name": "Adrienne’s Pizzabar",
+            "name": "Adrienne\u2019s Pizzabar",
             "address": "54 Stone St, New York, NY",
             "phone": "(212) 248-3838",
             "website": "https://adriennespizzabar.com"
           },
           {
-            "name": "Leo’s Bagels",
+            "name": "Leo\u2019s Bagels",
             "address": "3 Hanover Square, New York, NY",
             "phone": "(212) 785-4700",
             "website": "https://leosbagels.com"
@@ -976,7 +976,7 @@
             "website": "https://www.magnoliabakery.com"
           },
           {
-            "name": "Erin McKenna’s Bakery NYC (100% GF)",
+            "name": "Erin McKenna\u2019s Bakery NYC (100% GF)",
             "address": "248 Broome St, New York, NY",
             "phone": "(855) 462-2292",
             "website": "https://www.erinmckennasbakery.com"
@@ -988,10 +988,10 @@
             "address": "200 W 47th St, New York, NY 10036",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "Closest active TKTS (~20–25 min by subway)."
+            "note": "Closest active TKTS (~20\u201325 min by subway)."
           },
           {
-            "name": "New York Comedy Club – East Village",
+            "name": "New York Comedy Club \u2013 East Village",
             "address": "85 E 4th St, New York, NY",
             "phone": "(212) 477-5233",
             "website": "https://newyorkcomedyclub.com"
@@ -1011,7 +1011,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -1056,7 +1056,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -1086,7 +1086,7 @@
             "website": "https://mamannyc.com"
           },
           {
-            "name": "Bluestone Lane (UES Café)",
+            "name": "Bluestone Lane (UES Caf\u00e9)",
             "address": "2 E 90th St, New York, NY",
             "phone": "(718) 374-6858",
             "website": "https://bluestonelane.com"
@@ -1108,7 +1108,7 @@
         ],
         "pizza_bagels": [
           {
-            "name": "Patsy’s Pizzeria (UES)",
+            "name": "Patsy\u2019s Pizzeria (UES)",
             "address": "206 E 60th St, New York, NY",
             "phone": "(212) 688-9707",
             "website": "https://patsyspizzeria.us"
@@ -1181,7 +1181,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -1226,7 +1226,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -1321,7 +1321,7 @@
             "website": "https://levainbakery.com"
           },
           {
-            "name": "Senza Gluten Café & Bakery (100% GF)",
+            "name": "Senza Gluten Caf\u00e9 & Bakery (100% GF)",
             "address": "171 Sullivan St, New York, NY",
             "phone": "(646) 692-6424",
             "website": "https://senzaglutennyc.com"
@@ -1356,7 +1356,7 @@
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -1401,7 +1401,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -1431,7 +1431,7 @@
             "website": "https://birchcoffee.com"
           },
           {
-            "name": "Ralph’s Coffee",
+            "name": "Ralph\u2019s Coffee",
             "address": "888 Madison Ave, New York, NY",
             "phone": "(212) 434-8000",
             "website": "https://ralphlauren.com/ralphs-coffee"
@@ -1453,7 +1453,7 @@
         ],
         "pizza_bagels": [
           {
-            "name": "Joe’s Pizza (Midtown)",
+            "name": "Joe\u2019s Pizza (Midtown)",
             "address": "1435 Broadway, New York, NY",
             "phone": "(212) 391-9500",
             "website": "https://www.joespizzanyc.com"
@@ -1509,7 +1509,7 @@
             "address": "61 W 62nd St, New York, NY 10023",
             "phone": "(212) 912-9770",
             "website": "https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/",
-            "note": "Quick ride or 15–20 min walk from Madison/63rd."
+            "note": "Quick ride or 15\u201320 min walk from Madison/63rd."
           },
           {
             "name": "Stand Up NY",
@@ -1525,14 +1525,14 @@
             "website": "https://centralparkzoo.com"
           },
           {
-            "name": "Bloomingdale’s Flagship",
+            "name": "Bloomingdale\u2019s Flagship",
             "address": "1000 3rd Ave, New York, NY",
             "website": "https://bloomingdales.com"
           }
         ],
         "iconic": [
           {
-            "name": "MoMA – Museum of Modern Art",
+            "name": "MoMA \u2013 Museum of Modern Art",
             "address": "11 W 53rd St, New York, NY",
             "website": "https://www.moma.org"
           },
@@ -1577,7 +1577,7 @@
             "name": "Times Square",
             "address": "Broadway & 7th Ave, New York, NY",
             "website": "https://www.timessquarenyc.org",
-            "note": "Neon lights and giant screens—NYC’s bustling crossroads."
+            "note": "Neon lights and giant screens\u2014NYC\u2019s bustling crossroads."
           },
           {
             "name": "Empire State Building",
@@ -1593,6 +1593,38 @@
           }
         ]
       }
+    }
+  ],
+  "mustSees": [
+    {
+      "title": "Central Park",
+      "address": "Central Park South & 5th Ave, New York, NY 10019",
+      "website": "https://www.centralparknyc.org/"
+    },
+    {
+      "title": "The High Line",
+      "address": "500 W 30th St, New York, NY 10001",
+      "website": "https://www.thehighline.org/"
+    },
+    {
+      "title": "The Edge (Hudson Yards)",
+      "address": "30 Hudson Yards, New York, NY 10001",
+      "website": "https://www.edgenyc.com/"
+    },
+    {
+      "title": "Times Square",
+      "address": "Times Sq, New York, NY 10036",
+      "website": "https://www.timessquarenyc.org/"
+    },
+    {
+      "title": "Empire State Building",
+      "address": "20 W 34th St, New York, NY 10001",
+      "website": "https://www.esbnyc.com/"
+    },
+    {
+      "title": "Rockefeller Center",
+      "address": "45 Rockefeller Plaza, New York, NY 10111",
+      "website": "https://www.rockefellercenter.com/"
     }
   ]
 }
