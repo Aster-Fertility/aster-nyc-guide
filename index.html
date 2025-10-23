@@ -23,6 +23,7 @@
       </ol>
     </div>
 
+    <!-- Clinic dropdown directly under How to use -->
     <div id="clinicBox" class="card">
       <h3 class="section-title">Select a Clinic</h3>
       <select id="clinicSelect" aria-label="Select your clinic">
@@ -39,7 +40,12 @@
         <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address">
         <button id="nearbyBtn" class="secondary">Find nearby</button>
       </div>
-      <p class="muted" id="nearbyHint">Enter the name of your hotel (Ex: New York Hilton Midtown) or the address. We’ll show curated spots within a short walk of your hotel!</p>
+      <p class="muted" id="nearbyHint">
+        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated spots within a short walk!
+      </p>
+      <!-- Status line used by script.js for geocoder/retry messages -->
+      <p class="muted status" id="status" aria-live="polite"></p>
+
       <div id="nearbyResults" class="nearby-results"></div>
     </div>
 
