@@ -93,4 +93,186 @@
     const opts = [`<option value="">Select a clinic…</option>`]
       .concat([...CLINICS].sort((a,b)=>a.name.localeCompare(b.name))
       .map(c => `<option value="${c.name}">${c.name}</option>`));
-    selClinic.
+    selClinic.innerHTML = opts.join('');
+  }
+
+  function renderClinics(list, title='Clinics') {
+    const html = `
+      <div class="card">
+        <h3 class="section-title">${title}</h3>
+        <div class="grid grid-clinics">
+          ${list.map(c => `
+            <div class="clinic-card">
+              <div class="clinic-title">${c.name}</div>
+              <div class="clinic-sub">${c.address}</div>
+              ${c.website ? `<a class="ext" href="${c.website}" target="_blank">Website</a>` : ''}
+            </div>`).join('')}
+        </div>
+      </div>`;
+    resultsEl.innerHTML = html;
+  }
+
+  function renderNearby(anchor, groups) {
+    const order = ['museums','restaurants','cafes','shopping','activities','broadway_comedy','other'];
+    const labels = {
+      museums:'Museums',
+      restaurants:'Restaurants',
+      cafes:'Cafes & Bagels',
+      shopping:'Shopping',
+      activities:'Activities',
+      broadway_comedy:'Broadway & Comedy',
+      other:'Other'
+    };
+
+    const hdr = `
+      <div class="card">
+        <h3 class="section-title">Near: ${anchor.label}</h3>
+        <p class="muted">${anchor.display || anchor.address || ''}</p>
+        <p class="muted">Showing places within ~${WALK_MIN} minutes on foot.</p>
+      </div>`;
+
+    const blocks = order.map(cat => {
+      const rows = groups[cat] || [];
+      if (!rows.length) return '';
+      const cards = rows.map(r => `
+        <div class="place-card">
+          <div class="place-title">${r.name}</div>
+          <div class="place-sub">${r.address}</div>
+          <div class="place-meta">${fmtWalkTime(r._dist)}</div>
+          ${r.website ? `<a class="ext" href="${r.website}" target="_blank">Website</a>` : ''}
+        </div>`).join('');
+      return `
+        <div class="card">
+          <h3 class="section-title">${labels[cat]}</h3>
+          <div class="grid grid-places">${cards}</div>
+        </div>`;
+    }).join('');
+
+    resultsEl.insertAdjacentHTML('beforeend', hdr + blocks);
+  }
+
+  /* ---------- grouping ---------- */
+  function groupCurated(anchor) {
+    const withDist = CURATED
+      .filter(p => isFinite(p.lat) && isFinite(p.lon))
+      .map(p => ({ ...p, _dist: haversineMeters(anchor, { lat: p.lat, lon: p.lon }) }))
+      .filter(p => p._dist <= WALK_METERS);
+
+    const groups = {};
+    for (const p of withDist) {
+      const cat = p._normType || 'other';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(p);
+    }
+    Object.keys(groups).forEach(k => groups[k].sort((a,b)=>a._dist - b._dist));
+    return groups;
+  }
+
+  /* ---------- geocoding ---------- */
+  async function geocodeNominatim(q, tries=4) {
+    const base = 'https://nominatim.openstreetmap.org/search';
+    const url  = `${base}?format=jsonv2&limit=1&q=${encodeURIComponent(q)}`;
+    let backoff = 700;
+    for (let i=0;i<tries;i++) {
+      try {
+        setStatus(i ? `Retrying geocoder… (${i}/${tries-1})` : 'Searching address…');
+        const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (resp.status === 503) throw new Error('503');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const arr = await resp.json();
+        if (Array.isArray(arr) && arr.length) {
+          const hit = arr[0];
+          return { lat: parseFloat(hit.lat), lon: parseFloat(hit.lon), display: hit.display_name };
+        }
+        return null;
+      } catch {
+        await new Promise(r => setTimeout(r, backoff));
+        backoff = Math.min(backoff * 1.7, 4000);
+      }
+    }
+    return null;
+  }
+
+  async function smartGeocode(input) {
+    let g = await geocodeNominatim(input);
+    if (g) return g;
+
+    const stripped = input.replace(/\b(FL|Floor|Suite|Ste|Unit|#)\.?\s*\w+/gi, '').trim();
+    if (stripped !== input) {
+      g = await geocodeNominatim(stripped);
+      if (g) return g;
+    }
+
+    const simpler = stripped.replace(/,\s*NY\s*\d{5}(?:-\d{4})?$/i, '').trim();
+    if (simpler !== stripped) {
+      g = await geocodeNominatim(simpler);
+      if (g) return g;
+    }
+
+    return await geocodeNominatim('New York, NY');
+  }
+
+  /* ---------- interactions ---------- */
+  function onClinicChange() {
+    const name = selClinic.value;
+    resultsEl.innerHTML = '';
+    if (!name) { setStatus(''); return; }
+
+    const clinic = CLINICS.find(c => c.name === name);
+    if (!clinic) { setStatus('Clinic not found.'); return; }
+
+    setStatus('Loading curated places near clinic…');
+    renderClinics([clinic], 'Selected Clinic');
+
+    const groups = groupCurated({ lat: clinic.lat, lon: clinic.lon });
+    renderNearby({ label: clinic.name, address: clinic.address, lat: clinic.lat, lon: clinic.lon }, groups);
+    setStatus('');
+  }
+
+  function onShowAll() {
+    setStatus('');
+    if (!CLINICS.length) {
+      resultsEl.innerHTML = `<div class="card"><p>No clinics found.</p></div>`;
+      return;
+    }
+    resultsEl.innerHTML = '';
+    renderClinics(CLINICS, 'All Clinics');
+  }
+
+  async function onFindNearby() {
+    const q = (inputAddr?.value || '').trim();
+    resultsEl.innerHTML = '';
+    if (!q) { setStatus('Please enter a hotel or address.'); return; }
+    setStatus('Matching place…');
+
+    const geo = await smartGeocode(q);
+    if (!geo) { setStatus('Could not locate that address. Try the hotel name.'); return; }
+
+    setStatus('Finding curated spots nearby…');
+    const groups = groupCurated({ lat: geo.lat, lon: geo.lon });
+    setStatus('');
+    renderNearby({ label: q, display: geo.display, lat: geo.lat, lon: geo.lon }, groups);
+  }
+
+  /* ---------- init ---------- */
+  async function init() {
+    try {
+      await loadPlaces();
+      populateClinicDropdown();
+    } catch (e) {
+      setStatus('Failed to load places.json');
+      console.error(e);
+    }
+
+    selClinic?.addEventListener('change', onClinicChange);
+    btnShowAll?.addEventListener('click', onShowAll);
+    btnNearby?.addEventListener('click', onFindNearby);
+    inputAddr?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); btnNearby?.click(); }
+    });
+  }
+
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', init)
+    : init();
+})();
