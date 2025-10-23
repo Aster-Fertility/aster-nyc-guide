@@ -17,6 +17,8 @@ const $results = $('#results');
 const $input = $('#query');
 const $searchBtn = $('#searchBtn');
 const $showAllBtn = $('#showAllBtn');
+const $suggestions = $('#suggestions');
+
 function banner(msg, type='info'){
   if(!$results) return;
   let el = document.getElementById('diagnostic-banner');
@@ -198,8 +200,21 @@ function dedupeByName(list){
     const k = (x?.name || '').toLowerCase();
     if(k && !seen.has(k)){ seen.add(k); out.push(x); }
   }
+  // add mustSees (iconic NYC spots) if present
+  const ms = (DATA && DATA.mustSees) ? DATA.mustSees : [];
+  for(const m of ms){
+    if(!m || !m.address) continue;
+    out.push({
+      category: 'must-see',
+      name: m.title || '(Must‑See)',
+      address: m.address,
+      website: m.website || '',
+      clinic: 'Iconic NYC'
+    });
+  }
   return out;
 }
+
 
 // ---------------- remapClinicCategories (hoisted & global) ----------------
 function remapClinicCategories(c){
@@ -307,19 +322,26 @@ async function loadData(){
     if(!res.ok) res = await fetch('/nyc_fertility_locations.json');
     if(!res.ok){
       DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (nyc_fertility_locations.json not found).', 'error');
+
       return;
     }
     const json = await res.json();
     if(!json || !Array.isArray(json.clinics)){
       DATA = SAMPLE; LOADED = true;
-      banner('Loaded SAMPLE data (JSON must be { "clinics": [...] }).', 'error');
+
       return;
     }
-    DATA = json; LOADED = true;
-  }catch(e){
+    \1
+  (function populateClinicDropdown(){
+    const sel = document.getElementById('clinicSelect'); if(!sel || !DATA?.clinics) return;
+    try{
+      const list = [...DATA.clinics].sort((a,b)=> a.name.localeCompare(b.name));
+      sel.innerHTML = '<option value="">Select a clinic…</option>' + list.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }catch(e){ console.warn('Populate clinics failed', e); }
+  })();
+}catch(e){
     DATA = SAMPLE; LOADED = true;
-    banner('Loaded SAMPLE data (unexpected fetch error). See console.', 'error');
+
     console.error(e);
   }
 }
@@ -367,6 +389,22 @@ async function showAll(){
 
 // ---------------- Init ----------------
 window.addEventListener('DOMContentLoaded', async () => {
+  initNearby();
+  const selClinics = document.getElementById('clinicSelect');
+  if (selClinics){
+    selClinics.addEventListener('change', ()=>{
+      const q = currentQuery();
+      if (typeof doSearch === 'function') doSearch(q);
+      else if (typeof runSearch === 'function') runSearch(q);
+      else {
+        // fallback: if you rely on input event
+        const inp = document.getElementById('query');
+        if (inp){ inp.value = q; inp.dispatchEvent(new Event('input', {bubbles:true})); }
+        document.getElementById('searchBtn')?.click();
+      }
+    });
+  }
+
   const results = document.querySelector('#results');
   if(results){
     results.innerHTML = `<div class="card"><p>Enter your clinic to find cafés, restaurants, treats, and gentle activities nearby.</p></div>`;
@@ -395,4 +433,124 @@ window.addEventListener('DOMContentLoaded', async () => {
     showAllBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); showAll(); });
     if(!showAllBtn.getAttribute('type')) showAllBtn.setAttribute('type','button');
   }
+
+  if($suggestions && DATA?.clinics){
+    $suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
+  }
 });
+
+
+function currentQuery(){
+  const sel = document.getElementById('clinicSelect');
+  if (sel) return sel.value || '';
+  const inp = document.getElementById('query');
+  return inp ? (inp.value || '') : '';
+}
+
+
+// -------- Nearby to your hotel (address) --------
+const GEO_CACHE = new Map(); // address -> {lat, lon}
+function haversineMiles(a, b){
+  const R = 3958.7613;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));
+}
+async function geocodeCached(address, stateHint='NY'){
+  const key = `${address}|${stateHint}`.toLowerCase().trim();
+  if (GEO_CACHE.has(key)) return GEO_CACHE.get(key);
+  const pt = await geocodeBiased(address, stateHint);
+  if (pt) GEO_CACHE.set(key, pt);
+  return pt;
+}
+function collectPlaces(){
+  const out = [];
+  const data = DATA && DATA.clinics ? DATA.clinics : [];
+  for(const clinic of data){
+    const cats = clinic.categories || {};
+    for (const [cat, arr] of Object.entries(cats)){
+      if (!Array.isArray(arr)) continue;
+      for(const p of arr){
+        if (!p || !p.address) continue;
+        out.push({
+          category: cat,
+          name: p.name || '(Unnamed)',
+          address: p.address,
+          website: p.website || '',
+          clinic: clinic.name
+        });
+      }
+    }
+  }
+  // add mustSees (iconic NYC spots) if present
+  const ms = (DATA && DATA.mustSees) ? DATA.mustSees : [];
+  for(const m of ms){
+    if(!m || !m.address) continue;
+    out.push({
+      category: 'must-see',
+      name: m.title || '(Must‑See)',
+      address: m.address,
+      website: m.website || '',
+      clinic: 'Iconic NYC'
+    });
+  }
+  return out;
+}
+
+async function findNearby(address, radiusMiles=0.7){
+  const here = await geocodeCached(address, 'NY');
+  if (!here) throw new Error('Could not find that address.');
+  const places = collectPlaces();
+  const uniq = new Map();
+  for(const pl of places){ if(!uniq.has(pl.address)) uniq.set(pl.address, pl); }
+  const entries = Array.from(uniq.values());
+  const pts = await Promise.all(entries.map(async pl => ({ pl, pt: await geocodeCached(pl.address, 'NY') })));
+  const nearby = pts.filter(x => x.pt).map(x => ({ ...x.pl, pt: x.pt,
+                    miles: haversineMiles(here, x.pt) }))
+                    .filter(x => x.miles <= radiusMiles)
+                    .sort((a,b)=> a.miles - b.miles)
+                    .slice(0, 40);
+  return { here, list: nearby };
+}
+function renderNearby(result){
+  const wrap = document.getElementById('nearbyResults');
+  if (!wrap) return;
+  if (!result || !result.list || result.list.length === 0){
+    wrap.innerHTML = `<div class="nearby-card"><strong>No nearby picks found</strong><div class="meta">Try adding the city/borough.</div></div>`;
+    return;
+  }
+  wrap.innerHTML = result.list.map(r => `
+    <div class="nearby-card">
+      <div><strong>${r.name}</strong> <span class="meta">• ${r.category} • ${r.clinic}</span></div>
+      <div class="meta">${r.address} • ~${r.miles.toFixed(2)} mi</div>
+      ${r.website ? `<div><a href="${r.website}" target="_blank" rel="noopener">Website</a></div>` : ''}
+    </div>
+  `).join('');
+}
+function initNearby(){
+  const btn = document.getElementById('nearbyBtn');
+  const input = document.getElementById('userAddress');
+  const hint = document.getElementById('nearbyHint');
+  if(!btn || !input) return;
+  const doSearch = async () => {
+    if(!DATA || !DATA.clinics){ renderNearby(null); return; }
+    const val = input.value.trim();
+    if(!val){ renderNearby(null); return; }
+    btn.disabled = true; if(hint) hint.textContent = 'Searching nearby…';
+    try{
+      const res = await findNearby(val, 0.7);
+      renderNearby(res);
+      if(hint) hint.textContent = 'Showing places within ~15 min walk.';
+    }catch(e){
+      renderNearby(null);
+      if(hint) hint.textContent = 'We could not find that address. Try adding the city/borough.';
+      console.error(e);
+    }finally{
+      btn.disabled = false;
+    }
+  };
+  btn.addEventListener('click', doSearch);
+  input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doSearch(); });
+}
