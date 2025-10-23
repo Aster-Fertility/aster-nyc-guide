@@ -1,5 +1,5 @@
-/* Aster Fertility â€¢ NYC Clinic Concierge
-   script.js â€” Geocode Bias + Distance Guard (fixes OSRM 400s)
+/* Aster Fertility • NYC Clinic Concierge
+   script.js — Geocode Bias + Distance Guard (fixes OSRM 400s)
    - Bias Nominatim to US + clinic state (NY/NJ/CT)
    - If a place geocodes >300 km from clinic, retry with state hint; if still far, skip distances
    - Keeps directions links (Apple/Google), categories, and optional distance lines (toggle)
@@ -149,7 +149,7 @@ async function computeDistanceLine(clinicAddr, placeAddr){
     const dist = meters ? fmtMiles(meters) : '';
     const w = walk ? `${fmtMins(walk.seconds)} walk` : '';
     const d = drive ? `${fmtMins(drive.seconds)} drive` : '';
-    const parts = [dist, w, d].filter(Boolean).join(' â€¢ ');
+    const parts = [dist, w, d].filter(Boolean).join(' • ');
 
     return parts ? `<div class="distance">Distance from clinic: <em>${parts}</em></div>` : '';
   }catch{
@@ -166,11 +166,11 @@ const SAMPLE = {
     categories: {
       cafes: [{ name:"Maman UES", address:"1424 3rd Ave, New York, NY", website:"https://mamannyc.com" }],
       restaurants: [{ name:"Finestra", address:"1370 York Ave, New York, NY", website:"https://finestrarestaurant.com" }],
-      pizza_bagels: [{ name:"Patsyâ€™s Pizzeria (UES)", address:"206 E 60th St, New York, NY", website:"https://patsyspizzeria.us" }],
+      pizza_bagels: [{ name:"Patsy’s Pizzeria (UES)", address:"206 E 60th St, New York, NY", website:"https://patsyspizzeria.us" }],
       hidden_gems: [{ name:"Levain Bakery (UES)", address:"1484 3rd Ave, New York, NY", website:"https://levainbakery.com" }],
       broadway_comedy: [{ name:"TKTS Lincoln Center (David Rubenstein Atrium)", address:"61 W 62nd St, New York, NY 10023", website:"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/" }],
       activities: [{ name:"The Met Museum", address:"1000 5th Ave, New York, NY", website:"https://metmuseum.org" }],
-      iconic: [{ name:"MoMA â€“ Museum of Modern Art", address:"11 W 53rd St, New York, NY", website:"https://www.moma.org" }]
+      iconic: [{ name:"MoMA – Museum of Modern Art", address:"11 W 53rd St, New York, NY", website:"https://www.moma.org" }]
     }
   }]
 };
@@ -245,7 +245,7 @@ function itemHTML(it, clinicAddress){
     addr ? `<a href="${mapsLink(addr)}" target="_blank" rel="noopener">Open in Maps</a>` : '',
     addr ? `<a href="${mapsDirectionsLink(clinicAddress, addr, 'driving')}" target="_blank" rel="noopener">Directions (Drive)</a>` : '',
     addr ? `<a href="${mapsDirectionsLink(clinicAddress, addr, 'walking')}" target="_blank" rel="noopener">Directions (Walk)</a>` : ''
-  ].filter(Boolean).join(' â€¢ ');
+  ].filter(Boolean).join(' • ');
 
   const distanceDiv = (ENABLE_DISTANCES && addr)
     ? `<div class="distance" data-dist-for="${encodeURIComponent(addr)}"></div>`
@@ -254,7 +254,7 @@ function itemHTML(it, clinicAddress){
   return `
     <div class="item card">
       <h4>${name}</h4>
-      ${addr ? `<p>${addr}${phone ? ` â€¢ ${phone}` : ''}</p>` : (phone ? `<p>${phone}</p>` : '')}
+      ${addr ? `<p>${addr}${phone ? ` • ${phone}` : ''}</p>` : (phone ? `<p>${phone}</p>` : '')}
       ${links ? `<p>${links}</p>` : ''}
       ${note ? `<p>${note}</p>` : ''}
       ${distanceDiv}
@@ -277,11 +277,11 @@ function renderClinic(clinic){
   const head = `
     <div class="card">
       <h2>${clinic.name} <span class="badge">Clinic</span></h2>
-      <p>${clinic.address} â€¢ <a href="${clinic.website}" target="_blank" rel="noopener">Website</a> â€¢ <a href="${mapsLink(clinic.address)}" target="_blank" rel="noopener">Open in Maps</a></p>
+      <p>${clinic.address} • <a href="${clinic.website}" target="_blank" rel="noopener">Website</a> • <a href="${mapsLink(clinic.address)}" target="_blank" rel="noopener">Open in Maps</a></p>
     </div>
   `;
   return head + [
-    sectionHTML('CafÃ©s & Bakeries', m.cafes_bakeries, clinic.address),
+    sectionHTML('Cafés & Bakeries', m.cafes_bakeries, clinic.address),
     sectionHTML('Restaurants', m.restaurants, clinic.address),
     sectionHTML('Pizza & Bagels', m.pizza_bagels, clinic.address),
     sectionHTML('NYC Shopping', m.nyc_shopping, clinic.address),
@@ -319,7 +319,7 @@ async function loadData(){
       return;
     }
     DATA = json; LOADED = true;
-    banner(`Loaded ${DATA.clinics.length} clinics â€¢ Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
+    banner(`Loaded ${DATA.clinics.length} clinics • Distances: ${ENABLE_DISTANCES ? 'ON' : 'OFF'}`, 'info');
   }catch(e){
     DATA = SAMPLE; LOADED = true;
     banner('Loaded SAMPLE data (unexpected fetch error). See console.', 'error');
@@ -347,11 +347,11 @@ async function doSearch(){
   if(q) list = filterClinics(q);
 
   if(!q){
-    results.innerHTML = `<div class="card"><p>Type a clinic name (e.g., â€œWeill Cornellâ€, â€œRMAâ€, â€œCCRMâ€) or an address, then press Enter or Search.</p></div>`;
+    results.innerHTML = `<div class="card"><p>Type a clinic name (e.g., “Weill Cornell”, “RMA”, “CCRM”) or an address, then press Enter or Search.</p></div>`;
     return;
   }
   if(!list.length){
-    results.innerHTML = `<div class="card"><p>No clinics matched â€œ${q}â€. Try â€œ1305 Yorkâ€ or â€œNYU Langoneâ€.</p></div>`;
+    results.innerHTML = `<div class="card"><p>No clinics matched “${q}”. Try “1305 York” or “NYU Langone”.</p></div>`;
     return;
   }
 
@@ -372,7 +372,7 @@ async function showAll(){
 window.addEventListener('DOMContentLoaded', async () => {
   const results = document.querySelector('#results');
   if(results){
-    results.innerHTML = `<div class="card"><p>Enter your clinic to find cafÃ©s, restaurants, treats, and gentle activities nearby.</p></div>`;
+    results.innerHTML = `<div class="card"><p>Enter your clinic to find cafés, restaurants, treats, and gentle activities nearby.</p></div>`;
   }
 
   await loadData();
@@ -400,6 +400,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
   if($suggestions && DATA?.clinics){
-    $suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' Â· ')}`;
+    $suggestions.textContent = `Clinics: ${DATA.clinics.map(c => c.name).join(' · ')}`;
   }
 });
