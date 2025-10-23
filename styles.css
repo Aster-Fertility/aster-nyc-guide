@@ -40,6 +40,8 @@ select:focus, input[type="text"]:focus{ border-color:var(--brand) }
 button{ border:none; border-radius:12px; padding:10px 14px; cursor:pointer }
 button.secondary{ background:#f6efe6; color:var(--brand); border:1px solid var(--border) }
 button.secondary:hover{ filter:brightness(0.98) }
+#enrichBtn{ background:var(--brand); color:#fff }
+#enrichBtn:hover{ filter:brightness(0.96) }
 .nearby-row{ display:flex; gap:10px; align-items:center; margin-top:4px }
 #nearbyResults{ margin-top:10px; display:grid; gap:10px }
 .nearby-card{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff }
