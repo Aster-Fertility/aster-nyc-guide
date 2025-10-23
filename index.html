@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Aster Fertility Concierge - NYC Guide</title>
+  <title>Aster Fertility Concierge – NYC Guide</title>
   <link rel="icon" href="assets/aster-logo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <center><header class="header">
-    <img src="assets/aster-logo.png" alt="Aster Concierge Fertility" class="logo">
+  <header class="header">
+    <img src="assets/aster-logo.png" alt="Aster Fertility Concierge" class="logo">
     <h1>Aster Fertility Concierge</h1>
-  </header></center>
+  </header>
 
   <main class="container">
     <!-- Intro / Blurb -->
@@ -22,43 +22,48 @@
         Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out local favorites near
         your clinic and hotel: cozy cafés, peaceful parks, good eats, and little ways to unwind between appointments. It’s our way
         of helping you feel cared for, connected, and comfortable while you’re here—because even a medical trip deserves
-        a little <em>you-time</em>. 
+        a little <em>you-time</em>.
       </p>
     </section>
 
-    <div id="howtoBox" class="card">
+    <section id="howtoBox" class="card">
       <h3 class="section-title">How to use</h3>
       <ol>
         <li>Select your NYC clinic from the dropdown below.</li>
-        <li>Find local restaurants and things to do within a 15 minute walk of your clinic.</li>
+        <li>Find local spots within a ~10 minute walk.</li>
         <li>Decide where to go for some NYC fun!</li>
       </ol>
-    </div>
+    </section>
 
-    <!-- Clinic dropdown directly under How to use -->
-    <div id="clinicBox" class="card">
+    <!-- Clinic dropdown -->
+    <section id="clinicBox" class="card">
       <h3 class="section-title">Select a Clinic</h3>
-      <select id="clinicSelect" aria-label="Select your clinic">
-        <option value="">Select a clinic…</option>
-      </select>
-    </div>
+      <div class="helper-row">
+        <label class="sr-only" for="clinicSelect">Clinic</label>
+        <select id="clinicSelect" aria-label="Select your clinic">
+          <option value="">Select a clinic…</option>
+        </select>
+        <button id="showAllBtn" class="secondary" type="button">Show all clinics</button>
+      </div>
+    </section>
 
-    <div id="nearbyBox" class="card">
+    <!-- Hotel / address nearby search -->
+    <section id="nearbyBox" class="card">
       <h3 class="section-title">Check what's near your hotel</h3>
       <div class="nearby-row">
-        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address">
-        <button id="nearbyBtn" class="secondary">Find nearby</button>
+        <label class="sr-only" for="userAddress">Hotel or address</label>
+        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" autocomplete="off">
+        <button id="nearbyBtn" class="secondary" type="button">Find nearby</button>
       </div>
       <p class="muted" id="nearbyHint">
-        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated spots within a short walk!
+        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated Manhattan spots within a short walk!
       </p>
-      <!-- Status line used by script.js for geocoder/retry messages -->
       <p class="muted status" id="status" aria-live="polite"></p>
-
       <div id="nearbyResults" class="nearby-results"></div>
-    </div>
+    </section>
 
-    <section id="results"></section>
+    <!-- Results container (clinic-curated lists render here) -->
+    <section id="results" aria-live="polite"></section>
   </main>
 
   <script src="script.js"></script>
