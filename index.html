@@ -10,7 +10,6 @@
 </head>
 <body>
   <header class="header">
-    <img src="assets/aster-logo.png" alt="Aster Concierge Fertility" style="height:54px;vertical-align:middle;display:block;margin-bottom:10px">
     <h1>Aster Fertility • NYC Clinic Concierge</h1>
     <p class="tagline">A "Decidedly Different" approach to surrogacy support. Enter your clinic to find cafés, restaurants, treats, and activities nearby while you are in NYC for your medical screening and IVF transfer.</p>
   </header>
@@ -18,26 +17,10 @@
   <main class="container">
     <section class="search">
       <label for="query">Search by clinic name or address</label>
-      <div id="howtoBox" class="card">
-  <h3 class="section-title">How to use</h3>
-  <ol>
-    <li>type your NYC clinic into the search bar</li>
-    <li>find local restaurants and things to do within a 15 minute walk of your clinic</li>
-    <li>decide where to go for some NYC fun!</li>
-  </ol>
-</div>
-<div id="nearbyBox" class="card">
-  <h3 class="section-title">Check what's near your hotel</h3>
-  <div class="nearby-row">
-    <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" />
-    <button id="nearbyBtn" class="secondary">Find nearby</button>
-  </div>
-  <p class="muted" id="nearbyHint">We’ll show curated spots within a short walk. Data stays in your browser.</p>
-  <div id="nearbyResults" class="nearby-results"></div>
-</div>
-<select id="clinicSelect" aria-label="Select your clinic"><option value="">Select a clinic…</option></select>
+      <input id="query" type="text" placeholder="e.g., 1305 York Avenue or Weill Cornell" />
       <button id="searchBtn">Search</button>
       <button id="showAllBtn" class="secondary">Show all clinics</button>
+      <div id="suggestions" class="suggestions"></div>
     </section>
 
     <section id="results"></section>
