@@ -83,24 +83,55 @@
     el.innerHTML = out.join("");
   }
 
+  // ---------- Near your hotel (robust) ----------
   var NOMINATIM_BASE="https://nominatim.openstreetmap.org/search";
+  var NYC_VIEWBOX = [-74.25909, 40.477399, -73.700272, 40.916178]; // SW lon, SW lat, NE lon, NE lat
   var GEO_CACHE=new Map();
+
   function haversineMiles(a,b){
     var R=3958.7613, toRad=function(d){return d*Math.PI/180;};
     var dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
     var s=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)*Math.sin(dLon/2);
     return 2*R*Math.asin(Math.sqrt(s));
   }
-  async function geocodeBiased(address,stateHint){
-    var p=new URLSearchParams(); p.set("format","json"); p.set("limit","1"); p.set("q",(address+(stateHint?(", "+stateHint):""))+", USA");
-    var res=await fetch(NOMINATIM_BASE+"?"+p.toString(),{headers:{"Accept":"application/json"}}); if(!res.ok) return null;
-    var js=await res.json(); if(!Array.isArray(js)||!js.length) return null; return {lat:parseFloat(js[0].lat), lon:parseFloat(js[0].lon)};
+
+  async function geocodeBiased(address){
+    // Strong NYC bias and jsonv2 results
+    var p=new URLSearchParams();
+    p.set("format","jsonv2");
+    p.set("limit","1");
+    p.set("countrycodes","us");
+    p.set("addressdetails","0");
+    p.set("viewbox", NYC_VIEWBOX.join(","));
+    p.set("bounded","1");
+    p.set("q", address+", New York");
+    var url = NOMINATIM_BASE+"?"+p.toString();
+    var res;
+    try{
+      res = await fetch(url, { headers: { "Accept":"application/json" } });
+    }catch(netErr){
+      console.warn("Geocode network error", netErr);
+      return { error: "network" };
+    }
+    if (!res.ok){
+      // capture 429 rate-limit distinctly
+      if (res.status === 429) return { error: "rate" };
+      return { error: "http:"+res.status };
+    }
+    var js;
+    try { js = await res.json(); } catch(parseErr){ return { error: "parse" }; }
+    if (!Array.isArray(js) || !js.length) return null;
+    return { lat: parseFloat(js[0].lat), lon: parseFloat(js[0].lon) };
   }
-  async function geocodeCached(address,stateHint){
-    var key=(String(address||"")+"|"+String(stateHint||"")).toLowerCase().trim();
+
+  async function geocodeCached(address){
+    var key=(String(address||"")).toLowerCase().trim();
     if(GEO_CACHE.has(key)) return GEO_CACHE.get(key);
-    var pt=await geocodeBiased(address,stateHint); if(pt) GEO_CACHE.set(key,pt); return pt;
+    var pt=await geocodeBiased(address);
+    GEO_CACHE.set(key, pt);
+    return pt;
   }
+
   function collectPlaces(){
     var out=[], data=(window.DATA&&window.DATA.clinics)?window.DATA.clinics:[], i, clinic, cats, k, arr, j, p;
     for(i=0;i<data.length;i++){
@@ -117,26 +148,37 @@
     }
     return out;
   }
-  async function findNearby(address,radiusMiles){
-    var here=await geocodeCached(address,"NY"); if(!here) throw new Error("Could not geocode that address.");
-    var places=collectPlaces(), uniq={}, arr=[], i, key, results=[], pl, pt, miles;
+
+  async function findNearby(address, radiusMiles, statusCb){
+    if (typeof statusCb === "function") statusCb("geocoding");
+    var here = await geocodeCached(address);
+    if (!here || here.error){
+      return { error: here ? here.error : "no_results", results: [] };
+    }
+    if (typeof statusCb === "function") statusCb("matching");
+    var places=collectPlaces(), uniq={}, arr=[], i, key;
     for(i=0;i<places.length;i++){ key=(places[i].address||"").toLowerCase().trim(); if(!uniq[key]){uniq[key]=true; arr.push(places[i]);} }
+    var results=[], pl, pt, miles;
     for(i=0;i<arr.length;i++){
       pl=arr[i];
       try{
-        pt=await geocodeCached(pl.address,"NY");
-        if(pt){ miles=haversineMiles({lat:here.lat,lon:here.lon},{lat:pt.lat,lon:pt.lon}); if(miles<=0.7){ pl.miles=miles; results.push(pl);} }
+        pt=await geocodeCached(pl.address);
+        if(pt && !pt.error){
+          miles=haversineMiles({lat:here.lat,lon:here.lon},{lat:pt.lat,lon:pt.lon});
+          if(miles<=radiusMiles){ pl.miles=miles; results.push(pl); }
+        }
       }catch(_){}
     }
     results.sort(function(a,b){ return a.miles - b.miles; });
-    return results;
+    return { results: results };
   }
+
   function renderNearby(list){
     var wrap=document.getElementById("nearbyResults"), hint=document.getElementById("nearbyHint");
     if(!wrap) return;
     if(!list||!list.length){
-      wrap.innerHTML='<div class="nearby-card"><strong>No nearby picks found</strong><div class="meta">Try adding the city/borough.</div></div>';
-      if(hint) hint.textContent="We could not find that address. Try adding the city/borough.";
+      wrap.innerHTML='<div class="nearby-card"><strong>No nearby picks found</strong><div class="meta">Try adding the neighborhood or borough.</div></div>';
+      if(hint) hint.textContent="We could not find that address. Try adding the neighborhood or borough.";
       return;
     }
     var out=[], i, r;
@@ -151,13 +193,35 @@
     wrap.innerHTML=out.join("");
     if(hint) hint.textContent="Showing places within ~15 min walk.";
   }
+
   function attachNearby(){
     var btn=document.getElementById("nearbyBtn"), input=document.getElementById("userAddress"), hint=document.getElementById("nearbyHint");
     if(!btn||!input) return;
     var handler=async function(){
-      var val=(input.value||"").trim(); if(!val){ renderNearby([]); return; }
-      btn.disabled=true; if(hint) hint.textContent="Searching nearby...";
-      try{ var res=await findNearby(val,0.7); renderNearby(res); }catch(e){ console.error(e); renderNearby([]); } finally{ btn.disabled=false; }
+      var val=(input.value||"").trim();
+      if(!val){ renderNearby([]); return; }
+      btn.disabled=true;
+      if(hint) hint.textContent="Searching nearby...";
+      try{
+        var resp = await findNearby(val, 0.7, function(stage){
+          if(!hint) return;
+          if(stage==="geocoding") hint.textContent="Finding that address...";
+          else if(stage==="matching") hint.textContent="Matching places nearby...";
+        });
+        if(resp.error){
+          if(resp.error==="rate" && hint) hint.textContent="Temporarily rate-limited. Please try again in a minute.";
+          else if(hint) hint.textContent="We couldn't find that address. Try adding the neighborhood/borough.";
+          renderNearby([]);
+        }else{
+          renderNearby(resp.results||[]);
+        }
+      }catch(e){
+        console.error(e);
+        if(hint) hint.textContent="Something went wrong. Please try again.";
+        renderNearby([]);
+      }finally{
+        btn.disabled=false;
+      }
     };
     btn.addEventListener("click", handler);
     input.addEventListener("keydown", function(e){ if(e.key==="Enter") handler(); });
@@ -169,7 +233,17 @@
     btn.addEventListener("click", function(){
       var sel=document.getElementById("clinicSelect"); if(sel) sel.value="";
       var inp=document.getElementById("query"); if(inp) inp.value="";
-      renderClinics((window.DATA&&window.DATA.clinics)?window.DATA.clinics:[]);
+      if (window.DATA && Array.isArray(window.DATA.clinics)) renderClinics(window.DATA.clinics);
+    });
+  }
+
+  function filterClinics(q){ // (kept for completeness above)
+    q = (q||"").toLowerCase().trim();
+    var arr = (window.DATA && window.DATA.clinics) ? window.DATA.clinics : [];
+    if (!q) return arr.slice();
+    return arr.filter(function(c){
+      var n=(c.name||"").toLowerCase(), a=(c.address||"").toLowerCase();
+      return n.indexOf(q)>=0 || a.indexOf(q)>=0;
     });
   }
 
