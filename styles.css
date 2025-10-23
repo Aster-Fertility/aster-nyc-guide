@@ -1,11 +1,10 @@
 :root{
-  --brand:#4a1e16;           /* deep cocoa (from petals) */
-  --accent:#f6a21a;          /* marigold (from center)  */
+  --brand:#4a1e16;           /* deep cocoa */
+  --accent:#f6a21a;          /* marigold  */
   --ink:#2e2522;             /* body text */
   --muted:#6d5e57;           /* muted text */
-  --bg:#fff7ee;              /* neutral cream page background */
+  --bg:#fff7ee;              /* neutral cream background */
   --card:#ffffff;            /* card background */
-  --accent-soft:#fde9c9;     /* soft wash using accent */
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -34,36 +33,36 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Aria
 .distance em{font-style:normal;color:#0b69a3}
 
 
-/* Branding tweaks */
+/* Branding tweaks and components */
 .header{background:linear-gradient(90deg,var(--bg),#fff7f0)}
 .header h1{color:var(--brand)}
 .section-title{color:var(--brand)}
-.search button{background:var(--brand)}
-.search .secondary{background:#f0e6de;color:var(--brand)}
-.item a{color:#7a2d0b}
-.badge{background:#fff1dd;color:#7a2d0b}
-.card{border:1px solid #f0e6de}
 
-
-
-
-/* How to box styles (hero area) */
-#howtoBox {
+#howtoBox, #nearbyBox{
   background: var(--card);
   border: 1px solid #f0e6de;
   padding: 16px 20px;
   border-radius: 14px;
   color: var(--ink);
   box-shadow: 0 4px 10px rgba(0,0,0,.05);
+  margin-bottom: 20px;
 }
-#howtoBox h3 {
-  margin-top: 0;
-  color: var(--brand);
-  font-size: 18px;
-  font-weight: 700;
+#howtoBox h3, #nearbyBox h3{ margin-top:0; color:var(--brand); font-size:18px; font-weight:700 }
+#howtoBox ol{ margin:8px 0 0 18px; line-height:1.5; padding-left:4px }
+
+.nearby-row{ display:flex; gap:10px; align-items:center; margin-top:4px }
+#userAddress{
+  flex:1; background: var(--card); border:1px solid #f0e6de; color:var(--ink);
+  padding:12px; border-radius:12px; outline:none;
 }
-#howtoBox ol {
-  margin: 8px 0 0 18px;
-  line-height: 1.5;
-  padding-left: 4px;
+#userAddress:focus{ border-color: var(--brand) }
+.nearby-results{ margin-top:10px; display:grid; gap:10px }
+.nearby-card{ border:1px solid #f0e6de; border-radius:12px; padding:12px; background:#fff }
+.nearby-card .meta{ color:var(--muted); font-size:13px; margin-top:4px }
+
+/* Clinic dropdown */
+#clinicSelect{
+  width:100%; background: var(--card); border:1px solid #f0e6de; color:var(--ink);
+  padding:12px; border-radius:12px;
 }
+#clinicSelect:focus{ border-color: var(--brand); outline:none }
