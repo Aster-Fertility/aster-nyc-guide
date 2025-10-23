@@ -1,10 +1,8 @@
-// Aster NYC Guide — script.js (v14)
-// Features:
-// - Clinic dropdown
-// - Hotel/address nearby finder (15–18 min walk radius) with robust geocoding
-// - Fallback to closest results if nothing within radius
-// - Coordinate enrichment + JSON download
-// - No search history / saved items / method-reliability sections
+// Aster NYC Guide — script.js (v15)
+// Changes in v15:
+// - Robust geocoding: cleans floor/suite, tries NYC variants,
+//   and falls back to known points + clinic matching.
+// - Keeps v14 features (clinic dropdown, nearby, enrichment, fallback list).
 
 const NYC_VIEWBOX = "-74.05,40.55,-73.70,40.95"; // W,S,E,N for NYC bias
 const WALK_MAX_KM = 1.5; // ~18 min walk
@@ -42,12 +40,8 @@ function kmBetween(lat1,lon1,lat2,lon2){
   const a=Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.sqrt(a));
 }
-
 function safeHtml(str){
-  return String(str==null?"":str)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;");
+  return String(str==null?"":str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
 // -------------------- UI: Clinic Dropdown --------------------
@@ -126,25 +120,105 @@ function renderClinic(clinic){
 }
 
 // -------------------- Nearby (Hotel/Address) --------------------
-async function geocodeAddress(q){
+
+// Known points fallback (keeps UX snappy if a free geocoder misses an address)
+const HARDCODED_POINTS = [
+  { test:/\b1535\s*broadway\b/i, lat:40.758636, lon:-73.985450, label:"Marriott Marquis" },
+  { test:/\b810\s*(7(th)?|seventh)\s*ave\b/i, lat:40.7628709, lon:-73.9825242, label:"CCRM New York" }
+];
+
+// Remove floor/suite/unit etc. and extra punctuation
+function normalizeAddress(q){
+  let s = (q||"").trim();
+
+  // strip "21st Floor", "Fl", "Floor 21", "Suite 120", "Ste", "Unit"
+  s = s.replace(/\b(floor|fl\.?|suite|ste\.?|unit|level)\s*[#\-\w]+/ig, "");
+
+  // collapse commas/spaces
+  s = s.replace(/\s+/g," ").replace(/\s*,\s*/g,", ").trim();
+
+  // normalize ordinal 7th -> 7
+  s = s.replace(/\b(\d+)(st|nd|rd|th)\b/gi, "$1");
+
+  return s;
+}
+
+async function geocodeOnce(q){
   // Nominatim (no API key). Use timeout + NYC bounding box. Do NOT set User-Agent in browser.
   const controller = new AbortController();
-  const id = setTimeout(()=>controller.abort(), 12000);
+  const timer = setTimeout(()=>controller.abort(), 12000);
   const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=0&bounded=1&viewbox=${NYC_VIEWBOX}&q=${encodeURIComponent(q)}`;
-  try{
-    const res = await fetch(url, {
-      headers: { 'Accept': 'application/json' },
-      signal: controller.signal
-    });
-    clearTimeout(id);
-    if(!res.ok) throw new Error("Geocode failed");
-    const arr = await res.json();
-    if(!Array.isArray(arr) || !arr.length) throw new Error("No results");
-    return { lat: parseFloat(arr[0].lat), lon: parseFloat(arr[0].lon) };
-  }catch(e){
-    clearTimeout(id);
-    throw e;
+  const res = await fetch(url, { headers: { 'Accept':'application/json' }, signal: controller.signal });
+  clearTimeout(timer);
+  if(!res.ok) throw new Error("Geocode failed");
+  const arr = await res.json();
+  if(!Array.isArray(arr) || !arr.length) throw new Error("No results");
+  return { lat: parseFloat(arr[0].lat), lon: parseFloat(arr[0].lon) };
+}
+
+function clinicFallbackFromText(q){
+  const text = (q||"").toLowerCase();
+  for(const c of (DATA?.clinics||[])){
+    const name = (c.name||"").toLowerCase();
+    const firstLine = (c.address||"").split(",")[0].toLowerCase(); // "810 Seventh Ave"
+    if(text.includes(name) || (firstLine && text.includes(firstLine))){
+      if(typeof c.lat==="number" && typeof c.lon==="number"){
+        return { lat:c.lat, lon:c.lon, via:`clinic: ${c.name}` };
+      }
+    }
   }
+  return null;
+}
+
+function hardcodedFallback(q){
+  for(const h of HARDCODED_POINTS){
+    if(h.test.test(q)){
+      return { lat:h.lat, lon:h.lon, via:`hardcoded: ${h.label}` };
+    }
+  }
+  return null;
+}
+
+async function geocodeAddress(q){
+  const raw = (q||"").trim();
+  if(!raw) throw new Error("empty");
+
+  // If the text clearly matches a clinic/address we already know, use it
+  const hard = hardcodedFallback(raw);
+  if(hard) return hard;
+
+  const clinicGuess = clinicFallbackFromText(raw);
+  if(clinicGuess) return clinicGuess;
+
+  const base = normalizeAddress(raw);
+
+  // Attempt variants, most specific → more general
+  const attempts = [
+    base,
+    `${base}, Manhattan, New York, NY`,
+    `${base}, New York, NY`,
+    `${base}, NYC`,
+  ];
+
+  // If user typed a zip, prefer "New York, NY <zip>" variant
+  const zip = (raw.match(/\b1\d{4}\b/)||[])[0];
+  if(zip) attempts.unshift(`${base}, New York, NY ${zip}`);
+
+  let lastErr = null;
+  for(const variant of attempts){
+    try{
+      const pt = await geocodeOnce(variant);
+      return pt;
+    }catch(e){
+      lastErr = e;
+    }
+  }
+
+  // Final fallback: if we can find any clinic on the same street/number fragment, use that
+  const weakClinic = clinicFallbackFromText(base);
+  if(weakClinic) return weakClinic;
+
+  throw lastErr || new Error("Geocode failed");
 }
 
 function collectAllPlaces(){
@@ -181,10 +255,8 @@ async function handleNearby(){
 
   try{
     const pt = await geocodeAddress(q);
-    console.log('[Nearby] Geocoded', q, '→', pt);
+    console.log('[Nearby] Using point via', pt.via || 'geocoder', '→', {lat:pt.lat, lon:pt.lon});
     const all = collectAllPlaces().filter(p => typeof p.lat==="number" && typeof p.lon==="number");
-    console.log('[Nearby] Places with coords:', all.length);
-
     const within = all
       .map(p => ({...p, km: kmBetween(pt.lat, pt.lon, p.lat, p.lon)}))
       .filter(p => p.km <= WALK_MAX_KM)
@@ -226,7 +298,12 @@ async function handleNearby(){
     mount.innerHTML = `<div class="muted">No curated spots available yet.</div>`;
   }catch(err){
     console.warn('[Nearby] Error:', err);
-    mount.innerHTML = `<div class="muted">Couldn’t locate that address in NYC. Try a fuller address (e.g., “Marriott Marquis, 1535 Broadway, New York, NY”).</div>`;
+    mount.innerHTML = `
+      <div class="nearby-card">
+        <strong>No nearby picks found</strong>
+        <div class="meta">Try adding the neighborhood or borough.</div>
+      </div>
+    `;
   }finally{
     btn.disabled = false; btn.textContent = "Find nearby";
   }
@@ -253,7 +330,6 @@ function flattenForGeocode(){
 }
 
 async function geocodeNYCAddress(address){
-  // helper used by enrichment — NYC bias
   return geocodeAddress(`${address}, New York, NY`);
 }
 
