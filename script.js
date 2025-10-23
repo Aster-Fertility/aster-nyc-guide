@@ -1,303 +1,384 @@
-/* Aster NYC Guide — places.json only (with robust error messaging)
-   - Shows walking time (minutes) within 10-minute radius
-   - Category remaps: pizza→Restaurants, bagel→Cafes & Bagels, hidden_gems→Shopping,
-     iconic→Activities, + Museums bucket
-*/
+// script.js — Aster NYC Guide (places.json only)
 
-(() => {
-  const PLACES_JSON = 'places.json';
-  const METERS_PER_MIN = 80; // ~3 mph
-  const WALK_MIN = 10;
-  const WALK_METERS = METERS_PER_MIN * WALK_MIN;
+// -------------------------------
+// Config & globals
+// -------------------------------
+const PLACES_URL = 'places.json';
+const MAX_WALK_MIN = 10;                 // 10-minute walking radius
+const WALK_MIN_PER_KM = 12.5;            // ~80 m/min ≈ 12.5 min/km
+let ALL_PLACES = [];
+let CLINICS = [];                        // array of clinic place objects
+let lastGeocodeAt = 0;
 
-  // DOM
-  const $ = (id) => document.getElementById(id);
-  const selClinic  = $('clinicSelect');
-  const btnShowAll = $('showAllBtn');
-  const inputAddr  = $('userAddress');
-  const btnNearby  = $('nearbyBtn');
-  const resultsEl  = $('results');
+// -------------------------------
+// Helpers
+// -------------------------------
+const $ = sel => document.querySelector(sel);
 
-  // Add a small status line if it doesn't exist
-  let statusEl = $('status');
-  if (!statusEl) {
-    statusEl = document.createElement('div');
-    statusEl.id = 'status';
-    statusEl.className = 'muted';
-    resultsEl?.before(statusEl);
+function escapeHTML(s) {
+  return String(s ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function haversineKm(aLat, aLon, bLat, bLon) {
+  const toRad = d => d * Math.PI / 180;
+  const R = 6371;
+  const dLat = toRad(bLat - aLat);
+  const dLon = toRad(bLon - aLon);
+  const s1 = Math.sin(dLat/2)**2 +
+             Math.cos(toRad(aLat))*Math.cos(toRad(bLat))*Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(s1)));
+}
+
+function minutesFromKm(km) {
+  return Math.round(km * WALK_MIN_PER_KM);
+}
+
+function fmtWalk(mins) {
+  return `${mins} min walk`;
+}
+
+// Manhattan ZIP & bounds filter (addresses sometimes lack ZIPs)
+function extractZip(addr) {
+  if (!addr) return null;
+  const m = String(addr).match(/\b1\d{4}\b/); // 1xxxx
+  return m ? m[0] : null;
+}
+function isManhattanZip(zip) {
+  return !!zip && (zip.startsWith('100') || zip.startsWith('101') || zip.startsWith('102'));
+}
+function isWithinManhattanBounds(lat, lon) {
+  if (typeof lat !== 'number' || typeof lon !== 'number') return false;
+  return (lat >= 40.680 && lat <= 40.882) && (lon >= -74.047 && lon <= -73.906);
+}
+function isInManhattan(place) {
+  const zip = extractZip(place.address || '');
+  if (isManhattanZip(zip)) return true;
+  if (place.lat != null && place.lon != null) {
+    return isWithinManhattanBounds(Number(place.lat), Number(place.lon));
   }
-  const setStatus = (t='') => { if (statusEl) statusEl.textContent = t; };
+  return false;
+}
 
-  // Data
-  let ALL_PLACES = [];
-  let CLINICS = [];
-  let CURATED = [];
+// -------------------------------
+// Category normalization (per your rules)
+// -------------------------------
+const MUSEUM_KEYWORDS = [
+  'museum of modern art','moma','metropolitan museum','the met museum','met museum',
+  'american museum of natural history','guggenheim'
+];
 
-  /* ---------- helpers ---------- */
-  const toRad = (x) => (x * Math.PI) / 180;
-  function haversineMeters(a, b) {
-    if (!a || !b || a.lat == null || a.lon == null || b.lat == null || b.lon == null) return Infinity;
-    const R = 6371000;
-    const dLat = toRad(b.lat - a.lat);
-    const dLon = toRad(b.lon - a.lon);
-    const lat1 = toRad(a.lat);
-    const lat2 = toRad(b.lat);
-    const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
-    return 2 * R * Math.asin(Math.sqrt(h));
-  }
-  function fmtWalkTime(meters) {
-    if (!isFinite(meters)) return '';
-    const mins = Math.max(1, Math.round(meters / METERS_PER_MIN));
-    return `${mins} min walk`;
-  }
+function isMuseum(name) {
+  const n = String(name).toLowerCase();
+  return MUSEUM_KEYWORDS.some(k => n.includes(k));
+}
 
-  /* ---------- category mapping ---------- */
-  const museumRegex = /\b(museum|moma|metropolitan museum|american museum of natural history|memorial\s*&?\s*museum)\b/i;
-  const pizzaRegex  = /\b(pizza|pizzeria)\b/i;
-  const bagelRegex  = /\b(bagel)\b/i;
+function normalizeCategory(p) {
+  const name = String(p.name || '').toLowerCase();
+  const raw = String(p.type || '').toLowerCase();
 
-  function normalizeCategory(p) {
-    const original = (p.type || '').toLowerCase();
-    const name = p.name || '';
+  // Force moves based on name
+  if (name.includes('magnolia bakery')) return 'Cafes & Bagels';
+  if (name.includes('moma design store')) return 'Shopping';
+  if (isMuseum(name)) return 'Museums';
 
-    if (museumRegex.test(name)) return 'museums';
-    if (original === 'pizza_bagels') {
-      if (bagelRegex.test(name)) return 'cafes';
-      if (pizzaRegex.test(name)) return 'restaurants';
-      return 'restaurants';
+  // Move bagels to Cafes & Bagels; cafés remain Cafes & Bagels
+  if (raw === 'cafes') return 'Cafes & Bagels';
+  if (raw === 'pizza_bagels') {
+    if (name.includes('bagel') || name.includes('bakery') || name.includes('coffee')) {
+      return 'Cafes & Bagels';
     }
-    if (original === 'hidden_gems') return 'shopping';
-    if (original === 'iconic') return 'activities';
-    return original || 'other';
+    // else assume it's pizza
+    return 'Restaurants';
   }
 
-  /* ---------- load ---------- */
-  async function loadPlaces() {
+  // Move all pizza to Restaurants
+  if (name.includes('pizza')) return 'Restaurants';
+
+  // Hidden gems -> Shopping
+  if (raw === 'hidden_gems') return 'Shopping';
+
+  // Iconic -> Activities
+  if (raw === 'iconic') return 'Activities';
+
+  // Broadway / Comedy -> Activities
+  if (raw === 'broadway_comedy') return 'Activities';
+
+  // Activities stays Activities; restaurants stays Restaurants
+  if (raw === 'restaurants') return 'Restaurants';
+  if (raw === 'activities') return 'Activities';
+
+  // Fallback buckets based on name hints
+  if (name.includes('bagel') || name.includes('coffee') || name.includes('cafe')) {
+    return 'Cafes & Bagels';
+  }
+  if (name.includes('store') || name.includes('market') || name.includes('boutique')) {
+    return 'Shopping';
+  }
+
+  // Default bucket
+  return 'Activities';
+}
+
+// -------------------------------
+/** Group places by normalized category */
+function groupByCategory(list) {
+  const map = new Map();
+  for (const p of list) {
+    const cat = normalizeCategory(p);
+    if (!map.has(cat)) map.set(cat, []);
+    map.get(cat).push(p);
+  }
+  // Stable order for display
+  const order = ['Cafes & Bagels', 'Restaurants', 'Shopping', 'Museums', 'Activities'];
+  const out = [];
+  for (const key of order) {
+    if (map.has(key)) out.push([key, map.get(key)]);
+  }
+  // Append any extra categories if present
+  for (const [k, v] of map.entries()) {
+    if (!order.includes(k)) out.push([k, v]);
+  }
+  return out;
+}
+
+// -------------------------------
+// Rendering
+// -------------------------------
+function renderNearbyResults(list) {
+  const box = $('#nearbyResults');
+  if (!box) return;
+
+  if (!list.length) {
+    box.innerHTML = `<p class="muted">No curated spots within a 10-minute walk in Manhattan for that location.</p>`;
+    return;
+  }
+
+  const grouped = groupByCategory(list);
+  let html = '';
+  for (const [cat, items] of grouped) {
+    html += `<div class="category-block"><h4>${escapeHTML(cat)}</h4><ul class="place-list">`;
+    for (const p of items) {
+      const mins = p.mins ?? '';
+      html += `
+        <li class="place-item">
+          <div class="place-title">
+            <a href="${escapeHTML(p.website || '#')}" target="_blank" rel="noopener">${escapeHTML(p.name)}</a>
+          </div>
+          <div class="place-meta">
+            <span>${escapeHTML(p.address || '')}</span>
+            ${mins ? `<span class="dot">•</span><span>${fmtWalk(mins)}</span>` : ''}
+            ${p.clinic ? `<span class="dot">•</span><span class="badge">${escapeHTML(p.clinic)}</span>` : ''}
+          </div>
+        </li>`;
+    }
+    html += `</ul></div>`;
+  }
+  box.innerHTML = html;
+}
+
+function renderClinicResults(clinic, list) {
+  const results = $('#results');
+  if (!results) return;
+
+  if (!list.length) {
+    results.innerHTML = `<div class="card"><p class="muted">No curated spots within a 10-minute walk for ${escapeHTML(clinic.name)}.</p></div>`;
+    return;
+  }
+
+  const grouped = groupByCategory(list);
+  let html = `<div class="card"><h3 class="section-title">${escapeHTML(clinic.name)}</h3>`;
+  html += `<p class="muted">${escapeHTML(clinic.address || '')}</p>`;
+  for (const [cat, items] of grouped) {
+    html += `<div class="category-block"><h4>${escapeHTML(cat)}</h4><ul class="place-list">`;
+    for (const p of items) {
+      html += `
+        <li class="place-item">
+          <div class="place-title">
+            <a href="${escapeHTML(p.website || '#')}" target="_blank" rel="noopener">${escapeHTML(p.name)}</a>
+          </div>
+          <div class="place-meta">
+            <span>${escapeHTML(p.address || '')}</span>
+            <span class="dot">•</span><span>${fmtWalk(p.mins)}</span>
+          </div>
+        </li>`;
+    }
+    html += `</ul></div>`;
+  }
+  html += `</div>`;
+  results.innerHTML = html;
+}
+
+// -------------------------------
+// Data loading
+// -------------------------------
+async function loadPlaces() {
+  const res = await fetch(PLACES_URL, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to load ${PLACES_URL}`);
+  const json = await res.json();
+  if (!json || !Array.isArray(json.places)) throw new Error('Invalid places.json');
+  ALL_PLACES = json.places.map(p => ({
+    ...p,
+    lat: Number(p.lat),
+    lon: Number(p.lon)
+  }));
+  CLINICS = ALL_PLACES.filter(p => String(p.type).toLowerCase() === 'clinic');
+}
+
+// -------------------------------
+// UI wiring
+// -------------------------------
+function populateClinicDropdown() {
+  const sel = $('#clinicSelect');
+  if (!sel) return;
+  const sorted = [...CLINICS].sort((a,b) => a.name.localeCompare(b.name));
+  sel.innerHTML = `<option value="">Select a clinic…</option>` +
+    sorted.map(c => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`).join('');
+}
+
+function getClinicByName(name) {
+  return CLINICS.find(c => c.name === name);
+}
+
+// Show curated locations (≤ 10 min walk) for a clinic
+function showClinicCurated(clinic) {
+  if (!clinic || clinic.lat == null || clinic.lon == null) {
+    renderClinicResults(clinic || {name:'Clinic'}, []);
+    return;
+  }
+  const near = ALL_PLACES
+    .filter(p => p.clinic === clinic.name && p.type !== 'clinic')
+    .map(p => {
+      const km = haversineKm(clinic.lat, clinic.lon, p.lat, p.lon);
+      return { ...p, km, mins: minutesFromKm(km) };
+    })
+    .filter(p => p.mins <= MAX_WALK_MIN)
+    .sort((a,b) => a.km - b.km);
+
+  renderClinicResults(clinic, near);
+}
+
+// Find all clinics (simple listing)
+function showAllClinics() {
+  const results = $('#results');
+  if (!results) return;
+  const items = [...CLINICS].sort((a,b)=>a.name.localeCompare(b.name))
+    .map(c => `<li><strong>${escapeHTML(c.name)}</strong><br><span class="muted">${escapeHTML(c.address||'')}</span></li>`).join('');
+  results.innerHTML = `<div class="card"><h3 class="section-title">All Clinics</h3><ul class="simple-list">${items}</ul></div>`;
+}
+
+// -------------------------------
+// Geocoding (Nominatim) with retry/backoff & 1 req/sec pacing
+// -------------------------------
+async function geocodeQ(q) {
+  // Respect 1 rps
+  const now = Date.now();
+  const diff = now - lastGeocodeAt;
+  if (diff < 1100) await new Promise(r => setTimeout(r, 1100 - diff));
+
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(q)}`;
+  const res = await fetch(url, {
+    headers: { 'Accept-Language': 'en' }
+  });
+  lastGeocodeAt = Date.now();
+  if (!res.ok) throw new Error(`Geocode failed (${res.status})`);
+  const arr = await res.json();
+  if (!Array.isArray(arr) || !arr.length) throw new Error('No results');
+  const { lat, lon } = arr[0];
+  return { lat: Number(lat), lon: Number(lon) };
+}
+
+async function robustGeocode(q) {
+  // Try: 1) raw input; 2) ensure ", New York, NY" if not present
+  const tries = [];
+  tries.push(q);
+  const lower = String(q).toLowerCase();
+  if (!/new york/.test(lower)) tries.push(`${q}, New York, NY`);
+  if (!/usa|united states|ny\b|new york,? ny/i.test(lower)) tries.push(`${q}, New York, NY, USA`);
+
+  let lastErr;
+  for (let i=0; i<tries.length; i++) {
     try {
-      const res = await fetch(PLACES_JSON, { headers: { 'Accept': 'application/json' } });
-      if (!res.ok) {
-        throw new Error(`Failed to load ${PLACES_JSON} (HTTP ${res.status})`);
-      }
-      const json = await res.json();
-      ALL_PLACES = Array.isArray(json?.places) ? json.places : [];
-
-      // de-dup by name+address
-      const seen = new Set();
-      ALL_PLACES = ALL_PLACES.filter(p => {
-        const k = `${(p.name||'').trim()}|${(p.address||'').trim()}`.toLowerCase();
-        if (seen.has(k)) return false;
-        seen.add(k);
-        return true;
-      });
-
-      CLINICS = ALL_PLACES.filter(p => (p.type || '').toLowerCase() === 'clinic');
-      CURATED = ALL_PLACES
-        .filter(p => (p.type || '').toLowerCase() !== 'clinic')
-        .map(p => ({ ...p, _normType: normalizeCategory(p) }));
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      const isFileProtocol = location.protocol === 'file:';
-      const hint = isFileProtocol
-        ? `Tip: Open this folder with a local web server (e.g. "python -m http.server" or any static server) so the browser allows fetching places.json.`
-        : `Please confirm places.json is present at the site root and accessible.`;
-      setStatus(`Could not load places.json. ${hint}`);
-      return false;
+      return await geocodeQ(tries[i]);
+    } catch (e) {
+      lastErr = e;
+      // backoff on 429/503-ish failures
+      await new Promise(r => setTimeout(r, 1200 + i*800));
     }
   }
+  throw lastErr || new Error('Geocode failed');
+}
 
-  /* ---------- render ---------- */
-  function populateClinicDropdown() {
-    const opts = [`<option value="">Select a clinic…</option>`]
-      .concat([...CLINICS].sort((a,b)=>a.name.localeCompare(b.name))
-      .map(c => `<option value="${c.name}">${c.name}</option>`));
-    selClinic.innerHTML = opts.join('');
+// -------------------------------
+// Nearby search (hotel/address) — Manhattan + ≤ 10 min
+// -------------------------------
+async function handleNearby() {
+  const input = $('#userAddress');
+  const hint = $('#nearbyHint');
+  const out = $('#nearbyResults');
+  if (!input || !out) return;
+
+  const q = input.value.trim();
+  if (!q) {
+    out.innerHTML = `<p class="muted">Please enter your hotel name or address.</p>`;
+    return;
   }
 
-  function renderClinics(list, title='Clinics') {
-    const html = `
-      <div class="card">
-        <h3 class="section-title">${title}</h3>
-        <div class="grid grid-clinics">
-          ${list.map(c => `
-            <div class="clinic-card">
-              <div class="clinic-title">${c.name}</div>
-              <div class="clinic-sub">${c.address}</div>
-              ${c.website ? `<a class="ext" href="${c.website}" target="_blank" rel="noopener">Website</a>` : ''}
-            </div>`).join('')}
-        </div>
-      </div>`;
-    resultsEl.innerHTML = html;
+  hint && (hint.textContent = 'Searching nearby…');
+
+  try {
+    // 1) geocode hotel
+    const { lat, lon } = await robustGeocode(q);
+
+    // 2) Manhattan-only places
+    const manhattanOnly = ALL_PLACES.filter(isInManhattan);
+
+    // 3) Compute distances, filter to ≤ 10 minutes
+    const candidates = manhattanOnly
+      .filter(p => isFinite(p.lat) && isFinite(p.lon) && p.type !== 'clinic')
+      .map(p => {
+        const km = haversineKm(lat, lon, p.lat, p.lon);
+        return { ...p, km, mins: minutesFromKm(km) };
+      })
+      .filter(p => p.mins <= MAX_WALK_MIN)
+      .sort((a,b) => a.km - b.km);
+
+    renderNearbyResults(candidates);
+    hint && (hint.textContent = 'Showing curated Manhattan locations within ~10 minutes on foot.');
+  } catch (e) {
+    console.warn('Nearby search error', e);
+    out.innerHTML = `<p class="muted">We couldn’t find curated places near that address. Try entering the **hotel name** (e.g., “New York Hilton Midtown”) or a simpler address like “1335 6th Ave, New York, NY”.</p>`;
+    hint && (hint.textContent = 'Tip: hotel names usually work best.');
   }
+}
 
-  function renderNearby(anchor, groups) {
-    const order = ['museums','restaurants','cafes','shopping','activities','broadway_comedy','other'];
-    const labels = {
-      museums:'Museums',
-      restaurants:'Restaurants',
-      cafes:'Cafes & Bagels',
-      shopping:'Shopping',
-      activities:'Activities',
-      broadway_comedy:'Broadway & Comedy',
-      other:'Other'
-    };
+// -------------------------------
+// Boot
+// -------------------------------
+async function init() {
+  // Wire events
+  $('#clinicSelect')?.addEventListener('change', e => {
+    const name = e.target.value;
+    if (!name) { $('#results').innerHTML = ''; return; }
+    const clinic = getClinicByName(name);
+    showClinicCurated(clinic);
+  });
 
-    const hdr = `
-      <div class="card">
-        <h3 class="section-title">Near: ${anchor.label}</h3>
-        ${anchor.display || anchor.address ? `<p class="muted">${anchor.display || anchor.address}</p>` : ''}
-        <p class="muted">Showing places within ~${WALK_MIN} minutes on foot.</p>
-      </div>`;
+  $('#showAllBtn')?.addEventListener('click', showAllClinics);
+  $('#nearbyBtn')?.addEventListener('click', handleNearby);
+  $('#userAddress')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleNearby();
+  });
 
-    const blocks = order.map(cat => {
-      const rows = groups[cat] || [];
-      if (!rows.length) return '';
-      const cards = rows.map(r => `
-        <div class="place-card">
-          <div class="place-title">${r.name}</div>
-          <div class="place-sub">${r.address}</div>
-          <div class="place-meta">${fmtWalkTime(r._dist)}</div>
-          ${r.website ? `<a class="ext" href="${r.website}" target="_blank" rel="noopener">Website</a>` : ''}
-        </div>`).join('');
-      return `
-        <div class="card">
-          <h3 class="section-title">${labels[cat]}</h3>
-          <div class="grid grid-places">${cards}</div>
-        </div>`;
-    }).join('');
-
-    resultsEl.insertAdjacentHTML('beforeend', hdr + blocks);
+  // Load data
+  try {
+    await loadPlaces();
+    populateClinicDropdown();
+  } catch (e) {
+    console.error('Failed to initialize:', e);
+    $('#results').innerHTML = `<div class="card"><p class="muted">Could not load curated data. Please ensure <code>places.json</code> is deployed next to this page.</p></div>`;
   }
+}
 
-  /* ---------- grouping ---------- */
-  function groupCurated(anchor) {
-    const withDist = CURATED
-      .filter(p => isFinite(p.lat) && isFinite(p.lon))
-      .map(p => ({ ...p, _dist: haversineMeters(anchor, { lat: p.lat, lon: p.lon }) }))
-      .filter(p => p._dist <= WALK_METERS);
-
-    const groups = {};
-    for (const p of withDist) {
-      const cat = p._normType || 'other';
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(p);
-    }
-    Object.keys(groups).forEach(k => groups[k].sort((a,b)=>a._dist - b._dist));
-    return groups;
-  }
-
-  /* ---------- geocoding with retry ---------- */
-  async function geocodeNominatim(q, tries=4) {
-    const base = 'https://nominatim.openstreetmap.org/search';
-    const url  = `${base}?format=jsonv2&limit=1&q=${encodeURIComponent(q)}`;
-    let backoff = 700;
-    for (let i=0;i<tries;i++) {
-      try {
-        setStatus(i ? `Retrying geocoder… (${i}/${tries-1})` : 'Searching address…');
-        const resp = await fetch(url, {
-          headers: { 'Accept': 'application/json' }
-        });
-        if (resp.status === 503) throw new Error('503');
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const arr = await resp.json();
-        if (Array.isArray(arr) && arr.length) {
-          const hit = arr[0];
-          return { lat: parseFloat(hit.lat), lon: parseFloat(hit.lon), display: hit.display_name };
-        }
-        return null;
-      } catch (e) {
-        await new Promise(r => setTimeout(r, backoff));
-        backoff = Math.min(backoff * 1.7, 4000);
-      }
-    }
-    return null;
-  }
-
-  async function smartGeocode(input) {
-    let g = await geocodeNominatim(input);
-    if (g) return g;
-
-    // Strip unit/floor
-    const stripped = input.replace(/\b(FL|Floor|Suite|Ste|Unit|#)\.?\s*\w+/gi, '').trim();
-    if (stripped !== input) {
-      g = await geocodeNominatim(stripped);
-      if (g) return g;
-    }
-
-    // Strip trailing zip
-    const simpler = stripped.replace(/,\s*NY\s*\d{5}(?:-\d{4})?$/i, '').trim();
-    if (simpler !== stripped) {
-      g = await geocodeNominatim(simpler);
-      if (g) return g;
-    }
-
-    return await geocodeNominatim('New York, NY');
-  }
-
-  /* ---------- interactions ---------- */
-  function onClinicChange() {
-    const name = selClinic.value;
-    resultsEl.innerHTML = '';
-    if (!name) { setStatus(''); return; }
-
-    if (!CLINICS.length) {
-      setStatus('No clinics loaded. Check that places.json is available.');
-      return;
-    }
-    const clinic = CLINICS.find(c => c.name === name);
-    if (!clinic) { setStatus('Clinic not found.'); return; }
-
-    setStatus('Loading curated places near clinic…');
-    renderClinics([clinic], 'Selected Clinic');
-
-    const groups = groupCurated({ lat: clinic.lat, lon: clinic.lon });
-    renderNearby({ label: clinic.name, address: clinic.address, lat: clinic.lat, lon: clinic.lon }, groups);
-    setStatus('');
-  }
-
-  function onShowAll() {
-    resultsEl.innerHTML = '';
-    if (!CLINICS.length) {
-      setStatus('No clinics loaded. Check that places.json is available.');
-      return;
-    }
-    setStatus('');
-    renderClinics(CLINICS, 'All Clinics');
-  }
-
-  async function onFindNearby() {
-    const q = (inputAddr?.value || '').trim();
-    resultsEl.innerHTML = '';
-    if (!q) { setStatus('Please enter a hotel or address.'); return; }
-    setStatus('Matching place…');
-
-    const geo = await smartGeocode(q);
-    if (!geo) { setStatus('Could not locate that address. Try the hotel name.'); return; }
-
-    setStatus('Finding curated spots nearby…');
-    const groups = groupCurated({ lat: geo.lat, lon: geo.lon });
-    setStatus('');
-    renderNearby({ label: q, display: geo.display, lat: geo.lat, lon: geo.lon }, groups);
-  }
-
-  /* ---------- init ---------- */
-  async function init() {
-    const ok = await loadPlaces();
-    if (ok) {
-      populateClinicDropdown();
-      setStatus('');
-    }
-    // Always wire up handlers so UI responds (and shows helpful errors)
-    selClinic?.addEventListener('change', onClinicChange);
-    btnShowAll?.addEventListener('click', onShowAll);
-    btnNearby?.addEventListener('click', onFindNearby);
-    inputAddr?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); btnNearby?.click(); }
-    });
-  }
-
-  document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', init)
-    : init();
-})();
+document.addEventListener('DOMContentLoaded', init);
