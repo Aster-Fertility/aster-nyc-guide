@@ -148,5 +148,18 @@
 
     {"name":"Central Park Zoo","address":"E 64th St, New York, NY","lat":40.7650694,"lon":-73.9652104,"type":"activities","clinic":"Summit Fertility","website":"https://centralparkzoo.com"},
     {"name":"Bloomingdale’s Flagship","address":"1000 3rd Ave, New York, NY","lat":40.7623629,"lon":-73.9662333,"type":"activities","clinic":"Summit Fertility","website":"https://bloomingdales.com"}
+    {"name":"Eataly Flatiron","address":"200 Fifth Avenue, New York, NY 10010","lat":40.741999,"lon":-73.989600,"type":"restaurants","clinic":"Spring Fertility NYC","website":"https://www.eataly.com/us_en/stores/nyc-flatiron/"},
+    {"name":"Eataly Downtown","address":"4 World Trade Center (3rd Floor), 101 Liberty St, New York, NY 10007","lat":40.712743,"lon":-74.011230,"type":"restaurants","clinic":"Kofinas Fertility Group","website":"https://www.eataly.com/us_en/stores/nyc-downtown/"},
+    {"name":"Eataly SoHo","address":"200 Lafayette Street, New York, NY 10012","lat":40.723230,"lon":-73.997150,"type":"restaurants","clinic":"Kofinas Fertility Group","website":"https://www.eataly.com/us_en/stores/nyc-soho/"},
+    {"name":"Eataly Caffè Rockefeller Center","address":"1230 Avenue of the Americas, New York, NY 10020","lat":40.758000,"lon":-73.981700,"type":"restaurants","clinic":"CCRM New York","website":"https://www.eataly.com/us_en/stores/caffe-rockefeller-center/"},
+    {"name":"Eataly Caffè Hudson Yards","address":"20 Hudson Yards RU 416, New York, NY 10001","lat":40.754850,"lon":-74.001570,"type":"restaurants","clinic":"Spring Fertility NYC","website":"https://www.eataly.com/us_en/stores/caffe-hudson-yards/"}
+    {"name":"Rosemary’s – West Village","address":"18 Greenwich Ave, New York, NY 10011","lat":40.7335,"lon":-74.0010,"type":"restaurants","website":"https://www.rosemarysnyc.com/location/rosemarys-west-village/"},
+    {"name":"Rosemary’s – East Side","address":"350 1st Avenue, New York, NY 10010","lat":40.7369,"lon":-73.9787,"type":"restaurants","website":"https://www.rosemarysnyc.com/location/rosemarys-east/"},
+    {"name":"Rosemary’s – Midtown","address":"825 3rd Ave, New York, NY 10022","lat":40.7540,"lon":-73.9707,"type":"restaurants","website":"https://www.rosemarysnyc.com/location/rosemarys-midtown/"},
+    {"name":"La Pecora Bianca – NoMad","address":"1133 Broadway, New York, NY 10010","lat":40.7439,"lon":-73.9892,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
+    {"name":"La Pecora Bianca – Midtown","address":"950 2nd Ave, New York, NY 10022","lat":40.7575,"lon":-73.9665,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
+    {"name":"La Pecora Bianca – Bryant Park","address":"20 W 40th St, New York, NY 10018","lat":40.7541,"lon":-73.9847,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
+    {"name":"Bryant Park Grill","address":"25 W 40th St, New York, NY 10018","lat":40.7544,"lon":-73.9839,"type":"restaurants","website":"https://bryantparkgrillnyc.com/"}
+
   ]
 }
