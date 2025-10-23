@@ -1,57 +1,51 @@
 :root{
-  --brand:#244c66; --ink:#1f2937; --muted:#6b7280; --bg:#f8fafc; --card:#ffffff; --accent:#d7e8f1;
+  --brand:#4a1e16;
+  --accent:#f6a21a;
+  --ink:#2e2522;
+  --muted:#6d5e57;
+  --bg:#fff7ee;
+  --card:#ffffff;
+  --border:#f0e6de;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-.header{padding:28px 16px;background:linear-gradient(90deg,var(--accent),#f0f7fb)}
-.header h1{margin:0 0 8px;font-size:28px;color:var(--brand)}
-.header .tagline{margin:0;color:var(--muted)}
-.container{max-width:980px;margin:24px auto;padding:0 16px}
-.search{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
-.search label{display:block;margin-bottom:8px;font-weight:600}
-.search input{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:10px}
-.search button{padding:10px 14px;border:none;border-radius:10px;background:var(--brand);color:white;cursor:pointer}
-.search .secondary{background:#e5eef4;color:#14384b;margin-left:6px}
-.suggestions{margin-top:6px;color:var(--muted);font-size:14px}
-.section-title{margin:18px 0 10px;font-size:18px;color:var(--brand)}
-.card{background:var(--card);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.card h3{margin:0 0 4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.item h4{margin:0 0 4px;font-size:15px}
-.item p{margin:2px 0;color:var(--muted);font-size:14px}
-.item a{color:#0b69a3;text-decoration:none}
-.footer{padding:24px 16px;text-align:center;color:var(--muted)}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef6fb;color:#0b69a3;font-size:12px;margin-left:6px}
-
-/* NEW */
-.distance{margin-top:4px;font-size:12px;color:#475569}
-.distance em{font-style:normal;color:#0b69a3}
-
-/* Clinic selection card */
-#clinicBox {
-  background: var(--card);
-  border: 1px solid #f0e6de;
-  padding: 16px 20px;
-  border-radius: 14px;
-  color: var(--ink);
-  box-shadow: 0 4px 10px rgba(0,0,0,.05);
-  margin-bottom: 20px;
+html, body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.header{
+  position:sticky; top:0; z-index:10;
+  background:linear-gradient(90deg,var(--bg),#fff7f0);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  display:flex; align-items:center; gap:12px;
 }
-#clinicBox h3 {
-  margin-top: 0;
-  color: var(--brand);
-  font-size: 18px;
-  font-weight: 700;
+.header .logo{height:44px; width:auto; display:block}
+.header h1{margin:0; font-size:20px; color:var(--brand)}
+.container{max-width:960px; margin:22px auto; padding:0 16px}
+.section-title{color:var(--brand); margin:0 0 8px 0; font-size:18px; font-weight:700}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  padding:16px 20px;
+  margin-bottom:20px;
 }
-#clinicSelect {
-  width: 100%;
-  background: var(--card);
-  border: 1px solid #f0e6de;
-  color: var(--ink);
-  padding: 12px;
-  border-radius: 12px;
+.helper-row{margin-top:10px}
+input[type="text"], select, button{ font:inherit }
+select, input[type="text"]{
+  width:100%; background:var(--card); color:var(--ink);
+  border:1px solid var(--border); border-radius:12px; padding:12px;
+  outline:none;
 }
-#clinicSelect:focus {
-  border-color: var(--brand);
-  outline: none;
-}
+select:focus, input[type="text"]:focus{ border-color:var(--brand) }
+button{ border:none; border-radius:12px; padding:10px 14px; cursor:pointer }
+button.secondary{ background:#f6efe6; color:var(--brand); border:1px solid var(--border) }
+button.secondary:hover{ filter:brightness(0.98) }
+.nearby-row{ display:flex; gap:10px; align-items:center; margin-top:4px }
+#nearbyResults{ margin-top:10px; display:grid; gap:10px }
+.nearby-card{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff }
+.nearby-card .meta{ color:var(--muted); font-size:13px; margin-top:4px }
+#results{ display:grid; gap:14px }
+#results .card h4{ margin:0 0 6px 0 }
+.addr{ color:var(--muted); font-size:14px; margin:4px 0 6px 0 }
+.tag{ display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px; background:#fff1dd; color:#7a2d0b; margin-right:6px; border:1px solid var(--border) }
+@media (max-width:720px){ .header h1{ font-size:18px } }
