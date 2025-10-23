@@ -1,51 +1,33 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Aster NYC Guide</title>
-  <link rel="icon" href="assets/aster-logo.png">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>NYC Fertility – Nearby Finder</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:24px;line-height:1.4}
+    .wrap{max-width:960px;margin:0 auto}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input[type="text"]{flex:1;min-width:260px;padding:10px 12px;border:1px solid #ccc;border-radius:8px}
+    button{padding:10px 14px;border:0;border-radius:8px;background:#1b66e5;color:#fff;cursor:pointer}
+    button:hover{opacity:.95}
+    #status{min-height:20px;color:#555;margin-top:8px}
+    #results{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    .result{border:1px solid #eee;border-radius:12px;padding:12px}
+    .title{font-weight:600;margin-bottom:4px}
+    .meta{font-size:.9rem;color:#666}
+  </style>
 </head>
 <body>
-  <header class="header">
-    <img src="assets/aster-logo.png" alt="Aster Concierge Fertility" class="logo">
-    <h1>Aster NYC Guide</h1>
-  </header>
-
-  <main class="container">
-    <div id="howtoBox" class="card">
-      <h3 class="section-title">How to use</h3>
-      <ol>
-        <li>Select your NYC clinic from the dropdown below.</li>
-        <li>Find local restaurants and things to do within a 15 minute walk of your clinic.</li>
-        <li>Decide where to go for some NYC fun!</li>
-      </ol>
+  <div class="wrap">
+    <h1>Nearby Finder</h1>
+    <div class="row">
+      <input id="hotelInput" type="text" placeholder="Enter hotel name or full address (e.g., New York Hilton Midtown or 1335 6th Ave…)" />
+      <button id="hotelSearchBtn">Search Nearby</button>
     </div>
-
-    <div id="clinicBox" class="card">
-      <h3 class="section-title">Select a Clinic</h3>
-      <select id="clinicSelect" aria-label="Select your clinic">
-        <option value="">Select a clinic…</option>
-      </select>
-      <div class="helper-row">
-        <button id="showAllBtn" class="secondary">Show all clinics</button>
-      </div>
-    </div>
-
-    <div id="nearbyBox" class="card">
-      <h3 class="section-title">Check what's near your hotel</h3>
-      <div class="nearby-row">
-        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address">
-        <button id="nearbyBtn" class="secondary">Find nearby</button>
-      </div>
-      <p class="muted" id="nearbyHint">Enter the name of your hotel (Ex: New York Hilton Midtown) or the address. We’ll show curated spots within a short walk of your hotel!</p>
-      <div id="nearbyResults" class="nearby-results"></div>
-    </div>
-
-    <section id="results"></section>
-  </main>
+    <div id="status"></div>
+    <div id="results"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
