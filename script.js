@@ -1,12 +1,14 @@
 /* Aster NYC Guide — uses ONLY places.json for data
    - Populates clinic dropdown from places.json (type:"clinic")
-   - Clinic select now shows curated nearby places around that clinic
+   - Clinic select shows curated nearby places around that clinic
    - “Find nearby” geocodes hotel/address with retry + fallbacks
+   - Displays walking time (minutes) instead of meters/miles
 */
 
 (() => {
   const PLACES_JSON = 'places.json';
-  const WALK_METERS = 1200; // ~15 minutes
+  const WALK_METERS = 1200; // ~15 minutes (~80 m/min * 15)
+  const METERS_PER_MIN = 80; // ~3 mph average walk
 
   // DOM
   const $ = (id) => document.getElementById(id);
@@ -34,10 +36,10 @@
     const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
     return 2 * R * Math.asin(Math.sqrt(h));
   }
-  function fmtDist(m) {
-    if (!isFinite(m)) return '';
-    const miles = m / 1609.344;
-    return miles < 1 ? `${Math.round(m)} m` : `${miles.toFixed(2)} mi`;
+  function fmtWalkTime(meters) {
+    if (!isFinite(meters)) return '';
+    const mins = Math.max(1, Math.round(meters / METERS_PER_MIN));
+    return `${mins} min walk`;
   }
   const setStatus = (t='') => { if (statusEl) statusEl.textContent = t; };
 
@@ -107,7 +109,7 @@
         <div class="place-card">
           <div class="place-title">${r.name}</div>
           <div class="place-sub">${r.address}</div>
-          <div class="place-meta">${fmtDist(r._dist)} away</div>
+          <div class="place-meta">${fmtWalkTime(r._dist)}</div>
           ${r.website ? `<a class="ext" href="${r.website}" target="_blank" rel="noopener">Website</a>` : ''}
         </div>`).join('');
       return `
@@ -117,7 +119,6 @@
         </div>`;
     }).join('');
 
-    // append to whatever's already in results (so the clinic card stays visible)
     resultsEl.insertAdjacentHTML('beforeend', hdr + blocks);
   }
 
@@ -193,10 +194,10 @@
 
     setStatus('Loading curated places near clinic…');
 
-    // 1) show clinic card
+    // 1) clinic card
     renderClinics([clinic], 'Selected Clinic');
 
-    // 2) compute & render curated nearby
+    // 2) curated nearby as walking time
     const groups = groupCurated({ lat: clinic.lat, lon: clinic.lon });
     renderNearby(
       { label: clinic.name, address: clinic.address, lat: clinic.lat, lon: clinic.lon },
@@ -229,7 +230,6 @@
     const groups = groupCurated({ lat: geo.lat, lon: geo.lon });
     setStatus('');
 
-    // header only; no clinic card for arbitrary address
     renderNearby({ label: q, display: geo.display, lat: geo.lat, lon: geo.lon }, groups);
   }
 
