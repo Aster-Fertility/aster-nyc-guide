@@ -584,5 +584,60 @@
       "price_level": "$$",
       "note": "Upscale mall inside Time Warner Center with fashion, tech, and eats."
     }
+      {
+    "id": "mure-and-grand",
+    "name": "Mure & Grand",
+    "type": "hidden_gems",
+    "address": "864 7th Ave, New York, NY 10019",
+    "lat": 40.764502,
+    "lon": -73.9799,
+    "website": "https://www.mureandgrand.com/",
+    "clinic": "CCRM New York",
+    "tags": ["boutique", "accessories", "gifts", "women-owned"]
+  },
+  {
+    "id": "lanablu-boutique",
+    "name": "LanaBlu Boutique",
+    "type": "hidden_gems",
+    "address": "Turnstyle Underground Market, 1000 8th Ave, New York, NY 10019",
+    "lat": 40.768062,
+    "lon": -73.982753,
+    "website": "https://www.lanablu.com/",
+    "clinic": "CCRM New York",
+    "tags": ["boutique", "accessories", "gifts", "turnstyle-market"]
+  },
+  {
+    "id": "the-plaza-boutique",
+    "name": "The Plaza Boutique",
+    "type": "hidden_gems",
+    "address": "The Plaza Hotel, 1 W 58th St, New York, NY 10019",
+    "lat": 40.76439,
+    "lon": -73.974046,
+    "website": "https://www.theplazany.com/shopping/the-plaza-boutique/",
+    "clinic": "CCRM New York",
+    "tags": ["hotel-boutique", "luxury", "gifts", "souvenirs"]
+  },
+  {
+    "id": "big-apple-souvenirs-gifts",
+    "name": "Big Apple Souvenirs & Gifts",
+    "type": "hidden_gems",
+    "address": "840 7th Ave, New York, NY 10019",
+    "lat": 40.763623,
+    "lon": -73.980141,
+    "website": "https://www.yelp.com/biz/big-apple-souvenirs-and-gifts-new-york",
+    "clinic": "CCRM New York",
+    "tags": ["souvenirs", "nyc-merch", "gifts", "touristy"]
+  },
+  {
+    "id": "gift-expression-inc",
+    "name": "Gift Expression Inc",
+    "type": "hidden_gems",
+    "address": "730 8th Ave #45, New York, NY 10036",
+    "lat": 40.759848,
+    "lon": -73.987358,
+    "website": "https://www.yelp.com/biz/gift-expression-inc-new-york",
+    "clinic": "CCRM New York",
+    "tags": ["gift-shop", "souvenirs", "cards", "accessories"]
+  }
   ]
 }
