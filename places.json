@@ -9,6 +9,54 @@
       "lat": 40.7457441,
       "lon": -73.971953,
       "website": "https://nyulangone.org/locations/fertility-center"
+    },
+    {
+      "id": "ccrm-new-york",
+      "name": "CCRM New York",
+      "address": "810 Seventh Ave, New York, NY 10019",
+      "lat": 40.7639,
+      "lon": -73.9819,
+      "website": "https://www.ccrmivf.com/nyc/"
+    },
+    {
+      "id": "rma-east-side",
+      "name": "RMA of New York \u2013 East Side",
+      "address": "635 Madison Ave, 10th Floor, New York, NY 10022",
+      "lat": 40.7637,
+      "lon": -73.9727,
+      "website": "https://www.rmany.com/about-rmany/locations/manhattan/rma-eastside"
+    },
+    {
+      "id": "spring-fertility-bryant-park",
+      "name": "Spring Fertility \u2013 Bryant Park",
+      "address": "114 W 41st St, 2nd Floor, New York, NY 10036",
+      "lat": 40.753,
+      "lon": -73.9837,
+      "website": "https://springfertility.com/newyorkcity/"
+    },
+    {
+      "id": "kofinas-lower-manhattan",
+      "name": "Kofinas Fertility Group \u2013 Lower Manhattan",
+      "address": "65 Broadway, 14th Floor, New York, NY 10006",
+      "lat": 40.7072,
+      "lon": -74.0123,
+      "website": "https://www.kofinasfertility.com/locations/lower-manhattan"
+    },
+    {
+      "id": "weill-cornell-york-ave",
+      "name": "Weill Cornell Medicine (1305 York Ave)",
+      "address": "1305 York Ave, New York, NY 10021",
+      "lat": 40.7651,
+      "lon": -73.9557,
+      "website": "https://weill.cornell.edu/our-story/maps-and-directions"
+    },
+    {
+      "id": "summit-fertility-madison",
+      "name": "Summit Fertility (Midtown)",
+      "address": "635 Madison Ave, New York, NY 10022",
+      "lat": 40.7637,
+      "lon": -73.9727,
+      "website": "https://www.summithealth.com/"
     }
   ],
   "places": [
@@ -78,7 +126,10 @@
       ],
       "price_level": "$$",
       "featured_for": [
-        "nyu-kips-bay"
+        "ccrm-new-york",
+        "nyu-kips-bay",
+        "rma-east-side",
+        "summit-fertility-madison"
       ],
       "note": "Fresh pastas & seasonal veg; airy, plant-filled space on 1st Ave."
     },
@@ -142,7 +193,10 @@
       ],
       "price_level": "$$",
       "featured_for": [
-        "nyu-kips-bay"
+        "ccrm-new-york",
+        "nyu-kips-bay",
+        "rma-east-side",
+        "summit-fertility-madison"
       ],
       "note": "Bright Italian all\u2011day caf\u00e9; great house-made pastas near Midtown East."
     },
@@ -244,7 +298,10 @@
       ],
       "price_level": "$$$",
       "featured_for": [
-        "nyu-kips-bay"
+        "ccrm-new-york",
+        "nyu-kips-bay",
+        "rma-east-side",
+        "spring-fertility-bryant-park"
       ],
       "note": "Garden-side dining by Bryant Park\u2014great for a celebratory meal."
     },
@@ -279,7 +336,13 @@
         "tickets"
       ],
       "price_level": "$$",
-      "note": "Glass-floored sky deck with panoramic city views."
+      "note": "Glass-floored sky deck with panoramic city views.",
+      "featured_for": [
+        "ccrm-new-york",
+        "rma-east-side",
+        "spring-fertility-bryant-park",
+        "weill-cornell-york-ave"
+      ]
     },
     {
       "id": "iconic-times-square",
@@ -295,7 +358,13 @@
         "broadway"
       ],
       "price_level": "free",
-      "note": "Neon canyons, street performers, and nonstop energy."
+      "note": "Neon canyons, street performers, and nonstop energy.",
+      "featured_for": [
+        "ccrm-new-york",
+        "rma-east-side",
+        "spring-fertility-bryant-park",
+        "weill-cornell-york-ave"
+      ]
     },
     {
       "id": "iconic-empire-state",
@@ -311,7 +380,13 @@
         "tickets"
       ],
       "price_level": "$$",
-      "note": "Art Deco icon with two observation decks and classic skyline views."
+      "note": "Art Deco icon with two observation decks and classic skyline views.",
+      "featured_for": [
+        "ccrm-new-york",
+        "rma-east-side",
+        "spring-fertility-bryant-park",
+        "weill-cornell-york-ave"
+      ]
     },
     {
       "id": "iconic-rockefeller-center",
@@ -327,7 +402,13 @@
         "seasonal-skating"
       ],
       "price_level": "free+",
-      "note": "Art Deco complex, shops, and Top of the Rock observatory."
+      "note": "Art Deco complex, shops, and Top of the Rock observatory.",
+      "featured_for": [
+        "ccrm-new-york",
+        "rma-east-side",
+        "spring-fertility-bryant-park",
+        "weill-cornell-york-ave"
+      ]
     },
     {
       "id": "iconic-central-park",
