@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "generated_at_utc": "2025-10-24T14:32:02.258661+00:00",
+  "generated_at_utc": "2025-10-24T15:05:53.392164+00:00",
   "clinics": [
     {
       "id": "nyu-kips-bay",
@@ -79,9 +79,6 @@
       "dietary": [
         "vegetarian"
       ],
-      "featured_for": [
-        "nyu-kips-bay"
-      ],
       "note": "Yemeni coffee, Adani chai, mellow vibe."
     },
     {
@@ -101,9 +98,6 @@
       "dietary": [
         "gluten-free options"
       ],
-      "featured_for": [
-        "nyu-kips-bay"
-      ],
       "note": "Cozy neighborhood spot for coffee, egg sandwiches, and pastries."
     },
     {
@@ -120,16 +114,10 @@
         "cocktails",
         "date-night"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
-      ],
-      "price_level": "$$",
-      "featured_for": [
-        "ccrm-new-york",
-        "nyu-kips-bay",
-        "rma-east-side",
-        "summit-fertility-madison"
       ],
       "note": "Fresh pastas & seasonal veg; airy, plant-filled space on 1st Ave."
     },
@@ -146,11 +134,11 @@
         "pasta",
         "rooftop garden"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Beloved West Village original with rooftop garden; lively, stylish."
     },
     {
@@ -166,11 +154,11 @@
         "casual",
         "wine"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Crisp Roman-style pies, spritzes, and neighborhood energy."
     },
     {
@@ -187,16 +175,10 @@
         "aperitivo",
         "outdoor-seating"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
-      ],
-      "price_level": "$$",
-      "featured_for": [
-        "ccrm-new-york",
-        "nyu-kips-bay",
-        "rma-east-side",
-        "summit-fertility-madison"
       ],
       "note": "Bright Italian all\u2011day caf\u00e9; great house-made pastas near Midtown East."
     },
@@ -213,11 +195,11 @@
         "pasta",
         "brunch"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Bustling corner spot by Madison Square Park; spritz & pasta favorite."
     },
     {
@@ -232,11 +214,11 @@
         "italian",
         "pasta"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Downtown outpost with chic interiors and crowd-pleasing pastas."
     },
     {
@@ -251,11 +233,11 @@
         "italian",
         "pasta"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Polished UES dining room; reliable Italian classics."
     },
     {
@@ -271,11 +253,11 @@
         "pasta",
         "cocktails"
       ],
+      "price_level": "$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
       ],
-      "price_level": "$$",
       "note": "Steps from the High Line; lively bar scene and al fresco tables."
     },
     {
@@ -292,16 +274,10 @@
         "park-view",
         "reservations"
       ],
+      "price_level": "$$$",
       "dietary": [
         "gluten-free options",
         "vegetarian"
-      ],
-      "price_level": "$$$",
-      "featured_for": [
-        "ccrm-new-york",
-        "nyu-kips-bay",
-        "rma-east-side",
-        "spring-fertility-bryant-park"
       ],
       "note": "Garden-side dining by Bryant Park\u2014great for a celebratory meal."
     },
@@ -320,6 +296,7 @@
         "free"
       ],
       "price_level": "free",
+      "dietary": [],
       "note": "Elevated park with gardens, public art, and Hudson River views."
     },
     {
@@ -336,6 +313,7 @@
         "tickets"
       ],
       "price_level": "$$",
+      "dietary": [],
       "note": "Glass-floored sky deck with panoramic city views.",
       "featured_for": [
         "ccrm-new-york",
@@ -358,6 +336,7 @@
         "broadway"
       ],
       "price_level": "free",
+      "dietary": [],
       "note": "Neon canyons, street performers, and nonstop energy.",
       "featured_for": [
         "ccrm-new-york",
@@ -380,6 +359,7 @@
         "tickets"
       ],
       "price_level": "$$",
+      "dietary": [],
       "note": "Art Deco icon with two observation decks and classic skyline views.",
       "featured_for": [
         "ccrm-new-york",
@@ -401,7 +381,8 @@
         "top-of-the-rock",
         "seasonal-skating"
       ],
-      "price_level": "free+",
+      "price_level": "free",
+      "dietary": [],
       "note": "Art Deco complex, shops, and Top of the Rock observatory.",
       "featured_for": [
         "ccrm-new-york",
@@ -425,6 +406,7 @@
         "free"
       ],
       "price_level": "free",
+      "dietary": [],
       "note": "843-acre urban oasis\u2014stroll the Mall, Bow Bridge, and Bethesda Terrace."
     },
     {
@@ -440,6 +422,7 @@
         "boutiques"
       ],
       "price_level": "$$",
+      "dietary": [],
       "note": "Historic market hall with global eats, bakeries, and indie shops."
     }
   ]
