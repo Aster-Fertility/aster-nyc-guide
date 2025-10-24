@@ -77,25 +77,6 @@
       <!-- ▲▲▲ End of Option 3 additions ▲▲▲ -->
     </section>
 
-    <!-- Hotel / address nearby search -->
-    <section id="nearbyBox" class="card">
-      <h3 class="section-title">Check what's near your hotel</h3>
-      <div class="nearby-row">
-        <label class="sr-only" for="userAddress">Hotel or address</label>
-        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" autocomplete="off">
-        <button id="nearbyBtn" class="secondary" type="button">Find nearby</button>
-      </div>
-      <p class="muted" id="nearbyHint">
-        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated Manhattan spots within a short walk!
-      </p>
-      <p class="muted status" id="status" aria-live="polite"></p>
-      <div id="nearbyResults" class="nearby-results"></div>
-    </section>
-
-    <!-- Results container (clinic-curated lists render here) -->
-    <section id="results" aria-live="polite"></section>
-  </main>
-
   <!-- Optional polish: live update the "~min" label next to the radius slider -->
   <script>
     window.addEventListener('DOMContentLoaded', function () {
