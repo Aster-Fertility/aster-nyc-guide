@@ -6,6 +6,7 @@
   <title>Aster Fertility Concierge – NYC Guide</title>
   <link rel="icon" href="assets/aster-logo.png">
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
   <header class="header">
@@ -30,8 +31,8 @@
       <h3 class="section-title">How to use</h3>
       <ol>
         <li>Select your NYC clinic from the dropdown below.</li>
-        <li>Find local spots within a ~10 minute walk.</li>
-        <li>Decide where to go for some NYC fun!</li>
+        <li>Adjust the walking radius and (optionally) apply filters.</li>
+        <li>Browse curated spots that are closest to you.</li>
       </ol>
     </section>
 
@@ -45,6 +46,35 @@
         </select>
         <button id="showAllBtn" class="secondary" type="button">Show all clinics</button>
       </div>
+
+      <!-- ▼▼▼ Added: walking radius + filters (Option 3) ▼▼▼ -->
+      <div class="controls">
+        <div class="control-group">
+          <label for="radiusInput"><strong>Walking radius:</strong></label><br>
+          <input id="radiusInput" type="range" min="300" max="2400" step="100" value="1200" aria-label="Walking radius in meters">
+          <span id="radiusValue" class="muted">~15 min</span>
+        </div>
+
+        <div class="control-group">
+          <h4>Filter by category</h4>
+          <div data-filter-group="type" class="filters">
+            <label><input type="checkbox" value="cafe" checked> Cafés</label>
+            <label><input type="checkbox" value="restaurant" checked> Restaurants</label>
+            <label><input type="checkbox" value="shopping" checked> Shopping</label>
+            <label><input type="checkbox" value="iconic" checked> Iconic</label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h4>Filter by tags</h4>
+          <div data-filter-group="tag" class="filters">
+            <label><input type="checkbox" value="gluten-free options"> Gluten-free</label>
+            <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
+            <label><input type="checkbox" value="outdoor-seating"> Outdoor seating</label>
+          </div>
+        </div>
+      </div>
+      <!-- ▲▲▲ End of Option 3 additions ▲▲▲ -->
     </section>
 
     <!-- Hotel / address nearby search -->
@@ -66,6 +96,10 @@
     <section id="results" aria-live="polite"></section>
   </main>
 
-  <script src="script.js" defer></script>
-</body>
-</html>
+  <!-- Optional polish: live update the "~min" label next to the radius slider -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const r = document.getElementById('radiusInput');
+      const rv = document.getElementById('radiusValue');
+      function updateLabel() {
+        if (!r ||
