@@ -498,6 +498,28 @@
     "price_level": "$",
     "dietary": ["vegetarian options"],
     "note": "Classic NYC pizza joint serving generous slices—great for a quick stop after sightseeing."
-  }
+  },
+    {
+  "name": "Previti Pizza 34th St.",
+  "address": "344 E 34th St, New York, NY 10016",
+  "type": "Pizza Restaurant",
+  "rating": 4.8,
+  "notes": "Highly rated, gourmet slices near 1st Ave & 34th."
+},
+{
+  "name": "Vezzo Thin Crust Pizza",
+  "address": "178 Lexington Ave, New York, NY 10016",
+  "type": "Pizza Restaurant",
+  "rating": 4.5,
+  "notes": "Excellent thin-crust pies in Kips Bay area."
+},
+    {
+  "name": "La Pizza Italia",
+  "address": "1109 1st Ave, New York, NY 10065",
+  "type": "Pizza Restaurant",
+  "rating": 4.7,
+  "notes": "Right on 1st Ave – convenient and highly rated."
+},
+
   ]
 }
