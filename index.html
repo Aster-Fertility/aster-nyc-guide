@@ -1,22 +1,48 @@
-<title>Aster Fertility Concierge – NYC Guide</title>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aster Fertility Concierge – NYC Guide</title>
   <link rel="icon" href="assets/aster-logo.png">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
 <body>
   <header class="header">
-@@ -30,8 +31,8 @@ <h2 class="section-title">Welcome to the Aster NYC Guide</h2>
+    <img src="assets/aster-logo.png" alt="Aster Fertility Concierge" class="logo">
+    <h1>Aster Fertility Concierge</h1>
+  </header>
+
+  <main class="container">
+    <!-- Intro / Blurb -->
+    <section id="intro" class="card">
+      <h2 class="section-title">Welcome to the Aster NYC Guide</h2>
+      <p>
+        The Aster NYC Guide is your insider’s compass to the city that never sleeps—designed just for you.
+        Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out local favorites near
+        your clinic and hotel: cozy cafés, peaceful parks, good eats, and little ways to unwind between appointments. It’s our way
+        of helping you feel cared for, connected, and comfortable while you’re here—because even a medical trip deserves
+        a little <em>you-time</em>.
+      </p>
+    </section>
+
+    <section id="howtoBox" class="card">
       <h3 class="section-title">How to use</h3>
       <ol>
         <li>Select your NYC clinic from the dropdown below.</li>
-        <li>Find local spots within a ~10 minute walk.</li>
-        <li>Decide where to go for some NYC fun!</li>
         <li>Adjust the walking radius and (optionally) apply filters.</li>
         <li>Browse curated spots that are closest to you.</li>
       </ol>
     </section>
 
-@@ -45,6 +46,35 @@ <h3 class="section-title">Select a Clinic</h3>
+    <!-- Clinic dropdown -->
+    <section id="clinicBox" class="card">
+      <h3 class="section-title">Select a Clinic</h3>
+      <div class="helper-row">
+        <label class="sr-only" for="clinicSelect">Clinic</label>
+        <select id="clinicSelect" aria-label="Select your clinic">
+          <option value="">Select a clinic…</option>
         </select>
         <button id="showAllBtn" class="secondary" type="button">Show all clinics</button>
       </div>
@@ -52,13 +78,24 @@
     </section>
 
     <!-- Hotel / address nearby search -->
-@@ -66,6 +96,10 @@ <h3 class="section-title">Check what's near your hotel</h3>
+    <section id="nearbyBox" class="card">
+      <h3 class="section-title">Check what's near your hotel</h3>
+      <div class="nearby-row">
+        <label class="sr-only" for="userAddress">Hotel or address</label>
+        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" autocomplete="off">
+        <button id="nearbyBtn" class="secondary" type="button">Find nearby</button>
+      </div>
+      <p class="muted" id="nearbyHint">
+        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated Manhattan spots within a short walk!
+      </p>
+      <p class="muted status" id="status" aria-live="polite"></p>
+      <div id="nearbyResults" class="nearby-results"></div>
+    </section>
+
+    <!-- Results container (clinic-curated lists render here) -->
     <section id="results" aria-live="polite"></section>
   </main>
 
-  <script src="script.js" defer></script>
-</body>
-</html>
   <!-- Optional polish: live update the "~min" label next to the radius slider -->
   <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -66,3 +103,4 @@
       const rv = document.getElementById('radiusValue');
       function updateLabel() {
         if (!r ||
+
