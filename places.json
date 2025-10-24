@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "generated_at_utc": "2025-10-24T15:05:53.392164+00:00",
+  "generated_at_utc": "2025-10-24T15:23:07.489677+00:00",
   "clinics": [
     {
       "id": "nyu-kips-bay",
@@ -422,8 +422,167 @@
         "boutiques"
       ],
       "price_level": "$$",
-      "dietary": [],
       "note": "Historic market hall with global eats, bakeries, and indie shops."
+    },
+    {
+      "id": "shops-columbus-circle",
+      "name": "The Shops at Columbus Circle",
+      "type": "shopping",
+      "address": "10 Columbus Cir, New York, NY 10019",
+      "lat": 40.7681,
+      "lon": -73.9826,
+      "website": "https://www.theshopsatcolumbuscircle.com/",
+      "tags": [
+        "mall",
+        "luxury",
+        "brands"
+      ],
+      "price_level": "$$",
+      "note": "Upscale mall inside Time Warner Center with fashion, tech, and eats."
+    },
+    {
+      "id": "rockefeller-center-shops",
+      "name": "Rockefeller Center Shops",
+      "type": "shopping",
+      "address": "45 Rockefeller Plaza, New York, NY 10111",
+      "lat": 40.7587,
+      "lon": -73.9787,
+      "website": "https://www.rockefellercenter.com/shops/",
+      "tags": [
+        "boutiques",
+        "gifts"
+      ],
+      "price_level": "$$",
+      "note": "Indoor/outdoor shopping arcade with classic NYC boutiques."
+    },
+    {
+      "id": "bloomingdales-59th",
+      "name": "Bloomingdale\u2019s 59th Street",
+      "type": "shopping",
+      "address": "1000 3rd Ave, New York, NY 10022",
+      "lat": 40.7625,
+      "lon": -73.9672,
+      "website": "https://www.bloomingdales.com/storedetail?storeID=1",
+      "tags": [
+        "department-store",
+        "luxury",
+        "brands"
+      ],
+      "price_level": "$$$",
+      "note": "Iconic flagship department store on the Upper East Side."
+    },
+    {
+      "id": "grand-central-market",
+      "name": "Grand Central Market",
+      "type": "shopping",
+      "address": "89 E 42nd St, New York, NY 10017",
+      "lat": 40.7527,
+      "lon": -73.9772,
+      "website": "https://www.grandcentralterminal.com/shops/",
+      "tags": [
+        "market",
+        "gourmet",
+        "gifts"
+      ],
+      "price_level": "$$",
+      "note": "Indoor market hall with gourmet food stalls and specialty gifts."
+    },
+    {
+      "id": "shops-hudson-yards",
+      "name": "The Shops & Restaurants at Hudson Yards",
+      "type": "shopping",
+      "address": "20 Hudson Yards, New York, NY 10001",
+      "lat": 40.7539,
+      "lon": -74.001,
+      "website": "https://www.hudsonyardsnewyork.com/shops-and-restaurants",
+      "tags": [
+        "mall",
+        "luxury",
+        "brands"
+      ],
+      "price_level": "$$$",
+      "note": "Multi-level shopping center connected to the High Line and Edge."
+    },
+    {
+      "id": "brookfield-place",
+      "name": "Brookfield Place",
+      "type": "shopping",
+      "address": "230 Vesey St, New York, NY 10281",
+      "lat": 40.7146,
+      "lon": -74.0157,
+      "website": "https://bfplny.com/",
+      "tags": [
+        "mall",
+        "waterfront",
+        "luxury",
+        "food-hall"
+      ],
+      "price_level": "$$$",
+      "note": "Waterfront complex in Battery Park City with luxury shops and eateries."
+    },
+    {
+      "id": "westfield-oculus",
+      "name": "Westfield World Trade Center (Oculus)",
+      "type": "shopping",
+      "address": "185 Greenwich St, New York, NY 10007",
+      "lat": 40.7127,
+      "lon": -74.0119,
+      "website": "https://www.westfield.com/united-states/wtc",
+      "tags": [
+        "mall",
+        "architecture",
+        "brands"
+      ],
+      "price_level": "$$",
+      "note": "Santiago Calatrava\u2019s Oculus with striking architecture and retail."
+    },
+    {
+      "id": "soho-shopping",
+      "name": "SoHo Shopping District",
+      "type": "shopping",
+      "address": "Broadway & Prince St, New York, NY 10012",
+      "lat": 40.7243,
+      "lon": -73.9982,
+      "website": "https://www.sohonyc.com/",
+      "tags": [
+        "boutiques",
+        "fashion",
+        "design"
+      ],
+      "price_level": "$$",
+      "note": "Cast\u2011iron district with flagship stores and indie boutiques."
+    },
+    {
+      "id": "fifth-ave-flagships",
+      "name": "Fifth Avenue Flagships",
+      "type": "shopping",
+      "address": "Fifth Ave from 49th\u201359th St, New York, NY",
+      "lat": 40.7613,
+      "lon": -73.974,
+      "website": "https://www.nycgo.com/boroughs-neighborhoods/manhattan/midtown/",
+      "tags": [
+        "luxury",
+        "flagships",
+        "window-shopping"
+      ],
+      "price_level": "$$$",
+      "note": "Iconic stretch of luxury flagships and classic window\u2011shopping."
+    },
+    {
+      "id": "the-shops-columbus-circle",
+      "name": "The Shops at Columbus Circle",
+      "type": "shopping",
+      "address": "10 Columbus Cir, New York, NY 10019",
+      "lat": 40.7681,
+      "lon": -73.9826,
+      "website": "https://www.theshopsatcolumbuscircle.com/",
+      "tags": [
+        "mall",
+        "luxury",
+        "brands"
+      ],
+      "price_level": "$$",
+      "note": "Upscale mall inside Time Warner Center with fashion, tech, and eats."
     }
   ]
 }
