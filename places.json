@@ -168,6 +168,13 @@
     {"name":"Gift Expression Inc","address":"730 8th Ave #45, New York, NY 10036","lat":40.759848,"lon":-73.987358,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.yelp.com/biz/gift-expression-inc-new-york"},
     {"name":"The Little Beet","address":"135 W 50th St, New York, NY 10020","lat":40.760644,"lon":-73.981537,"type":"restaurants","clinic":"CCRM New York","website":"https://www.thelittlebeet.com/"},
     {"name":"Twenty One Grains","address":"245 W 46th St, New York, NY 10036","lat":40.759032,"lon":-73.986454,"type":"restaurants","clinic":"CCRM New York","website":"https://www.twentyonegrains.com/"},
+    {"name":"Bryant Park","address":"New York, NY 10018","lat":40.753597,"lon":-73.983233,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://bryantpark.org/"},
+    {"name":"Radio City Music Hall","address":"1260 6th Ave, New York, NY 10020","lat":40.759976,"lon":-73.979977,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://www.msg.com/radio-city-music-hall"},
+    {"name":"Central Park (Southwestern Edge)","address":"Columbus Circle, New York, NY 10019","lat":40.768094,"lon":-73.981891,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://www.centralparknyc.org/"},
+    {"name":"Times Square","address":"Manhattan, NY 10036","lat":40.758896,"lon":-73.985130,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://www.timessquarenyc.org/"},
+    {"name":"Rockefeller Center & Top of the Rock Observation Deck","address":"45 Rockefeller Plaza, New York, NY 10111","lat":40.758740,"lon":-73.978674,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://www.topoftherocknyc.com/"},
+    {"name":"The Edge","address":"30 Hudson Yards, New York, NY 10001","lat":40.753856,"lon":-74.001789,"type":"iconic_nyc_must_sees","clinic":"CCRM New York","website":"https://www.edgenyc.com/"},
+    {"name":"Empire State Building","address":"20 W 34th St, New York, NY 10001","lat":40.748817,"lon":-73.985428,"type":"iconic_nyc_must_sees","clinic":"CCRM New York",_
 
     {"name":"Bryant Park Grill","address":"25 W 40th St, New York, NY 10018","lat":40.7544,"lon":-73.9839,"type":"restaurants","website":"https://bryantparkgrillnyc.com/"}
   ]
