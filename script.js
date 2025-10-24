@@ -1,25 +1,21 @@
 
 /**
- * Aster NYC Guide – nearest places engine (drop-in)
- * Expects a sibling `places.json` file.
- * Optional DOM hooks (if present):
- *  - <select id="clinicSelect">
- *  - <input type="range" id="radiusInput"> (meters)
- *  - <div id="results"></div>
- *  - Filter checkboxes container with data-filter-group="type" and inputs [value=restaurant|cafe|shopping|iconic]
- *  - Filter checkboxes container with data-filter-group="tag"   and inputs [value=...] for tag filters
+ * Aster NYC Guide – nearest places engine (cleaned UI)
+ * - Only the website is clickable (Visit website → link)
+ * - Better spacing between items
+ * - Distance shows in miles and walking time (min)
  */
 (function () {
   const STATE = {
     data: null,
     clinic: null,
-    radius: 1200, // default ~10–12 min walk
-    typeFilters: new Set(),    // e.g. 'cafe','restaurant','shopping','iconic'
-    tagFilters: new Set(),     // e.g. 'gluten-free options','kid-friendly'
+    radius: 1200, // meters; ~80 m/min walking speed
+    typeFilters: new Set(),
+    tagFilters: new Set(),
     limitPerGroup: 8
   };
 
-  // Haversine distance (meters)
+  // Helpers
   function haversine(lat1, lon1, lat2, lon2) {
     const R = 6371000;
     const toRad = d => d * Math.PI / 180;
@@ -28,8 +24,10 @@
     const a = Math.sin(dLat/2) ** 2 +
               Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
               Math.sin(dLon/2) ** 2;
-    return 2 * R * Math.asin(Math.sqrt(a));
+    return 2 * R * Math.asin(Math.sqrt(a)); // meters
   }
+  function metersToMiles(m) { return m * 0.000621371; }
+  function metersToWalkMins(m) { return Math.round(m / 80); } // ≈80 m per minute
 
   function loadPlaces() {
     return fetch('places.json', { cache: 'no-cache' })
@@ -40,7 +38,6 @@
       .then(json => {
         STATE.data = json;
         initUI();
-        // default: pick first clinic
         STATE.clinic = json.clinics[0];
         renderAll();
         return json;
@@ -91,7 +88,8 @@
 
     let candidates = places.filter(p => {
       const typeOK = !types.length || types.includes(p.type);
-      const tagsOK = !mustHaveTags.length || (p.dietary || []).concat(p.tags || []).some(t => mustHaveTags.has ? mustHaveTags.has(t) : mustHaveTags.includes(t));
+      const tagsArray = (p.dietary || []).concat(p.tags || []);
+      const tagsOK = !mustHaveTags.size ? true : tagsArray.some(t => mustHaveTags.has(t));
       return typeOK && tagsOK;
     });
 
@@ -112,21 +110,26 @@
   }
 
   function renderCard(p) {
-    const dist = p.distance != null ? `${Math.round(p.distance)} m` : '';
+    const miles = metersToMiles(p.distance || 0);
+    const mins = metersToWalkMins(p.distance || 0);
+    const dist = p.distance != null ? `${miles.toFixed(1)} mi · ${mins} min walk` : '';
     const tags = (p.tags || []).concat(p.dietary || []);
     const tagHtml = tags.map(t => `<span class="chip">${t}</span>`).join('');
     const price = p.price_level ? `<span class="price">${p.price_level}</span>` : '';
     const note = p.note ? `<div class="note">${p.note}</div>` : '';
+    const website = p.website ? `<a class="visit-link" href="${p.website}" target="_blank" rel="noopener">Visit website</a>` : '';
+
     return `
-      <a class="place-card" href="${p.website || '#'}" target="_blank" rel="noopener">
-        <div class="place-card__header">
+      <div class="place-card">
+        <div class="place-card__row">
           <div class="place-card__title">${p.name}</div>
-          <div class="place-card__meta">${price}${dist ? ' · ' + dist : ''}</div>
+          <div class="place-card__meta">${price}${dist ? ` · ${dist}` : ''}</div>
         </div>
         <div class="place-card__sub">${p.address}</div>
         ${tagHtml ? `<div class="place-card__tags">${tagHtml}</div>` : ''}
         ${note}
-      </a>
+        ${website}
+      </div>
     `;
   }
 
@@ -135,7 +138,7 @@
     return `
       <section class="card">
         <h3 class="section-title">${title}</h3>
-        <div class="grid">${ items.map(renderCard).join('') }</div>
+        <div class="grid grid-gap">${ items.map(renderCard).join('') }</div>
       </section>
     `;
   }
@@ -146,8 +149,8 @@
 
     const { places } = STATE.data;
     const radius = STATE.radius;
-    const types = STATE.typeFilters.size ? Array.from(STATE.typeFilters) : []; // empty means all
-    const tags  = STATE.tagFilters; // Set
+    const types = STATE.typeFilters.size ? Array.from(STATE.typeFilters) : [];
+    const tags  = STATE.tagFilters;
 
     const groups = [
       { key: 'cafe',      title: 'Cafés Near This Clinic' },
@@ -168,24 +171,20 @@
       return renderSection(g.title, items);
     }).join('');
 
+    const mins = (radius/80).toFixed(1);
+    const miles = (radius * 0.000621371).toFixed(2); // radius is meters
     root.innerHTML = `
       <div class="header-compact">
         <div><strong>Clinic:</strong> ${STATE.clinic.name}</div>
-        <div><strong>Radius:</strong> ${(radius/80).toFixed(1)} min walk (≈ ${Math.round(radius)} m)</div>
+        <div><strong>Radius:</strong> ~${mins} min (~${miles} mi)</div>
       </div>
       ${html || '<div class="card">No results match your filters.</div>'}
     `;
   }
 
   // Public API
-  window.AsterGuide = {
-    loadPlaces,
-    getNearbyPlaces,
-    renderAll,
-    state: STATE
-  };
+  window.AsterGuide = { loadPlaces, getNearbyPlaces, renderAll, state: STATE };
 
-  // Auto-run if results container exists
   if (document.getElementById('results')) {
     loadPlaces();
   }
