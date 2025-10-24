@@ -161,6 +161,12 @@
     {"name":"La Pecora Bianca – NoMad","address":"1133 Broadway, New York, NY 10010","lat":40.7439,"lon":-73.9892,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
     {"name":"La Pecora Bianca – Midtown","address":"950 2nd Ave, New York, NY 10022","lat":40.7575,"lon":-73.9665,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
     {"name":"La Pecora Bianca – Bryant Park","address":"20 W 40th St, New York, NY 10018","lat":40.7541,"lon":-73.9847,"type":"restaurants","website":"https://www.lapecorabianca.com/"},
+    {"name":"Mure & Grand","address":"864 7th Ave, New York, NY 10019","lat":40.764502,"lon":-73.979900,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.mureandgrand.com/"},
+    {"name":"LanaBlu Boutique","address":"Turnstyle Underground Market, 1000 8th Ave, New York, NY 10019","lat":40.768062,"lon":-73.982753,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.lanablu.com/"},
+    {"name":"The Plaza Boutique","address":"The Plaza Hotel, 1 W 58th St, New York, NY 10019","lat":40.764390,"lon":-73.974046,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.theplazany.com/shopping/the-plaza-boutique/"},
+    {"name":"Big Apple Souvenirs & Gifts","address":"840 7th Ave, New York, NY 10019","lat":40.763623,"lon":-73.980141,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.yelp.com/biz/big-apple-souvenirs-and-gifts-new-york"},
+    {"name":"Gift Expression Inc","address":"730 8th Ave #45, New York, NY 10036","lat":40.759848,"lon":-73.987358,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.yelp.com/biz/gift-expression-inc-new-york"},
+
     {"name":"Bryant Park Grill","address":"25 W 40th St, New York, NY 10018","lat":40.7544,"lon":-73.9839,"type":"restaurants","website":"https://bryantparkgrillnyc.com/"}
   ]
 }
