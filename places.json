@@ -460,39 +460,36 @@
       "clinic": "CCRM New York",
       "tags": ["gift-shop", "souvenirs", "cards", "accessories"]
     },
-      {
+        {
     "id": "ny-pizza-suprema",
     "name": "NY Pizza Suprema",
-    "type": "pizza_bagels",
+    "type": "restaurant",
     "address": "413 8th Ave, New York, NY 10001",
-    "lat": 40.748000,
-    "lon": -73.993000,
+    "lat": 40.7502,
+    "lon": -73.9953,
     "website": "https://nypizzasuprema.com/",
-    "clinic": "CCRM New York",
-    "tags": ["slice", "family-owned", "award-winning"]
+    "tags": ["pizza", "casual", "classic-nyc", "family-owned"],
+    "price_level": "$$",
+    "dietary": ["vegetarian options"],
+    "note": "Old-school NYC slice shop near Penn Station known for perfect thin-crust slices and fast service."
   },
   {
     "id": "johns-of-times-square",
     "name": "John’s of Times Square",
-    "type": "pizza_bagels",
+    "type": "restaurant",
     "address": "260 W 44th St, New York, NY 10036",
-    "lat": 40.757000,
-    "lon": -73.987000,
+    "lat": 40.7582,
+    "lon": -73.9884,
     "website": "https://www.johnspizzerianyc.com/",
-    "clinic": "CCRM New York",
-    "tags": ["coal-oven", "theater-district", "classic"]
+    "tags": ["pizza", "coal-oven", "theater-district", "family-friendly"],
+    "price_level": "$$",
+    "dietary": ["vegetarian options"],
+    "note": "Famous coal-fired brick oven pizza served in a converted church—perfect before a Broadway show."
   },
   {
-    "id": "rays-pizza-7th-ave-54th",
+    "id": "rays-pizza-midtown",
     "name": "Ray’s Pizza (Midtown West)",
-    "type": "pizza_bagels",
-    "address": "831 7th Ave (at 54th St), New York, NY 10019",
-    "lat": 40.764000,
-    "lon": -73.981000,
-    "website": "https://rayspizza.com/",
-    "clinic": "CCRM New York",
-    "tags": ["late-night", "slice", "midtown"]
-  }
-
+    "type": "restaurant",
+    "address": "831 7th Ave, New York, NY 10
   ]
 }
