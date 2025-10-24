@@ -166,6 +166,8 @@
     {"name":"The Plaza Boutique","address":"The Plaza Hotel, 1 W 58th St, New York, NY 10019","lat":40.764390,"lon":-73.974046,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.theplazany.com/shopping/the-plaza-boutique/"},
     {"name":"Big Apple Souvenirs & Gifts","address":"840 7th Ave, New York, NY 10019","lat":40.763623,"lon":-73.980141,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.yelp.com/biz/big-apple-souvenirs-and-gifts-new-york"},
     {"name":"Gift Expression Inc","address":"730 8th Ave #45, New York, NY 10036","lat":40.759848,"lon":-73.987358,"type":"hidden_gems","clinic":"CCRM New York","website":"https://www.yelp.com/biz/gift-expression-inc-new-york"},
+    {"name":"The Little Beet","address":"135 W 50th St, New York, NY 10020","lat":40.760644,"lon":-73.981537,"type":"restaurants","clinic":"CCRM New York","website":"https://www.thelittlebeet.com/"},
+    {"name":"Twenty One Grains","address":"245 W 46th St, New York, NY 10036","lat":40.759032,"lon":-73.986454,"type":"restaurants","clinic":"CCRM New York","website":"https://www.twentyonegrains.com/"},
 
     {"name":"Bryant Park Grill","address":"25 W 40th St, New York, NY 10018","lat":40.7544,"lon":-73.9839,"type":"restaurants","website":"https://bryantparkgrillnyc.com/"}
   ]
