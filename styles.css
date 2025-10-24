@@ -50,4 +50,28 @@ button.secondary:hover{ filter:brightness(0.98) }
 #results .card h4{ margin:0 0 6px 0 }
 .addr{ color:var(--muted); font-size:14px; margin:4px 0 6px 0 }
 .tag{ display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px; background:#fff1dd; color:#7a2d0b; margin-right:6px; border:1px solid var(--border) }
-@media (max-width:720px){ .header h1{ font-size:18px } }
+@media (max-width:720px){ .header h1{ font-size:18px } 
+                        /* --- Aster NYC Guide: list spacing & link styling --- */
+.grid.grid-gap { display: grid; gap: 12px; }
+.place-card {
+  padding: 12px 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  background: #fff;
+}
+.place-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.place-card__title { font-weight: 600; color: #222; }
+.place-card__meta { color: #555; font-size: 0.95rem; white-space: nowrap; }
+.place-card__sub { color: #444; margin-bottom: 6px; }
+.place-card .chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; background: #f3f4f6; margin-right: 6px; margin-bottom: 6px; }
+.place-card .note { color: #333; margin-top: 6px; }
+.place-card .visit-link { display: inline-block; margin-top: 8px; text-decoration: underline; }
+.place-card a { color: #0b5cab; } /* links only appear on the "Visit website" text */
+.place-card a:visited { color: #6b4ea3; }
+}
