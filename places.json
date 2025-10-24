@@ -486,10 +486,18 @@
     "dietary": ["vegetarian options"],
     "note": "Famous coal-fired brick oven pizza served in a converted church—perfect before a Broadway show."
   },
-  {
+ {
     "id": "rays-pizza-midtown",
     "name": "Ray’s Pizza (Midtown West)",
     "type": "restaurant",
-    "address": "831 7th Ave, New York, NY 10
+    "address": "831 7th Ave, New York, NY 10019",
+    "lat": 40.764,
+    "lon": -73.981,
+    "website": "https://rayspizza.com/",
+    "tags": ["pizza", "late-night", "quick-bite", "casual"],
+    "price_level": "$",
+    "dietary": ["vegetarian options"],
+    "note": "Classic NYC pizza joint serving generous slices—great for a quick stop after sightseeing."
+  },
   ]
 }
