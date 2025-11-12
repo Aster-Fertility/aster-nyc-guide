@@ -1,11 +1,12 @@
 :root{
-  --brand:#4a1e16;
-  --accent:#f6a21a;
-  --ink:#2e2522;
-  --muted:#6d5e57;
-  --bg:#fff7ee;
-  --card:#ffffff;
-  --border:#f0e6de;
+  --brand:#4a1e16;     /* deep cocoa */
+  --accent:#f6a21a;    /* warm amber */
+  --ink:#2b2421;       /* primary text */
+  --muted:#7a6a62;     /* secondary text */
+  --bg:#fff9f2;        /* soft paper */
+  --card:#ffffff;      /* cards */
+  --border:#efe2d7;    /* subtle border */
+  --accent-soft:#fff2d6; /* accent tint */
 }
 
 /* Reset + base */
@@ -14,100 +15,152 @@ html, body{margin:0;padding:0}
 body{
   background:var(--bg);
   color:var(--ink);
-  font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif
+  font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
 
 /* Header */
 .header{
   position:sticky; top:0; z-index:10;
-  background:linear-gradient(90deg,var(--bg),#fff7f0);
+  background:linear-gradient(90deg,#fffaf4, #fff5e8);
   border-bottom:1px solid var(--border);
-  padding:14px 18px;
-  display:flex; align-items:center; gap:12px;
+  padding:16px 18px;
+  display:flex; align-items:center; justify-content:center; gap:14px;
 }
-.header .logo{height:44px; width:auto; display:block}
-.header h1{margin:0; font-size:20px; color:var(--brand)}
+.header .logo{
+  height:64px; /* ← larger logo */
+  width:auto; display:block;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.06));
+}
+.header h1{
+  margin:0; font-size:22px; color:var(--brand); letter-spacing:.2px;
+}
 
-/* Layout */
-.container{max-width:960px; margin:22px auto; padding:0 16px}
-.section-title{color:var(--brand); margin:0 0 8px 0; font-size:18px; font-weight:700}
+/* Layout (narrower + centered) */
+.container{
+  max-width:760px;            /* ← smaller, centered column */
+  margin:28px auto;           /* ← centered */
+  padding:0 16px;
+}
+
+/* Section headings with accent underline */
+.section-title{
+  color:var(--brand);
+  margin:0 0 10px 0;
+  font-size:17px; font-weight:700;
+  position:relative;
+}
+.section-title:after{
+  content:"";
+  display:block; width:28px; height:3px;
+  background:var(--accent);
+  border-radius:999px; margin-top:6px;
+}
+
+/* Cards: smaller, lighter */
 .card{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:14px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  padding:16px 20px;
-  margin-bottom:20px;
+  box-shadow:0 6px 16px rgba(0,0,0,.04);
+  padding:14px 16px;          /* ← smaller padding */
+  margin:14px auto;           /* ← slightly tighter vertical rhythm */
 }
-.helper-row{margin-top:10px}
+
+/* Helpers */
+.helper-row{margin-top:8px}
 
 /* Form controls */
 input[type="text"], select, button{ font:inherit }
 select, input[type="text"]{
   width:100%; background:var(--card); color:var(--ink);
-  border:1px solid var(--border); border-radius:12px; padding:12px;
-  outline:none;
+  border:1px solid var(--border); border-radius:12px; padding:10px 12px;
+  outline:none; transition:border-color .15s ease;
 }
-select:focus, input[type="text"]:focus{ border-color:var(--brand) }
-button{ border:none; border-radius:12px; padding:10px 14px; cursor:pointer }
-button.secondary{ background:#f6efe6; color:var(--brand); border:1px solid var(--border) }
-button.secondary:hover{ filter:brightness(0.98) }
-#enrichBtn{ background:var(--brand); color:#fff }
-#enrichBtn:hover{ filter:brightness(0.96) }
+select:focus, input[type="text"]:focus{ border-color:var(--accent) }
+button{
+  border:1px solid var(--border);
+  border-radius:12px; padding:9px 12px; cursor:pointer;
+  background:var(--accent); color:#23180f; font-weight:600;
+}
+button.secondary{
+  background:var(--accent-soft); color:#3a2b22; border-color:#f2d9b7;
+}
+button:hover{ filter:brightness(0.98) }
 
 /* Nearby search layout */
 .nearby-row{ display:flex; gap:10px; align-items:center; margin-top:4px }
-#nearbyResults{ margin-top:10px; display:grid; gap:14px } /* bumped gap for nicer spacing */
-.nearby-card{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff }
+#nearbyResults{ margin-top:10px; display:grid; gap:12px }
+.nearby-card{
+  border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff
+}
 .nearby-card .meta{ color:var(--muted); font-size:13px; margin-top:4px }
 
-/* Results container */
-#results{ display:grid; gap:14px }
+/* Results container grid spacing (smaller boxes, but nice breathing room) */
+#results{ display:grid; gap:12px }
+
+/* Legacy address/text helpers */
 #results .card h4{ margin:0 0 6px 0 }
 .addr{ color:var(--muted); font-size:14px; margin:4px 0 6px 0 }
 
-/* Generic tag badge (legacy) */
+/* Tag badge (legacy) */
 .tag{
   display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
-  background:#fff1dd; color:#7a2d0b; margin-right:6px; border:1px solid var(--border)
+  background:var(--accent-soft); color:#6f3b05; margin-right:6px; border:1px solid #f3d9a8
 }
 
-/* --- Aster NYC Guide: list spacing & link styling (GLOBAL) --- */
-.grid.grid-gap { display:grid; gap:16px; } /* ↑ spacing between place cards */
+/* ----- Places list styling (global) ----- */
+.grid.grid-gap { display:grid; gap:14px; }  /* space between place cards */
 
-.place-card {
-  padding:12px 14px;
+.place-card{
+  padding:10px 12px;                     /* ← smaller overall */
   border:1px solid rgba(0,0,0,0.08);
   border-radius:12px;
   background:#fff;
+  transition: box-shadow .15s ease, transform .05s ease;
+}
+.place-card:hover{
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+  transform: translateY(-1px);
 }
 
-.place-card__row {
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:baseline;
+.place-card__row{
+  display:flex; justify-content:space-between; gap:12px; align-items:baseline;
   margin-bottom:6px;
 }
 
-/* Make location name bold */
-.place-card__title { font-weight:700; color:#222; } /* ← bold name */
+/* Bold location name */
+.place-card__title{ font-weight:700; color:#1f1815; }
 
-.place-card__meta { color:#555; font-size:0.95rem; white-space:nowrap; }
-.place-card__sub  { color:#444; margin-bottom:6px; }
+/* Meta line: price + distance with accent dot separator handled in JS */
+.place-card__meta{ color:#5b504a; font-size:0.93rem; white-space:nowrap; }
+
+.place-card__sub{ color:#4a403b; margin-bottom:6px; font-size:.95rem }
 
 .place-card .chip{
   display:inline-block; padding:2px 8px; border-radius:999px;
-  font-size:0.8rem; background:#f3f4f6;
-  margin-right:6px; margin-bottom:6px;
+  font-size:0.78rem; background:#f7f6f5; color:#3e342f;
+  margin-right:6px; margin-bottom:6px; border:1px solid #eee2d7;
 }
+.place-card .note{ color:#2f2724; margin-top:6px; font-size:.95rem }
+.place-card .visit-link{
+  display:inline-block; margin-top:8px; text-decoration:none; font-weight:600;
+  color:#2b2a28; background:var(--accent-soft); border:1px solid #f2d9b7;
+  padding:6px 10px; border-radius:10px;
+}
+.place-card .visit-link:hover{ filter:brightness(0.98) }
+.place-card a{ color:#0b5cab }
+.place-card a:visited{ color:#6b4ea3 }
 
-.place-card .note { color:#333; margin-top:6px; }
-.place-card .visit-link { display:inline-block; margin-top:8px; text-decoration:underline; }
-.place-card a { color:#0b5cab; } /* links only appear on the "Visit website" text */
-.place-card a:visited { color:#6b4ea3; }
+/* Controls layout polish */
+.controls{ display:grid; gap:12px; }
+.control-group{ background:#fff; border:1px solid var(--border); border-radius:12px; padding:10px 12px }
+.filters label{ display:inline-flex; align-items:center; gap:6px; margin:6px 10px 0 0; font-size:.95rem }
 
-/* --- Responsive tweaks --- */
+/* Responsive */
 @media (max-width:720px){
-  .header h1{ font-size:18px }
+  .header h1{ font-size:19px }
+  .header .logo{ height:56px }
+  .container{ max-width:100%; margin:20px auto; }
+  .grid.grid-gap{ gap:12px }
 }
