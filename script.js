@@ -362,4 +362,27 @@ if (methodBtn && modal && closeModal) {
     }
   });
 }
+// --- Method & Reliability modal ---
+const modal = document.getElementById('methodModal');
+const openBtn = document.getElementById('methodBtn');
+const closeBtn = document.getElementById('closeModal');
+
+if (openBtn && modal && closeBtn) {
+  openBtn.addEventListener('click', () => {
+    modal.classList.add('is-visible');
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('is-visible');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('is-visible');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
 
