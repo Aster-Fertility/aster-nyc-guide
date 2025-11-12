@@ -27,6 +27,7 @@
       </p>
     </section>
 
+    <!-- How to use -->
     <section id="howtoBox" class="card">
       <h3 class="section-title">How to use</h3>
       <ol>
@@ -35,6 +36,13 @@
         <li>Browse curated spots that are closest to you.</li>
       </ol>
     </section>
+
+    <!-- Method & Reliability button -->
+    <div class="method-btn-container">
+      <button id="methodBtn" type="button" class="btn-accent">
+        Method &amp; Reliability
+      </button>
+    </div>
 
     <!-- Clinic dropdown -->
     <section id="clinicBox" class="card">
@@ -65,7 +73,7 @@
             <label><input type="checkbox" value="things to do" checked> Things to do</label>
           </div>
         </div>
-
+      </div>
     </section>
 
     <!-- Hotel / address nearby search -->
@@ -86,6 +94,22 @@
     <!-- Results container (clinic-curated lists render here) -->
     <section id="results" aria-live="polite"></section>
   </main>
+
+  <!-- Method & Reliability Modal -->
+  <div id="methodModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="methodTitle">
+      <button class="close-modal" id="closeModal" aria-label="Close modal">×</button>
+      <h3 id="methodTitle">Method &amp; Reliability</h3>
+      <div class="modal-body">
+        <p><strong>Data source:</strong> All locations are curated manually and stored in the <code>places.json</code> file, grouped by category and clinic proximity.</p>
+        <p><strong>Geocoding:</strong> Each address includes latitude and longitude so distances can be estimated from each clinic or your entered address.</p>
+        <p><strong>Distance:</strong> Calculated using the Haversine formula to estimate straight-line distance between points.</p>
+        <p><strong>Walking time:</strong> Estimated at approximately 80 meters per minute. Actual walking times will vary based on pace, traffic lights, sidewalks, and weather.</p>
+        <p><strong>Filters:</strong> Category filters (e.g., cafés, bagels, pizza, shopping, things to do) and tags (e.g., vegetarian, gluten-free) narrow the list to what’s most relevant.</p>
+        <p><strong>Disclaimer:</strong> This guide is intended to support your visit and provide nearby options, but it is not a guarantee of quality or current conditions. Please double-check hours, availability, and suitability before visiting.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Live update the "~min" label next to the radius slider -->
   <script>
