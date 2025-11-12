@@ -1,152 +1,952 @@
 {
+  "version": "2.0.0",
+  "generated_at_utc": "2025-11-12T21:15:57.925318Z",
+  "clinics": [
+    {
+      "id": "nyu-kips-bay",
+      "name": "NYU Langone Fertility Center (Kips Bay)",
+      "address": "660 1st Ave, New York, NY 10016",
+      "lat": 40.7457441,
+      "lon": -73.971953,
+      "website": "https://nyulangone.org/locations/fertility-center"
+    },
+    {
+      "id": "ccrm-new-york",
+      "name": "CCRM New York",
+      "address": "810 Seventh Ave, New York, NY 10019",
+      "lat": 40.7639,
+      "lon": -73.9819,
+      "website": "https://www.ccrmivf.com/nyc/"
+    }
+  ],
   "places": [
-    {"name":"NYU Langone Fertility Center (Kips Bay)","address":"660 1st Ave, New York, NY 10016","lat":40.7457441,"lon":-73.971953,"type":"clinic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://nyulangone.org/locations/fertility-center"},
-
-    {"name":"Qahwah Valley Cafe","address":"630 1st Ave, New York, NY 10016","lat":40.7451845,"lon":-73.9723656,"type":"cafes","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.qahwahvalley.com/"},
-    {"name":"Charlotte Cafe","address":"605 2nd Ave, New York, NY 10016","lat":40.744291,"lon":-73.9763347,"type":"cafes","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.instagram.com/charlottecafeofficial/"},
-    {"name":"Gold Coffee","address":"491 3rd Ave, New York, NY 10016","lat":40.7451244,"lon":-73.9783409,"type":"cafes","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.instagram.com/the_gold_coffee_official/"},
-
-    {"name":"Garlic New York Pizza Bar","address":"629 2nd Ave, New York, NY 10016","lat":40.7451809,"lon":-73.975951,"type":"restaurants","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.garlicnewyorkpizza.com/"},
-    {"name":"Hole in the Wall – Murray Hill","address":"445 E 35th St, New York, NY 10016","lat":40.7442668,"lon":-73.9723584,"type":"restaurants","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://holeinthewallnyc.com/murray-hill"},
-    {"name":"Little Alley","address":"550 3rd Ave, New York, NY 10016","lat":40.747425,"lon":-73.9772514,"type":"restaurants","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.littlealley.nyc/"},
-    {"name":"Lena’s Italian Kitchen (Kips Bay)","address":"551 2nd Ave, New York, NY 10016","lat":40.7426423,"lon":-73.9777385,"type":"restaurants","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.lenasitaliankitchen.com/"},
-
-    {"name":"Chelsea Market","address":"75 9th Ave, New York, NY 10011","lat":40.7420513,"lon":-74.0048973,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.chelseamarket.com/"},
-    {"name":"Vintage India NYC","address":"132 Lexington Ave, New York, NY 10016","lat":40.7431166,"lon":-73.9824339,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://vintageindianyc.com/"},
-    {"name":"TTH Vintage Boutique (NoMad)","address":"40 W 25th St, New York, NY 10010","lat":40.7436045,"lon":-73.9910607,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.tthvintageboutique.org/"},
-    {"name":"Artisans of New York (Bryant Park Holiday Shops)","address":"41 W 40th St, New York, NY 10018","lat":40.7538161,"lon":-73.9843175,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.artisansofny.com/"},
-    {"name":"Rizzoli Bookstore (NoMad)","address":"1133 Broadway, New York, NY 10010","lat":40.7435762,"lon":-73.9892435,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.rizzolibookstore.com/"},
-    {"name":"Vintage Thrift Shop (Gramercy)","address":"286 3rd Ave, New York, NY 10010","lat":40.7384551,"lon":-73.9836479,"type":"hidden_gems","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.vintagethriftshop.org/"},
-
-    {"name":"TKTS Times Square (under the Red Steps)","address":"200 W 47th St, New York, NY 10036","lat":40.759195,"lon":-73.984833,"type":"broadway_comedy","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.tdf.org/discount-ticket-programs/tkts-by-tdf/tkts-live/"},
-
-    {"name":"Edge (Hudson Yards)","address":"30 Hudson Yards, New York, NY 10001","lat":40.7539277,"lon":-74.0005544,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.edgenyc.com/"},
-    {"name":"Statue of Liberty & Ellis Island (Statue City Cruises)","address":"Battery Park, New York, NY","lat":40.702786,"lon":-74.0157731,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.cityexperiences.com/new-york/city-cruises/statue/"},
-    {"name":"9/11 Memorial & Museum","address":"180 Greenwich St, New York, NY","lat":40.7113675,"lon":-74.0132704,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.911memorial.org"},
-    {"name":"Times Square","address":"Broadway & 7th Ave, New York, NY","lat":40.7536955,"lon":-73.988712,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.timessquarenyc.org"},
-    {"name":"Empire State Building","address":"20 W 34th St, New York, NY 10001","lat":40.7486538,"lon":-73.9853043,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.esbnyc.com"},
-    {"name":"Rockefeller Center","address":"45 Rockefeller Plaza, New York, NY 10111","lat":40.7592576,"lon":-73.9799569,"type":"iconic","clinic":"NYU Langone Fertility Center (Kips Bay)","website":"https://www.rockefellercenter.com"},
-
-    {"name":"CCRM New York","address":"810 Seventh Ave, New York, NY 10019","lat":40.7628709,"lon":-73.9825242,"type":"clinic","clinic":"CCRM New York","website":"https://www.ccrmivf.com/location/new-york"},
-
-    {"name":"Blue Bottle Coffee (Rockefeller Plaza)","address":"1 Rockefeller Plaza, New York, NY","lat":40.7579519,"lon":-73.9789482,"type":"cafes","clinic":"CCRM New York","website":"https://bluebottlecoffee.com"},
-    {"name":"Gregorys Coffee (874 6th Ave)","address":"874 6th Ave, New York, NY","lat":40.7477274,"lon":-73.9890629,"type":"cafes","clinic":"CCRM New York","website":"https://gregoryscoffee.com"},
-
-    {"name":"Serafina (Times Square)","address":"224 W 49th St, New York, NY","lat":40.7609769,"lon":-73.9855279,"type":"restaurants","clinic":"CCRM New York","website":"https://serafinarestaurant.com"},
-    {"name":"Carmine’s Italian Restaurant","address":"200 W 44th St, New York, NY","lat":40.7575108,"lon":-73.9867126,"type":"restaurants","clinic":"CCRM New York","website":"https://carminesnyc.com"},
-    {"name":"Ellen’s Stardust Diner","address":"1650 Broadway, New York, NY","lat":40.7618484,"lon":-73.9835031,"type":"restaurants","clinic":"CCRM New York","website":"https://www.ellensstardustdiner.com"},
-
-    {"name":"John’s of Times Square","address":"260 W 44th St, New York, NY","lat":40.7582345,"lon":-73.9884017,"type":"pizza_bagels","clinic":"CCRM New York","website":"https://johnspizzerianyc.com"},
-    {"name":"Best Bagel & Coffee","address":"225 W 35th St, New York, NY","lat":40.7523015,"lon":-73.9910004,"type":"pizza_bagels","clinic":"CCRM New York","website":"https://bestbagelandcoffee.com"},
-
-    {"name":"MoMA Design Store (Midtown)","address":"44 W 53rd St, New York, NY","lat":40.7611682,"lon":-73.9779863,"type":"hidden_gems","clinic":"CCRM New York","website":"https://store.moma.org"},
-    {"name":"NY Transit Museum Store (Grand Central)","address":"89 E 42nd St, New York, NY","lat":40.7526944,"lon":-73.977253,"type":"hidden_gems","clinic":"CCRM New York","website":"https://shop.nytransitmuseumstore.com"},
-    {"name":"Magnolia Bakery (Rockefeller Center)","address":"1240 6th Ave, New York, NY","lat":40.7592602,"lon":-73.9805486,"type”:”cafes,”clinic":"CCRM New York","website":"https://www.magnoliabakery.com"},
-    {"name":"Modern Bread & Bagel (UWS)","address":"472 Columbus Ave, New York, NY","lat":40.7844333,"lon":-73.9740436,"type":"hidden_gems","clinic":"CCRM New York","website":"https://modernbreadandbagel.com"},
-
-    {"name":"Broadway Comedy Club","address":"318 W 53rd St, New York, NY","lat":40.7644391,"lon":-73.9856707,"type":"broadway_comedy","clinic":"CCRM New York","website":"https://www.broadwaycomedyclub.com"},
-
-    {"name":"Rockefeller Center","address":"30 Rockefeller Plaza, New York, NY","lat":40.7591232,"lon":-73.979556,"type":"activities","clinic":"CCRM New York","website":"https://rockefellercenter.com"},
-
-    {"name":"American Museum of Natural History","address":"200 Central Park West, New York, NY","lat":40.7813974,"lon":-73.9733215,"type":"iconic","clinic":"CCRM New York","website":"https://www.amnh.org"},
-    {"name":"The Metropolitan Museum of Art","address":"1000 5th Ave, New York, NY","lat":40.7794396,"lon":-73.9633825,"type":"iconic","clinic":"CCRM New York","website":"https://www.metmuseum.org"},
-    {"name":"The Edge (Hudson Yards)","address":"30 Hudson Yards, New York, NY 10001","lat":40.7539277,"lon":-74.0005544,"type":"iconic","clinic":"CCRM New York","website":"https://www.edgenyc.com"},
-    {"name":"Empire State Building","address":"20 W 34th St, New York, NY 10001","lat":40.7486538,"lon":-73.9853043,"type":"iconic","clinic":"CCRM New York","website":"https://www.esbnyc.com"},
-
-    {"name":"RMA of New York","address":"635 Madison Ave, New York, NY 10022","lat":40.7636838,"lon":-73.9709281,"type":"clinic","clinic":"RMA of New York","website":"https://rmanetwork.com/location/new-york"},
-
-    {"name":"Joe Coffee Company","address":"1045 Lexington Ave, New York, NY","lat":40.7720126,"lon":-73.9607854,"type":"cafes","clinic":"RMA of New York","website":"https://joecoffeecompany.com"},
-    {"name":"Ralph’s Coffee","address":"888 Madison Ave, New York, NY","lat":40.7716285,"lon":-73.9657301,"type":"cafes","clinic":"RMA of New York","website":"https://ralphlauren.com/ralphs-coffee"},
-
-    {"name":"Avra Madison Estiatorio","address":"14 E 60th St, New York, NY","lat":40.7643033,"lon":-73.9716079,"type":"restaurants","clinic":"RMA of New York","website":"https://theavragroup.com"},
-    {"name":"Quality Bistro","address":"120 W 55th St, New York, NY","lat":40.7632322,"lon":-73.978856,"type":"restaurants","clinic":"RMA of New York","website":"https://qualitybistro.com"},
-    {"name":"Fumo UES","address":"1459 York Ave, New York, NY","lat":40.770414,"lon":-73.9513952,"type":"restaurants","clinic":"RMA of New York","website":"https://fumorestaurant.com"},
-
-    {"name":"Prince Street Pizza","address":"27 Prince St, New York, NY","lat":40.7230823,"lon":-73.9945374,"type":"pizza_bagels","clinic":"RMA of New York","website":"https://www.princestpizza.com"},
-    {"name":"Pick A Bagel (1475 2nd Ave)","address":"1475 2nd Ave, New York, NY","lat":40.7719838,"lon":-73.9564121,"type":"pizza_bagels","clinic":"RMA of New York","website":"https://pickabagel.net"},
-
-    {"name":"Comic Strip Live","address":"1568 2nd Ave, New York, NY","lat":40.7748581,"lon":-73.9536956,"type":"broadway_comedy","clinic":"RMA of New York","website":"https://comicstriplive.com"},
-
-    {"name":"Spring Fertility NYC","address":"114 W 41st St, New York, NY 10036","lat":40.7544782,"lon":-73.9855838,"type":"clinic","clinic":"Spring Fertility NYC","website":"https://springfertility.com"},
-
-    {"name":"Culture Espresso","address":"72 W 38th St, New York, NY","lat":40.7518497,"lon":-73.9850613,"type":"cafes","clinic":"Spring Fertility NYC","website":"https://cultureespresso.com"},
-    {"name":"Blank Slate Coffee + Kitchen","address":"121 Madison Ave, New York, NY","lat":40.7452911,"lon":-73.9845959,"type":"cafes","clinic":"Spring Fertility NYC","website":"https://blankslatenyc.com"},
-
-    {"name":"Eataly Flatiron","address":"200 5th Ave, New York, NY","lat":40.7421545,"lon":-73.9898646,"type":"restaurants","clinic":"Spring Fertility NYC","website":"https://www.eataly.com/us_en/stores/nyc-flatiron"},
-    {"name":"La Pecora Bianca (Bryant Park)","address":"20 W 40th St, New York, NY","lat":40.7524169,"lon":-73.9825675,"type":"restaurants","clinic":"Spring Fertility NYC","website":"https://lapecorabianca.com"},
-
-    {"name":"NY Pizza Suprema","address":"413 8th Ave, New York, NY","lat":40.7501778,"lon":-73.9952685,"type":"pizza_bagels","clinic":"Spring Fertility NYC","website":"https://nypizzasuprema.com"},
-    {"name":"Liberty Bagels Midtown","address":"260 W 35th St, New York, NY","lat":40.7524141,"lon":-73.9925766,"type":"pizza_bagels","clinic":"Spring Fertility NYC","website":"https://libertybagels.com"},
-
-    {"name":"CityStore (NYC Official)","address":"1 Centre St, New York, NY","lat":40.7130272,"lon":-74.0034742,"type":"hidden_gems","clinic":"Spring Fertility NYC","website":"https://www.nyc.gov/citystore"},
-    {"name":"Dominique Ansel Bakery (SoHo)","address":"189 Spring St, New York, NY","lat":40.7251997,"lon":-74.0029229,"type":"hidden_gems","clinic":"Spring Fertility NYC","website":"https://dominiqueanselny.com"},
-
-    {"name":"Global Fertility Partners","address":"50 W 47th St, New York, NY 10036","lat":40.7574915,"lon":-73.9808385,"type":"clinic","clinic":"Global Fertility Partners","website":"https://globalfertilitypartners.com"},
-
-    {"name":"Blue Bottle Coffee (Bryant Park)","address":"54 W 40th St, New York, NY","lat":40.7529557,"lon":-73.9842411,"type":"cafes","clinic":"Global Fertility Partners","website":"https://bluebottlecoffee.com"},
-    {"name":"Maman Midtown","address":"12 W 48th St, New York, NY","lat":40.7574073,"lon":-73.9791077,"type":"cafes","clinic":"Global Fertility Partners","website":"https://mamannyc.com"},
-
-    {"name":"Keens Steakhouse","address":"72 W 36th St, New York, NY","lat":40.750773,"lon":-73.9864091,"type":"restaurants","clinic":"Global Fertility Partners","website":"https://keens.com"},
-
-    {"name":"Patzeria Perfect Pizza","address":"231 W 46th St, New York, NY","lat":40.7594345,"lon":-73.9868675,"type":"pizza_bagels","clinic":"Global Fertility Partners","website":"https://patzeriaperfectpizza.com"},
-
-    {"name":"Friedmans (Chelsea Market) – GF-friendly","address":"75 9th Ave, New York, NY","lat":40.7420513,"lon":-74.0048973,"type":"hidden_gems","clinic":"Global Fertility Partners","website":"https://www.friedmansrestaurant.com"},
-
-    {"name":"Gotham Comedy Club","address":"208 W 23rd St, New York, NY","lat":40.7441378,"lon":-73.99644,"type":"broadway_comedy","clinic":"Global Fertility Partners","website":"https://gothamcomedyclub.com"},
-    {"name":"Radio City Music Hall","address":"1260 6th Ave, New York, NY","lat":40.7601258,"lon":-73.9800192,"type":"activities","clinic":"Global Fertility Partners","website":"https://radiocity.com"},
-    {"name":"Top of the Rock","address":"30 Rockefeller Plaza, New York, NY","lat":40.7591232,"lon":-73.979556,"type":"activities","clinic":"Global Fertility Partners","website":"https://rockefellercenter.com"},
-
-    {"name":"Kofinas Fertility Group","address":"65 Broadway, New York, NY 10006","lat":40.7071798,"lon":-74.0123457,"type":"clinic","clinic":"Kofinas Fertility Group","website":"https://kofinasfertility.com"},
-
-    {"name":"Blue Spoon Coffee Company","address":"90 William St, New York, NY","lat":40.708081,"lon":-74.0074766,"type":"cafes","clinic":"Kofinas Fertility Group","website":"https://bluespooncoffee.com"},
-    {"name":"Black Fox Coffee","address":"70 Pine St, New York, NY","lat":40.7064733,"lon":-74.0077415,"type":"cafes","clinic":"Kofinas Fertility Group","website":"https://blackfoxcoffee.com"},
-
-    {"name":"Delmonico’s","address":"56 Beaver St, New York, NY","lat":40.705042,"lon":-74.0102055,"type":"restaurants","clinic":"Kofinas Fertility Group","website":"https://delmonicos.com"},
-    {"name":"Luke’s Lobster FiDi","address":"26 S William St, New York, NY","lat":40.7045322,"lon":-74.0109178,"type":"restaurants","clinic":"Kofinas Fertility Group","website":"https://lukeslobster.com"},
-
-    {"name":"Adrienne’s Pizzabar","address":"54 Stone St, New York, NY","lat":40.7042918,"lon":-74.0101218,"type":"pizza_bagels","clinic":"Kofinas Fertility Group","website":"https://adriennespizzabar.com"},
-    {"name":"Leo’s Bagels","address":"3 Hanover Square, New York, NY","lat":40.7050279,"lon":-74.0096264,"type":"pizza_bagels","clinic":"Kofinas Fertility Group","website":"https://leosbagels.com"},
-
-    {"name":"New York Transit Museum (Brooklyn)","address":"99 Schermerhorn St, Brooklyn, NY","lat":40.6905176,"lon":-73.9899802,"type":"hidden_gems","clinic":"Kofinas Fertility Group","website":"https://www.nytransitmuseum.org"},
-    {"name":"Levain Bakery (NoHo)","address":"340 Lafayette St, New York, NY","lat":40.7262725,"lon":-73.9946961,"type":"hidden_gems","clinic":"Kofinas Fertility Group","website":"https://levainbakery.com"},
-    {"name":"Magnolia Bakery (Fulton Center)","address":"200 Broadway, New York, NY","lat":40.7104439,"lon":-74.0089465,"type”:”cafes,”clinic":"Kofinas Fertility Group","website":"https://www.magnoliabakery.com"},
-    {"name":"Erin McKenna’s Bakery NYC (GF)","address":"248 Broome St, New York, NY","lat":40.7181267,"lon":-73.9896117,"type":"hidden_gems","clinic":"Kofinas Fertility Group","website":"https://www.erinmckennasbakery.com"},
-
-    {"name":"Battery Park","address":"State St & Battery Pl, New York, NY","lat":40.7043931,"lon":-74.0141411,"type":"activities","clinic":"Kofinas Fertility Group","website":"https://www.nycgovparks.org/parks/battery-park"},
-    {"name":"One World Observatory","address":"117 West St, New York, NY","lat":40.7138389,"lon":-74.0135131,"type":"activities","clinic":"Kofinas Fertility Group","website":"https://oneworldobservatory.com"},
-
-    {"name":"Weill Cornell Medicine (1305 York Ave)","address":"1305 York Ave, New York, NY 10021","lat":40.7655396,"lon":-73.9553023,"type":"clinic","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://weillcornell.org"},
-
-    {"name":"Maman UES","address":"1424 3rd Ave, New York, NY","lat":40.7755174,"lon":-73.9566349,"type":"cafes","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://mamannyc.com"},
-    {"name":"Bluestone Lane (UES Café)","address":"2 E 90th St, New York, NY","lat":40.7836928,"lon":-73.9578694,"type":"cafes","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://bluestonelane.com"},
-
-    {"name":"Finestra","address":"1370 York Ave, New York, NY","lat":40.7675579,"lon":-73.9529698,"type":"restaurants","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://finestrarestaurant.com"},
-    {"name":"Uva Wine Bar","address":"1486 2nd Ave, New York, NY","lat":40.7721739,"lon":-73.9555966,"type":"restaurants","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://uvawinebar.com"},
-
-    {"name":"Patsy’s Pizzeria (UES)","address":"206 E 60th St, New York, NY","lat":40.7617493,"lon":-73.9657628,"type":"pizza_bagels","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://patsyspizzeria.us"},
-    {"name":"Tal Bagels","address":"1228 Lexington Ave, New York, NY","lat":40.7777126,"lon":-73.9570936,"type":"pizza_bagels","clinic":"Weill Cornell Medicine (1305 York Ave)","website":"https://talbagels.com"},
-
-    {"name":"Illume Fertility (NYC)","address":"30 E 60th St, New York, NY 10022","lat":40.7636761,"lon":-73.9703259,"type":"clinic","clinic":"Illume Fertility (NYC)","website":"https://illumefertility.com"},
-
-    {"name":"Joe & The Juice","address":"667 Lexington Ave, New York, NY","lat":40.689824,"lon":-73.934302,"type":"cafes","clinic":"Illume Fertility (NYC)","website":"https://joejuice.com"},
-    {"name":"Blue Bottle Coffee (10 E 53rd)","address":"10 E 53rd St, New York, NY","lat":40.7597879,"lon":-73.9752965,"type":"cafes","clinic":"Illume Fertility (NYC)","website":"https://bluebottlecoffee.com"},
-
-    {"name":"Il Postino","address":"337 E 49th St, New York, NY","lat":40.7538443,"lon":-73.9673928,"type":"restaurants","clinic":"Illume Fertility (NYC)","website":"https://ilpostinonyc.com"},
-    {"name":"La Pecora Bianca (Midtown East)","address":"950 2nd Ave, New York, NY","lat":40.7549287,"lon":-73.9682465,"type":"restaurants","clinic":"Illume Fertility (NYC)","website":"https://lapecorabianca.com"},
-
-    {"name":"San Matteo Pizza Espresso Bar","address":"1739 2nd Ave, New York, NY","lat":40.7804043,"lon":-73.9501234,"type":"pizza_bagels","clinic":"Illume Fertility (NYC)","website":"https://sanmatteopizzany.com"},
-    {"name":"Ess-a-Bagel (Midtown East)","address":"831 3rd Ave, New York, NY","lat":40.7561558,"lon":-73.9701715,"type":"pizza_bagels","clinic":"Illume Fertility (NYC)","website":"https://www.ess-a-bagel.com"},
-
-    {"name":"The Stand NYC","address":"116 E 16th St, New York, NY","lat":40.7353379,"lon":-73.988463,"type":"broadway_comedy","clinic":"Illume Fertility (NYC)","website":"https://thestandnyc.com"},
-
-    {"name":"Summit Fertility","address":"635 Madison Ave, New York, NY 10022","lat":40.7636838,"lon":-73.9709281,"type":"clinic","clinic":"Summit Fertility","website":"https://summitfertilityny.com"},
-
-    {"name":"Birch Coffee (E 62nd)","address":"134 E 62nd St, New York, NY","lat":40.7641004,"lon":-73.9673216,"type":"cafes","clinic":"Summit Fertility","website":"https://birchcoffee.com"},
-
-    {"name":"Serafina Always","address":"1022 Madison Ave, New York, NY","lat":40.7761112,"lon":-73.9624638,"type":"restaurants","clinic":"Summit Fertility","website":"https://serafinarestaurant.com"},
-    {"name":"Joe’s Pizza (Midtown)","address":"1435 Broadway, New York, NY","lat":40.754705,"lon":-73.9870157,"type":"pizza_bagels","clinic":"Summit Fertility","website":"https://www.joespizzanyc.com"},
-
-    {"name":"Central Park Zoo","address":"E 64th St, New York, NY","lat":40.7650694,"lon":-73.9652104,"type":"activities","clinic":"Summit Fertility","website":"https://centralparkzoo.com"},
-    {"name":"Bloomingdale’s Flagship","address":"1000 3rd Ave, New York, NY","lat":40.7623629,"lon":-73.9662333,"type":"activities","clinic":"Summit Fertility","website":"https://bloomingdales.com"}
+    {
+      "id": "frida-midtown",
+      "name": "Frida Midtown",
+      "type": "restaurant",
+      "address": "214 E 52nd St, New York, NY 10022",
+      "lat": 40.7566006,
+      "lon": -73.9692075
+    },
+    {
+      "id": "the-smith",
+      "name": "The Smith",
+      "type": "restaurant",
+      "address": "956 2nd Ave, New York, NY 10022",
+      "lat": 40.755202,
+      "lon": -73.967987
+    },
+    {
+      "id": "xeno-s",
+      "name": "Xeno’s",
+      "type": "restaurant",
+      "address": "163 E 52nd St, New York, NY 10022",
+      "lat": 40.757359,
+      "lon": -73.9702677
+    },
+    {
+      "id": "la-pizza-italia",
+      "name": "La Pizza Italia",
+      "type": "restaurant",
+      "address": "959 2nd Ave, New York, NY 10022",
+      "lat": 40.7554682,
+      "lon": -73.9684159
+    },
+    {
+      "id": "ellens-stardust-diner",
+      "name": "Ellens Stardust Diner",
+      "type": "restaurant",
+      "address": "1650 Broadway, New York, NY 10019",
+      "lat": 40.7618126,
+      "lon": -73.9833787
+    },
+    {
+      "id": "devocion",
+      "name": "Devocion",
+      "type": "cafe",
+      "address": "600 Lexington Ave, New York, NY 10022",
+      "lat": 40.757996,
+      "lon": -73.9715748
+    },
+    {
+      "id": "ground-central",
+      "name": "Ground Central",
+      "type": "cafe",
+      "address": "672 Lexington Ave, New York, NY 10022",
+      "lat": 40.7601456,
+      "lon": -73.9699198
+    },
+    {
+      "id": "maman",
+      "name": "Maman",
+      "type": "cafe",
+      "address": "667 Lexington Ave, New York, NY 10022",
+      "lat": 40.7598992,
+      "lon": -73.9696671
+    },
+    {
+      "id": "blank-street",
+      "name": "Blank Street",
+      "type": "cafe",
+      "address": "830 3rd Ave, New York, NY 10022",
+      "lat": 40.7564053,
+      "lon": -73.9707437
+    },
+    {
+      "id": "modern-bread-and-bagel",
+      "name": "Modern Bread & Bagel",
+      "type": "bagels",
+      "address": "630 Lexington Ave, New York, NY 10022",
+      "lat": 40.7585387,
+      "lon": -73.9711148
+    },
+    {
+      "id": "ess-a-bagel",
+      "name": "Ess-a-Bagel",
+      "type": "bagels",
+      "address": "831 3rd Ave, New York, NY 10022",
+      "lat": 40.756084,
+      "lon": -73.9700056
+    },
+    {
+      "id": "the-bagel-lab",
+      "name": "The Bagel Lab",
+      "type": "bagels",
+      "address": "59 E 54th St #1, New York, NY 10022",
+      "lat": 40.7601965,
+      "lon": -73.9728087
+    },
+    {
+      "id": "moma-design-store",
+      "name": "Moma Design Store",
+      "type": "shopping",
+      "address": "44 W 53rd St, New York, NY 10019",
+      "lat": 40.7611144,
+      "lon": -73.9778728
+    },
+    {
+      "id": "chase-the-fox",
+      "name": "Chase the Fox",
+      "type": "shopping",
+      "address": "229 E 53rd St Basement, New York, NY 10022",
+      "lat": 40.7573841,
+      "lon": -73.9681063
+    },
+    {
+      "id": "fao-shwarz",
+      "name": "FAO Shwarz",
+      "type": "shopping",
+      "address": "30 Rockefeller Plaza, New York, NY 10111",
+      "lat": 40.758954,
+      "lon": -73.978974
+    },
+    {
+      "id": "piq-rockefeller-center",
+      "name": "PIQ Rockefeller Center",
+      "type": "shopping",
+      "address": "74 W 50th St, New York, NY 10112",
+      "lat": 40.7596041,
+      "lon": -73.9800874
+    },
+    {
+      "id": "bryant-park",
+      "name": "Bryant Park",
+      "type": "things to do",
+      "address": "42nd Street and, 6th Ave, New York, NY 10018",
+      "lat": 40.7548442,
+      "lon": -73.9841084999999
+    },
+    {
+      "id": "new-york-transit-museum",
+      "name": "New York Transit Museum",
+      "type": "things to do",
+      "address": "99 Schermerhorn St, Brooklyn, NY 11201",
+      "lat": 40.6905414999999,
+      "lon": -73.9899806
+    },
+    {
+      "id": "top-of-the-rock",
+      "name": "Top of the Rock",
+      "type": "things to do",
+      "address": "30 Rockefeller Plaza, New York, NY 10112",
+      "lat": 40.7593755,
+      "lon": -73.9799726
+    },
+    {
+      "id": "the-channel-gardens",
+      "name": "The Channel Gardens",
+      "type": "things to do",
+      "address": "45 Rockefeller Plaza, New York, NY 10111",
+      "lat": 40.7587402,
+      "lon": -73.9786735
+    },
+    {
+      "id": "radio-city",
+      "name": "Radio City",
+      "type": "things to do",
+      "address": "1260 6th Ave, New York, NY 10020",
+      "lat": 40.7599499,
+      "lon": -73.9801447999999
+    },
+    {
+      "id": "tkts",
+      "name": "TKTS",
+      "type": "things to do",
+      "address": "Broadway at, W 47th St, New York, NY 10036",
+      "lat": 40.7594356,
+      "lon": -73.9851467
+    },
+    {
+      "id": "central-park",
+      "name": "Central Park",
+      "type": "things to do",
+      "address": "2735 Central Park S, New York, NY 10019",
+      "lat": 40.7664878,
+      "lon": -73.9780013
+    },
+    {
+      "id": "rise-ny",
+      "name": "Rise NY",
+      "type": "things to do",
+      "address": "160 W 45th St, New York, NY 10036",
+      "lat": 40.7575592,
+      "lon": -73.9849605
+    },
+    {
+      "id": "empire-state-building",
+      "name": "Empire State Building",
+      "type": "things to do",
+      "address": "20 W 34th St., New York, NY 10001",
+      "lat": 40.7489190999999,
+      "lon": -73.9861275
+    },
+    {
+      "id": "the-edge",
+      "name": "The Edge",
+      "type": "things to do",
+      "address": "30 Hudson Yards, New York, NY 10001",
+      "lat": 40.7547887,
+      "lon": -74.0004182999999
+    },
+    {
+      "id": "ap-brazilian-caf",
+      "name": "AP Brazilian Café",
+      "type": "cafe",
+      "address": "685 3rd Ave, New York, NY 10017",
+      "lat": 40.7521879,
+      "lon": -73.9728023999999
+    },
+    {
+      "id": "le-botaniste",
+      "name": "Le Botaniste",
+      "type": "cafe",
+      "address": "833 Lexington Ave, New York, NY 10065",
+      "lat": 40.7649818,
+      "lon": -73.9658941
+    },
+    {
+      "id": "glass-house-tavern",
+      "name": "Glass House Tavern",
+      "type": "restaurant",
+      "address": "252 W 47th St #14, New York, NY 10036",
+      "lat": 40.7598542,
+      "lon": -73.9867024999999
+    },
+    {
+      "id": "amor-loco",
+      "name": "Amor Loco",
+      "type": "restaurant",
+      "address": "134 W 46th St, New York, NY 10036",
+      "lat": 40.7578552,
+      "lon": -73.9839358
+    },
+    {
+      "id": "la-grande-boucherie",
+      "name": "La Grande Boucherie",
+      "type": "restaurant",
+      "address": "145 W 53rd St, New York, NY 10019",
+      "lat": 40.7626218,
+      "lon": -73.9808238999999
+    },
+    {
+      "id": "bryant-park-grill",
+      "name": "Bryant Park Grill",
+      "type": "restaurant",
+      "address": "25 W 40th St, New York, NY 10018",
+      "lat": 40.7531999,
+      "lon": -73.982957
+    },
+    {
+      "id": "famous-original-rays-pizza",
+      "name": "Famous Original Rays Pizza",
+      "type": "pizza",
+      "address": "831 7th Ave, New York, NY 10019",
+      "lat": 40.7632138,
+      "lon": -73.9813684
+    },
+    {
+      "id": "pop-s-pizzas",
+      "name": "Pop's Pizzas",
+      "type": "pizza",
+      "address": "301 W 57th St Ground floor, New York, NY 10019",
+      "lat": 40.7670953,
+      "lon": -73.9830798999999
+    },
+    {
+      "id": "don-antonio",
+      "name": "Don Antonio",
+      "type": "pizza",
+      "address": "Don Antonio's Pizza, 309 W 50th St, New York, NY 10019",
+      "lat": 40.7626629,
+      "lon": -73.9867256
+    },
+    {
+      "id": "broad-nosh-bagels",
+      "name": "Broad Nosh Bagels",
+      "type": "bagels",
+      "address": "314 W 58th St, New York, NY 10019",
+      "lat": 40.7676542,
+      "lon": -73.9832955
+    },
+    {
+      "id": "daily-provisions-rockefeller-center",
+      "name": "Daily Provisions - Rockefeller Center",
+      "type": "cafe",
+      "address": "30 Rockefeller Center Unit CO-03, New York, NY 10112",
+      "lat": 40.7591116,
+      "lon": -73.9789969999999
+    },
+    {
+      "id": "rosetta-bakery",
+      "name": "Rosetta Bakery",
+      "type": "cafe",
+      "address": "1633 Broadway, New York, NY 10019",
+      "lat": 40.7619672,
+      "lon": -73.9843241
+    },
+    {
+      "id": "le-parisien-bakery",
+      "name": "Le Parisien Bakery",
+      "type": "cafe",
+      "address": "235 W 46th St, New York, NY 10036",
+      "lat": 40.7595259,
+      "lon": -73.9868118
+    },
+    {
+      "id": "frisson-espresso",
+      "name": "Frisson Espresso",
+      "type": "cafe",
+      "address": "10036 326 W 47th St, New York, NY 10036",
+      "lat": 40.7608298,
+      "lon": -73.9889944999999
+    },
+    {
+      "id": "787-coffee",
+      "name": "787 Coffee",
+      "type": "cafe",
+      "address": "245 W 46th St, New York, NY 10036",
+      "lat": 40.7597579,
+      "lon": -73.9873571
+    },
+    {
+      "id": "down-under-coffee",
+      "name": "Down Under Coffee",
+      "type": "cafe",
+      "address": "1000 8th Ave, New York, NY 10019",
+      "lat": 40.7673254,
+      "lon": -73.9829065
+    },
+    {
+      "id": "black-seed-bagels",
+      "name": "Black Seed Bagels",
+      "type": "bagels",
+      "address": "30 Rockefeller Plaza, New York, NY 10112",
+      "lat": 40.7593755,
+      "lon": -73.9799726
+    },
+    {
+      "id": "bread-nosh-bagels",
+      "name": "Bread Nosh Bagels",
+      "type": "bagels",
+      "address": "314 W 58th St, New York, NY 10019",
+      "lat": 40.7676542,
+      "lon": -73.9832955
+    },
+    {
+      "id": "museum-of-modern-art",
+      "name": "Museum of Modern Art",
+      "type": "things to do",
+      "address": "11 W 53rd St, New York, NY 10019",
+      "lat": 40.7613492,
+      "lon": -73.9773325
+    },
+    {
+      "id": "the-iridium-live-jazz-bar",
+      "name": "The Iridium - Live Jazz Bar",
+      "type": "things to do",
+      "address": "1650 Broadway, New York, NY 10019",
+      "lat": 40.7618126,
+      "lon": -73.9833787
+    },
+    {
+      "id": "birdland-jazz-club",
+      "name": "Birdland Jazz Club",
+      "type": "things to do",
+      "address": "315 W 44th St, New York, NY 10036",
+      "lat": 40.7590888999999,
+      "lon": -73.9897175
+    },
+    {
+      "id": "sheba-s-speakeasy-comedy-club",
+      "name": "Sheba's Speakeasy Comedy Club",
+      "type": "things to do",
+      "address": "Between 50th and, 832 8th Avenue, W 51st St, New York, NY 10019",
+      "lat": 40.7624251,
+      "lon": -73.9858066
+    },
+    {
+      "id": "museum-of-broadway",
+      "name": "Museum of Broadway",
+      "type": "things to do",
+      "address": "145 W 45th St, New York, NY 10036",
+      "lat": 40.757637,
+      "lon": -73.9843975
+    },
+    {
+      "id": "museum-of-arts-and-design",
+      "name": "Museum of Arts & Design",
+      "type": "things to do",
+      "address": "2 Columbus Cir, New York, NY 10019",
+      "lat": 40.7674065,
+      "lon": -73.9819905
+    },
+    {
+      "id": "mure-and-grande-park-central",
+      "name": "Mure & Grande Park Central",
+      "type": "shopping",
+      "address": "864 7th Ave, New York, NY 10019",
+      "lat": 40.7645198,
+      "lon": -73.9809989
+    },
+    {
+      "id": "lanablu-boutique",
+      "name": "LanaBlu Boutique",
+      "type": "shopping",
+      "address": "Turnstyle Underground Market, 1000s 8th Ave, New York, NY 10019",
+      "lat": 40.7664796,
+      "lon": -73.982719
+    },
+    {
+      "id": "the-magic-table",
+      "name": "The Magic Table",
+      "type": "restaurant",
+      "address": "2 E 61st St, New York, NY 10065",
+      "lat": 40.7650292999999,
+      "lon": -73.9716679
+    },
+    {
+      "id": "mangia-57th",
+      "name": "Mangia 57th",
+      "type": "restaurant",
+      "address": "57 W 57th St, New York, NY 10019",
+      "lat": 40.7644381,
+      "lon": -73.9766479
+    },
+    {
+      "id": "tony-s-dinapoli",
+      "name": "Tony's DiNapoli",
+      "type": "pizza",
+      "address": "1081 3rd Ave, New York, NY 10065",
+      "lat": 40.7643641,
+      "lon": -73.9641611999999
+    },
+    {
+      "id": "my-pie-pizzeria",
+      "name": "My Pie Pizzeria",
+      "type": "pizza",
+      "address": "690 Lexington Ave, New York, NY 10022",
+      "lat": 40.7607046,
+      "lon": -73.9695543
+    },
+    {
+      "id": "liberty-bagels",
+      "name": "Liberty Bagels",
+      "type": "bagels",
+      "address": "16 E 58th St, New York, NY 10022",
+      "lat": 40.7630799,
+      "lon": -73.9727505
+    },
+    {
+      "id": "zootique-at-central-park",
+      "name": "Zootique at Central Park",
+      "type": "shopping",
+      "address": "830 5th Ave, New York, NY 10065",
+      "lat": 40.7676387,
+      "lon": -73.9712993999999
+    },
+    {
+      "id": "neuhaus-chocolates",
+      "name": "Neuhaus Chocolates",
+      "type": "shopping",
+      "address": "488 Madison Ave Between 51st, E 52nd St, New York, NY 10022",
+      "lat": 40.7589103,
+      "lon": -73.9751974
+    },
+    {
+      "id": "the-plaza-boutique",
+      "name": "The Plaza Boutique",
+      "type": "shopping",
+      "address": "1 W 58th St, New York, NY 10019",
+      "lat": 40.7642389,
+      "lon": -73.9745539
+    },
+    {
+      "id": "central-park-zoo",
+      "name": "Central Park Zoo",
+      "type": "things to do",
+      "address": "New York, NY 10021",
+      "lat": 40.7700703,
+      "lon": -73.9580246
+    },
+    {
+      "id": "la-pecora-bianca",
+      "name": "La Pecora Bianca",
+      "type": "restaurant",
+      "address": "20 W 40th St, New York, NY 10018",
+      "lat": 40.7525176,
+      "lon": -73.9831529
+    },
+    {
+      "id": "madison-and-vine",
+      "name": "Madison & Vine",
+      "type": "restaurant",
+      "address": "299 Madison Ave, New York, NY 10017",
+      "lat": 40.7521259,
+      "lon": -73.979434
+    },
+    {
+      "id": "parker-and-quinn",
+      "name": "Parker & Quinn",
+      "type": "restaurant",
+      "address": "64 W 39th St, New York, NY 10018",
+      "lat": 40.7525862,
+      "lon": -73.9850713
+    },
+    {
+      "id": "ledo-pizza",
+      "name": "Ledo Pizza",
+      "type": "pizza",
+      "address": "243 W 38th St, New York, NY 10018",
+      "lat": 40.754269,
+      "lon": -73.9902535
+    },
+    {
+      "id": "famous-famiglia-pizza",
+      "name": "Famous Famiglia Pizza",
+      "type": "pizza",
+      "address": "686 8th Ave, New York, NY 10036",
+      "lat": 40.7580556,
+      "lon": -73.9888888999999
+    },
+    {
+      "id": "bagel-pub",
+      "name": "Bagel Pub",
+      "type": "bagels",
+      "address": "1385 Broadway, New York, NY 10018",
+      "lat": 40.7526152,
+      "lon": -73.9875699
+    },
+    {
+      "id": "zuckers-bagels",
+      "name": "Zuckers Bagels",
+      "type": "bagels",
+      "address": "1065 6th Ave, New York, NY 10018",
+      "lat": 40.754043,
+      "lon": -73.985355
+    },
+    {
+      "id": "pull-tab-coffee",
+      "name": "Pull Tab Coffee",
+      "type": "cafe",
+      "address": "1029a 6th Ave, New York, NY 10018",
+      "lat": 40.752723,
+      "lon": -73.9859999999999
+    },
+    {
+      "id": "gumption-coffee",
+      "name": "Gumption Coffee",
+      "type": "cafe",
+      "address": "106 W 45th St, New York, NY 10036",
+      "lat": 40.7567853,
+      "lon": -73.983176
+    },
+    {
+      "id": "madman-espresso",
+      "name": "Madman Espresso",
+      "type": "cafe",
+      "address": "234 W 35th St, New York, NY 10001",
+      "lat": 40.7520805,
+      "lon": -73.9915457
+    },
+    {
+      "id": "zeppola-bakery",
+      "name": "Zeppola Bakery",
+      "type": "cafe",
+      "address": "499 7th Ave, New York, NY 10018",
+      "lat": 40.7526255999999,
+      "lon": -73.9890855
+    },
+    {
+      "id": "angelina-bakery",
+      "name": "Angelina Bakery",
+      "type": "cafe",
+      "address": "575 8th Ave, New York, NY 10018",
+      "lat": 40.7550116,
+      "lon": -73.9917432
+    },
+    {
+      "id": "summit-one-vanderbilt",
+      "name": "Summit One Vanderbilt",
+      "type": "things to do",
+      "address": "45 E 42nd St, New York, NY 10017",
+      "lat": 40.7527788,
+      "lon": -73.978735
+    },
+    {
+      "id": "the-morgan-library-and-museum",
+      "name": "The Morgan Library & Museum",
+      "type": "things to do",
+      "address": "225 Madison Ave, New York, NY 10016",
+      "lat": 40.7491829,
+      "lon": -73.9813041
+    },
+    {
+      "id": "macy-s-herald-square",
+      "name": "Macy's Herald Square",
+      "type": "shopping",
+      "address": "151 W 34th St., New York, NY 10001",
+      "lat": 40.7508631,
+      "lon": -73.9890633999999
+    },
+    {
+      "id": "cafe-luxembourg",
+      "name": "Cafe Luxembourg",
+      "type": "restaurant",
+      "address": "200 W 70th St, New York, NY 10023",
+      "lat": 40.7773323,
+      "lon": -73.9830175
+    },
+    {
+      "id": "solid-state-coffee",
+      "name": "Solid State Coffee",
+      "type": "cafe",
+      "address": "104 W 71st St, New York, NY 10023",
+      "lat": 40.7767235,
+      "lon": -73.979741
+    },
+    {
+      "id": "cafe-aroma",
+      "name": "Cafe Aroma",
+      "type": "cafe",
+      "address": "1873 Broadway, New York, NY 10023",
+      "lat": 40.7705066,
+      "lon": -73.9825938
+    },
+    {
+      "id": "muffins-cafe",
+      "name": "Muffins Cafe",
+      "type": "cafe",
+      "address": "222 Columbus Ave, New York, NY 10023",
+      "lat": 40.7763452,
+      "lon": -73.9797847
+    },
+    {
+      "id": "magnolia-bakery",
+      "name": "Magnolia Bakery",
+      "type": "cafe",
+      "address": "200 Columbus Ave, New York, NY 10023",
+      "lat": 40.7756833,
+      "lon": -73.9803361
+    },
+    {
+      "id": "poetry-of-material-things",
+      "name": "Poetry of Material Things",
+      "type": "shopping",
+      "address": "220 Columbus Ave, New York, NY 10023",
+      "lat": 40.7763317,
+      "lon": -73.979828
+    },
+    {
+      "id": "met-opera-shop",
+      "name": "Met Opera Shop",
+      "type": "shopping",
+      "address": "Lincoln Center, 140 W 65th St, New York, NY 10023",
+      "lat": 40.7724641,
+      "lon": -73.9834889
+    },
+    {
+      "id": "lincoln-center",
+      "name": "Lincoln Center",
+      "type": "things to do",
+      "address": "Lincoln Center, 140 W 65th St, New York, NY 10023",
+      "lat": 40.7724641,
+      "lon": -73.9834889
+    },
+    {
+      "id": "central-park-carousel",
+      "name": "Central Park Carousel",
+      "type": "things to do",
+      "address": "1802 E 65th St, New York, NY 10065",
+      "lat": 40.7718552,
+      "lon": -73.9749310999999
+    },
+    {
+      "id": "hayden-planetarium",
+      "name": "Hayden Planetarium",
+      "type": "things to do",
+      "address": "200 Central Prk W, New York, NY 10024",
+      "lat": 40.781135,
+      "lon": -73.9736037
+    },
+    {
+      "id": "strawberry-fields",
+      "name": "Strawberry Fields",
+      "type": "things to do",
+      "address": "Q2GG+83, New York, NY 10019",
+      "lat": 40.7758125,
+      "lon": -73.9748125
+    },
+    {
+      "id": "shakespeare-garden",
+      "name": "Shakespeare Garden",
+      "type": "things to do",
+      "address": "79th St Transverse, New York, NY 10024",
+      "lat": 40.7793807,
+      "lon": -73.9696201
+    },
+    {
+      "id": "spyscape",
+      "name": "Spyscape",
+      "type": "things to do",
+      "address": "928 8th Ave, New York, NY 10019",
+      "lat": 40.7652697,
+      "lon": -73.9837269
+    },
+    {
+      "id": "zaza",
+      "name": "Zaza",
+      "type": "restaurant",
+      "address": "104 Greenwich St, New York, NY 10006",
+      "lat": 40.7084781,
+      "lon": -74.013525
+    },
+    {
+      "id": "george-s",
+      "name": "George's",
+      "type": "restaurant",
+      "address": "89 Greenwich St, New York, NY 10006",
+      "lat": 40.7078133,
+      "lon": -74.0134638999999
+    },
+    {
+      "id": "halfmoon",
+      "name": "Halfmoon",
+      "type": "bagels",
+      "address": "50 Trinity Pl, New York, NY 10006",
+      "lat": 40.7076917,
+      "lon": -74.013341
+    },
+    {
+      "id": "harry-s-bagels",
+      "name": "Harry's Bagels",
+      "type": "bagels",
+      "address": "110 Trinity Pl, New York, NY 10006",
+      "lat": 40.7095045,
+      "lon": -74.0120408
+    },
+    {
+      "id": "siena-pizza",
+      "name": "Siena Pizza",
+      "type": "pizza",
+      "address": "14 Rector St, New York, NY 10006",
+      "lat": 40.7080776,
+      "lon": -74.0136934
+    },
+    {
+      "id": "sea-glass-carousel",
+      "name": "Sea Glass Carousel",
+      "type": "things to do",
+      "address": "Water St &, State St, New York, NY 10004",
+      "lat": 40.702441,
+      "lon": -74.0128508
+    },
+    {
+      "id": "9-11-memorial-and-museum",
+      "name": "9/11 Memorial & Museum",
+      "type": "things to do",
+      "address": "180 Greenwich St, New York, NY 10007",
+      "lat": 40.711576,
+      "lon": -74.0132769
+    },
+    {
+      "id": "one-world-observatory",
+      "name": "One World Observatory",
+      "type": "things to do",
+      "address": "117 West St, New York, NY 10007",
+      "lat": 40.7131216,
+      "lon": -74.0133630999999
+    },
+    {
+      "id": "charging-bull-statue",
+      "name": "Charging Bull Statue",
+      "type": "things to do",
+      "address": "Bowling Green, New York, NY 10004",
+      "lat": 40.7049375,
+      "lon": -74.0136875
+    },
+    {
+      "id": "eataly",
+      "name": "Eataly",
+      "type": "restaurant",
+      "address": "101 Liberty St, New York, NY 10007",
+      "lat": 40.7103186999999,
+      "lon": -74.011926
+    },
+    {
+      "id": "statue-of-liberty",
+      "name": "Statue of Liberty",
+      "type": "things to do",
+      "address": "Battery Park Underpass, New York, NY 10004",
+      "lat": 40.7028363,
+      "lon": -74.0160651
+    },
+    {
+      "id": "ghostbusters-headquarters",
+      "name": "Ghostbusters Headquarters",
+      "type": "things to do",
+      "address": "14 N Moore St, New York, NY 10013",
+      "lat": 40.7196776,
+      "lon": -74.0066382999999
+    },
+    {
+      "id": "wonder-lenox-hill",
+      "name": "Wonder Lenox Hill",
+      "type": "shopping",
+      "address": "888 Lexington Ave, New York, NY 10065",
+      "lat": 40.7665778,
+      "lon": -73.9653108999999
+    },
+    {
+      "id": "sea-salt-nyc",
+      "name": "Sea Salt NYC",
+      "type": "shopping",
+      "address": "888 Lexington Ave, New York, NY 10065",
+      "lat": 40.7665778,
+      "lon": -73.9653108999999
+    },
+    {
+      "id": "the-frick-collection",
+      "name": "The Frick Collection",
+      "type": "things to do",
+      "address": "1 E 70th St, New York, NY 10021",
+      "lat": 40.7713438,
+      "lon": -73.9672540999999
+    },
+    {
+      "id": "bagel-works",
+      "name": "Bagel Works",
+      "type": "bagels",
+      "address": "1229 1st Ave, New York, NY 10065",
+      "lat": 40.7643428,
+      "lon": -73.9588179
+    },
+    {
+      "id": "b-and-b-bagels",
+      "name": "B&B Bagels",
+      "type": "bagels",
+      "address": "1370 1st Ave, New York, NY 10021",
+      "lat": 40.7684982,
+      "lon": -73.9552085
+    },
+    {
+      "id": "claire-s-kitchen-cafe",
+      "name": "Claire's Kitchen Cafe",
+      "type": "cafe",
+      "address": "1374 York Ave, New York, NY 10021",
+      "lat": 40.7676752,
+      "lon": -73.9528579
+    },
+    {
+      "id": "ines",
+      "name": "Ines",
+      "type": "cafe",
+      "address": "419 E 74th St, New York, NY 10021",
+      "lat": 40.7688801,
+      "lon": -73.9540789
+    },
+    {
+      "id": "two-boots-pizza-upper-east-side",
+      "name": "Two Boots Pizza - Upper East Side",
+      "type": "pizza",
+      "address": "1243 2nd Ave, New York, NY 10065",
+      "lat": 40.7646328,
+      "lon": -73.9617880999999
+    },
+    {
+      "id": "freeland-comedy-show",
+      "name": "Freeland Comedy Show",
+      "type": "things to do",
+      "address": "500 E 79th St, New York, NY 10075",
+      "lat": 40.7711244,
+      "lon": -73.9504389
+    },
+    {
+      "id": "melody-s-piano-bar",
+      "name": "Melody's Piano Bar",
+      "type": "things to do",
+      "address": "1020 Lexington Ave, New York, NY 10021",
+      "lat": 40.771055,
+      "lon": -73.9620044
+    },
+    {
+      "id": "lolita",
+      "name": "Lolita",
+      "type": "restaurant",
+      "address": "45 W 45th St, New York, NY 10036",
+      "lat": 40.756359,
+      "lon": -73.9811027
+    },
+    {
+      "id": "the-original-little-italy",
+      "name": "The Original Little Italy",
+      "type": "pizza",
+      "address": "2 East 39th Street, 5th Ave Off, New York, NY 10016",
+      "lat": 40.7512625,
+      "lon": -73.9819407
+    },
+    {
+      "id": "napoli-pizza",
+      "name": "Napoli Pizza",
+      "type": "pizza",
+      "address": "1032 6th Ave, New York, NY 10018",
+      "lat": 40.7526973,
+      "lon": -73.9854014
+    },
+    {
+      "id": "isla-and-co-midtown",
+      "name": "Isla & Co - Midtown",
+      "type": "restaurant",
+      "address": "25 W 38th St, New York, NY 10018",
+      "lat": 40.7518125,
+      "lon": -73.9840589
+    },
+    {
+      "id": "boqueria-w40th",
+      "name": "Boqueria W40th",
+      "type": "restaurant",
+      "address": "260 W 40th St, New York, NY 10018",
+      "lat": 40.7554316,
+      "lon": -73.9900633
+    }
   ]
 }
