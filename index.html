@@ -46,7 +46,7 @@
         </select>
       </div>
 
-      <!-- ▼▼▼ Added: walking radius + filters (Option 3) ▼▼▼ -->
+      <!-- Controls: walking radius + filters -->
       <div class="controls">
         <div class="control-group">
           <label for="radiusInput"><strong>Walking radius:</strong></label><br>
@@ -58,22 +58,30 @@
           <h4>Filter by category</h4>
           <div data-filter-group="type" class="filters">
             <label><input type="checkbox" value="cafe" checked> Cafés</label>
+            <label><input type="checkbox" value="bagels" checked> Bagels</label>
+            <label><input type="checkbox" value="pizza" checked> Pizza</label>
             <label><input type="checkbox" value="restaurant" checked> Restaurants</label>
             <label><input type="checkbox" value="shopping" checked> Shopping</label>
-            <label><input type="checkbox" value="iconic" checked> Iconic</label>
+            <label><input type="checkbox" value="things to do" checked> Things to do</label>
           </div>
         </div>
 
         <div class="control-group">
           <h4>Filter by tags</h4>
           <div data-filter-group="tag" class="filters">
+            <!-- These values must match tag strings in your places.json -->
             <label><input type="checkbox" value="gluten-free options"> Gluten-free</label>
             <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
             <label><input type="checkbox" value="outdoor-seating"> Outdoor seating</label>
+            <!-- Add more if you use them in your data:
+            <label><input type="checkbox" value="wifi"> Wi-Fi</label>
+            <label><input type="checkbox" value="quiet"> Quiet</label>
+            <label><input type="checkbox" value="reservations"> Reservations</label>
+            -->
           </div>
+          <p class="muted">Tip: tag values are case-sensitive and should match your <code>places.json</code> tags exactly.</p>
         </div>
       </div>
-      <!-- ▲▲▲ End of Option 3 additions ▲▲▲ -->
     </section>
 
     <!-- Hotel / address nearby search -->
@@ -95,11 +103,21 @@
     <section id="results" aria-live="polite"></section>
   </main>
 
-  <!-- Optional polish: live update the "~min" label next to the radius slider -->
+  <!-- Live update the "~min" label next to the radius slider -->
   <script>
     window.addEventListener('DOMContentLoaded', function () {
       const r = document.getElementById('radiusInput');
       const rv = document.getElementById('radiusValue');
       function updateLabel() {
-        if (!r ||
-
+        if (!r || !rv) return;
+        const mins = (Number(r.value) / 80).toFixed(1);
+        rv.textContent = `~${mins} min`;
+      }
+      if (r) {
+        updateLabel();
+        r.addEventListener('input', updateLabel);
+      }
+    });
+  </script>
+</body>
+</html>
