@@ -94,7 +94,7 @@
     const types = STATE.typeFilters.size ? Array.from(STATE.typeFilters) : [];
     const tags  = STATE.tagFilters;
     const groups = [
-  { key: 'cafe',         title: 'Cafés Near This Clinic' },
+  { key: 'cafe',         title: 'Cafés & Bakeries' },
   { key: 'bagels',       title: 'Bagels & Breakfast' },
   { key: 'pizza',        title: 'Great Slices Nearby' },
   { key: 'restaurant',   title: 'Great Eats Nearby' },
