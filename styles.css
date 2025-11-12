@@ -265,4 +265,29 @@ button:hover{ filter:brightness(0.98) }
   font-size: 22px;
   cursor: pointer;
 }
+.method-btn-wrapper {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.method-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
+
+.method-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.method-btn:active {
+  transform: translateY(0);
+}
 
