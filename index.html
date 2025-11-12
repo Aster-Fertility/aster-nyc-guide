@@ -15,15 +15,14 @@
   </header>
 
   <main class="container">
-    <!-- Intro / Blurb -->
+
+    <!-- Intro -->
     <section id="intro" class="card">
       <h2 class="section-title">Welcome to the Aster NYC Guide</h2>
       <p>
         The Aster NYC Guide is your insider’s compass to the city that never sleeps—designed just for you.
-        Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out local favorites near
-        your clinic and hotel: cozy cafés, peaceful parks, good eats, and little ways to unwind between appointments. It’s our way
-        of helping you feel cared for, connected, and comfortable while you’re here—because even a medical trip deserves
-        a little <em>you-time</em>.
+        Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out
+        local favorites near your clinic and hotel: cozy cafés, peaceful parks, good eats, and restful spaces.
       </p>
     </section>
 
@@ -37,7 +36,7 @@
       </ol>
     </section>
 
-    <!-- Method & Reliability button -->
+    <!-- Method & Reliability Button (centered) -->
     <div class="method-btn-container">
       <button id="methodBtn" type="button" class="btn-accent">
         Method &amp; Reliability
@@ -47,6 +46,7 @@
     <!-- Clinic dropdown -->
     <section id="clinicBox" class="card">
       <h3 class="section-title">Select a Clinic</h3>
+
       <div class="helper-row">
         <label class="sr-only" for="clinicSelect">Clinic</label>
         <select id="clinicSelect" aria-label="Select your clinic">
@@ -54,11 +54,10 @@
         </select>
       </div>
 
-      <!-- Controls: walking radius + filters -->
       <div class="controls">
         <div class="control-group">
           <label for="radiusInput"><strong>Walking radius:</strong></label><br>
-          <input id="radiusInput" type="range" min="300" max="2400" step="100" value="1200" aria-label="Walking radius in meters">
+          <input id="radiusInput" type="range" min="300" max="2400" step="100" value="1200">
           <span id="radiusValue" class="muted">~15 min</span>
         </div>
 
@@ -76,56 +75,36 @@
       </div>
     </section>
 
-    <!-- Hotel / address nearby search -->
+    <!-- Nearby hotel/address -->
     <section id="nearbyBox" class="card">
       <h3 class="section-title">Check what's near your hotel</h3>
       <div class="nearby-row">
-        <label class="sr-only" for="userAddress">Hotel or address</label>
-        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" autocomplete="off">
+        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" autocomplete="off">
         <button id="nearbyBtn" class="secondary" type="button">Find nearby</button>
       </div>
-      <p class="muted" id="nearbyHint">
-        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated Manhattan spots within a short walk!
-      </p>
-      <p class="muted status" id="status" aria-live="polite"></p>
-      <div id="nearbyResults" class="nearby-results"></div>
+      <p class="muted status" id="status"></p>
+      <div id="nearbyResults"></div>
     </section>
 
-    <!-- Results container (clinic-curated lists render here) -->
+    <!-- Results container -->
     <section id="results" aria-live="polite"></section>
   </main>
 
   <!-- Method & Reliability Modal -->
   <div id="methodModal" class="modal" aria-hidden="true">
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="methodTitle">
+    <div class="modal-content" role="dialog" aria-modal="true">
       <button class="close-modal" id="closeModal" aria-label="Close modal">×</button>
-      <h3 id="methodTitle">Method &amp; Reliability</h3>
+      <h3>Method &amp; Reliability</h3>
       <div class="modal-body">
-        <p><strong>Data source:</strong> All locations are curated manually and stored in the <code>places.json</code> file, grouped by category and clinic proximity.</p>
-        <p><strong>Geocoding:</strong> Each address includes latitude and longitude so distances can be estimated from each clinic or your entered address.</p>
-        <p><strong>Distance:</strong> Calculated using the Haversine formula to estimate straight-line distance between points.</p>
-        <p><strong>Walking time:</strong> Estimated at approximately 80 meters per minute. Actual walking times will vary based on pace, traffic lights, sidewalks, and weather.</p>
-        <p><strong>Filters:</strong> Category filters (e.g., cafés, bagels, pizza, shopping, things to do) and tags (e.g., vegetarian, gluten-free) narrow the list to what’s most relevant.</p>
-        <p><strong>Disclaimer:</strong> This guide is intended to support your visit and provide nearby options, but it is not a guarantee of quality or current conditions. Please double-check hours, availability, and suitability before visiting.</p>
+        <p><strong>Data Source:</strong> All locations are manually curated and stored in <code>places.json</code>.</p>
+        <p><strong>Geocoding:</strong> Addresses include latitude & longitude for distance calculations.</p>
+        <p><strong>Distance:</strong> Computed using the Haversine formula from clinic to destination.</p>
+        <p><strong>Walking Time:</strong> Estimated at 80 meters per minute.</p>
+        <p><strong>Filters:</strong> Locations can be narrowed by category and tags.</p>
+        <p><strong>Disclaimer:</strong> Always check hours and conditions before visiting.</p>
       </div>
     </div>
   </div>
 
-  <!-- Live update the "~min" label next to the radius slider -->
-  <script>
-    window.addEventListener('DOMContentLoaded', function () {
-      const r = document.getElementById('radiusInput');
-      const rv = document.getElementById('radiusValue');
-      function updateLabel() {
-        if (!r || !rv) return;
-        const mins = (Number(r.value) / 80).toFixed(1);
-        rv.textContent = `~${mins} min`;
-      }
-      if (r) {
-        updateLabel();
-        r.addEventListener('input', updateLabel);
-      }
-    });
-  </script>
 </body>
 </html>
