@@ -93,12 +93,14 @@
     const { places } = STATE.data; const radius=STATE.radius;
     const types = STATE.typeFilters.size ? Array.from(STATE.typeFilters) : [];
     const tags  = STATE.tagFilters;
-    const groups=[
-      { key:'cafe', title:'Cafés Near This Clinic' },
-      { key:'restaurant', title:'Great Eats Nearby' },
-      { key:'shopping', title:'Shopping & Markets' },
-      { key:'iconic', title:'Iconic NYC Must‑Sees' }
-    ].filter(g=>!types.length || types.includes(g.key));
+    const groups = [
+  { key: 'cafe',         title: 'Cafés Near This Clinic' },
+  { key: 'bagels',       title: 'Bagels & Breakfast' },
+  { key: 'pizza',        title: 'Great Slices Nearby' },
+  { key: 'restaurant',   title: 'Great Eats Nearby' },
+  { key: 'shopping',     title: 'Shopping & Markets' },
+  { key: 'things to do', title: 'Iconic NYC Must-Sees' } // ← key must match the JSON type exactly
+].filter(g => !types.length || types.includes(g.key));
     const html = groups.map(g=>{
       const items = getNearbyPlaces({ clinic:STATE.clinic, places, types:g.key?[g.key]:[], radiusMeters:radius, limit:STATE.limitPerGroup, mustHaveTags:tags });
       return renderSection(g.title, items);
