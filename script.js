@@ -1,7 +1,7 @@
 /**
  * Aster NYC Guide – nearest places engine
- * - Website-only link, card spacing, miles + min walk
  * - Category + tag filters, nearby hotel/address search
+ * - Left drawer: How to use / Method & reliability
  * - Safe if a place lacks coords (shows without distance)
  */
 (function () {
@@ -63,6 +63,55 @@
       : `<div class="card">No curated places within your current radius. Try increasing the slider or clearing filters.</div>`;
   }
 
+  // --- Drawer helpers ---
+  function openDrawer({ title, html }) {
+    const drawer = document.getElementById('drawer');
+    const panel = drawer?.querySelector('.drawer__panel');
+    const dTitle = drawer?.querySelector('#drawerTitle');
+    const dContent = drawer?.querySelector('#drawerContent');
+    if (!drawer || !panel || !dTitle || !dContent) return;
+
+    dTitle.textContent = title;
+    dContent.innerHTML = html;
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden','false');
+    panel.focus();
+  }
+  function closeDrawer() {
+    const drawer = document.getElementById('drawer');
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden','true');
+  }
+  function getHowToHTML() {
+    // Copy from the on-page "How to use" section if present; fallback text otherwise
+    const sec = document.querySelector('#howtoBox');
+    if (sec) {
+      const clone = sec.cloneNode(true);
+      // Reduce nesting: we just want the inner of the card
+      return clone.innerHTML;
+    }
+    return `
+      <h4>How to use</h4>
+      <ol>
+        <li>Select your clinic from the dropdown.</li>
+        <li>Adjust the walking radius and apply category/tag filters.</li>
+        <li>Browse curated spots closest to you, or search by hotel/address.</li>
+      </ol>
+    `;
+  }
+  function getMethodHTML() {
+    return `
+      <h4>Method & reliability</h4>
+      <p><strong>Data source:</strong> Curated list from <code>places.json</code> (handpicked categories: café, bagels, pizza, restaurant, shopping, things to do).</p>
+      <p><strong>Geocoding:</strong> Addresses are geocoded to latitude/longitude. If any item lacks coordinates it can still display (without distance).</p>
+      <p><strong>Distance:</strong> Calculated via the Haversine formula from clinic (or your typed address) to each place.</p>
+      <p><strong>Walking time:</strong> Estimated at ~80 meters/minute. Actual times vary by traffic, signals, pace, and weather.</p>
+      <p><strong>Filters:</strong> Category filters must match the <code>type</code> field; tag filters match <code>tags</code> (and optional <code>dietary</code>) exactly.</p>
+      <p><strong>Limitations:</strong> Hours and conditions change; verify before visiting. This guide emphasizes proximity and user comfort near clinics.</p>
+    `;
+  }
+
   // --- UI wiring ---
   function initUI() {
     const sel=document.getElementById('clinicSelect');
@@ -81,17 +130,16 @@
       radius.addEventListener('input', ()=>{
         STATE.radius=Number(radius.value)||1200;
         renderAll();
-        // If user has a nearby search active, refresh it silently
         const addr = document.getElementById('userAddress');
         if (addr && addr.value.trim()) {
           geocodeAddress(addr.value.trim())
             .then(({lat,lon}) => renderNearbyFromCoords({ lat, lon, label: addr.value.trim() }))
-            .catch(()=>{ /* ignore if geocode fails during slider */ });
+            .catch(()=>{});
         }
       });
     }
 
-    // Category filters (values must match places.json types)
+    // Category filters
     document.querySelectorAll('[data-filter-group="type"] input[type="checkbox"]').forEach(cb => {
       cb.addEventListener('change', ()=>{
         if (cb.checked) STATE.typeFilters.add(cb.value); else STATE.typeFilters.delete(cb.value);
@@ -99,22 +147,21 @@
       });
     });
 
-    // Tag filters (values must match tags in places.json)
+    // Tag filters
     document.querySelectorAll('[data-filter-group="tag"] input[type="checkbox"]').forEach(cb => {
       cb.addEventListener('change', ()=>{
         if (cb.checked) STATE.tagFilters.add(cb.value); else STATE.tagFilters.delete(cb.value);
         renderAll();
-        // refresh nearby section if active
         const addr = document.getElementById('userAddress');
         if (addr && addr.value.trim()) {
           geocodeAddress(addr.value.trim())
             .then(({lat,lon}) => renderNearbyFromCoords({ lat, lon, label: addr.value.trim() }))
-            .catch(()=>{ /* ignore */ });
+            .catch(()=>{});
         }
       });
     });
 
-    // Nearby hotel/address search wiring
+    // Nearby hotel/address search
     const nearbyBtn = document.getElementById('nearbyBtn');
     const userAddress = document.getElementById('userAddress');
     const statusEl = document.getElementById('status');
@@ -146,6 +193,19 @@
         }
       });
     }
+
+    // Drawer triggers + close handlers
+    const btnHowTo = document.getElementById('btnHowTo');
+    const btnMethod = document.getElementById('btnMethod');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('drawerOverlay');
+    const closeBtn = document.getElementById('drawerClose');
+
+    btnHowTo?.addEventListener('click', () => openDrawer({ title: 'How to use', html: getHowToHTML() }));
+    btnMethod?.addEventListener('click', () => openDrawer({ title: 'Method & reliability', html: getMethodHTML() }));
+    overlay?.addEventListener('click', closeDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeDrawer(); });
   }
 
   // --- Core engine (coordinate-safe) ---
@@ -225,7 +285,7 @@
     </div>`;
   }
 
-  // --- Section + page render ---
+  // --- Sections + page render ---
   function renderSection(title, items) {
     if (!items.length) return '';
     return `<section class="card">
@@ -246,7 +306,7 @@
       { key: 'pizza',        title: 'Great Slices Nearby' },
       { key: 'restaurant',   title: 'Great Eats Nearby' },
       { key: 'shopping',     title: 'Shopping & Markets' },
-      { key: 'things to do', title: 'Iconic NYC Must-Sees' } // key must match the JSON type exactly
+      { key: 'things to do', title: 'Iconic NYC Must-Sees' }
     ].filter(g => !types.length || types.includes(g.key));
 
     const html = groups.map(g=>{
