@@ -7,9 +7,17 @@
   --card:#ffffff;
   --border:#f0e6de;
 }
+
+/* Reset + base */
 *{box-sizing:border-box}
 html, body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif
+}
+
+/* Header */
 .header{
   position:sticky; top:0; z-index:10;
   background:linear-gradient(90deg,var(--bg),#fff7f0);
@@ -19,6 +27,8 @@ body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system
 }
 .header .logo{height:44px; width:auto; display:block}
 .header h1{margin:0; font-size:20px; color:var(--brand)}
+
+/* Layout */
 .container{max-width:960px; margin:22px auto; padding:0 16px}
 .section-title{color:var(--brand); margin:0 0 8px 0; font-size:18px; font-weight:700}
 .card{
@@ -30,6 +40,8 @@ body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system
   margin-bottom:20px;
 }
 .helper-row{margin-top:10px}
+
+/* Form controls */
 input[type="text"], select, button{ font:inherit }
 select, input[type="text"]{
   width:100%; background:var(--card); color:var(--ink);
@@ -42,49 +54,60 @@ button.secondary{ background:#f6efe6; color:var(--brand); border:1px solid var(-
 button.secondary:hover{ filter:brightness(0.98) }
 #enrichBtn{ background:var(--brand); color:#fff }
 #enrichBtn:hover{ filter:brightness(0.96) }
+
+/* Nearby search layout */
 .nearby-row{ display:flex; gap:10px; align-items:center; margin-top:4px }
-#nearbyResults{ margin-top:10px; display:grid; gap:10px }
+#nearbyResults{ margin-top:10px; display:grid; gap:14px } /* bumped gap for nicer spacing */
 .nearby-card{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff }
 .nearby-card .meta{ color:var(--muted); font-size:13px; margin-top:4px }
+
+/* Results container */
 #results{ display:grid; gap:14px }
 #results .card h4{ margin:0 0 6px 0 }
 .addr{ color:var(--muted); font-size:14px; margin:4px 0 6px 0 }
-.tag{ display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px; background:#fff1dd; color:#7a2d0b; margin-right:6px; border:1px solid var(--border) }
-@media (max-width:720px){ .header h1{ font-size:18px } 
-                        /* --- Aster NYC Guide: list spacing & link styling --- */
-.grid.grid-gap { display: grid; gap: 12px; }
+
+/* Generic tag badge (legacy) */
+.tag{
+  display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
+  background:#fff1dd; color:#7a2d0b; margin-right:6px; border:1px solid var(--border)
+}
+
+/* --- Aster NYC Guide: list spacing & link styling (GLOBAL) --- */
+.grid.grid-gap { display:grid; gap:16px; } /* ↑ spacing between place cards */
+
 .place-card {
-  padding: 12px 14px;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  background: #fff;
+  padding:12px 14px;
+  border:1px solid rgba(0,0,0,0.08);
+  border-radius:12px;
+  background:#fff;
 }
+
 .place-card__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: baseline;
-  margin-bottom: 4px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:baseline;
+  margin-bottom:6px;
 }
-.place-card__title { font-weight: 600; color: #222; }
-.place-card__meta { color: #555; font-size: 0.95rem; white-space: nowrap; }
-.place-card__sub { color: #444; margin-bottom: 6px; }
-.place-card .chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; background: #f3f4f6; margin-right: 6px; margin-bottom: 6px; }
-.place-card .note { color: #333; margin-top: 6px; }
-.place-card .visit-link { display: inline-block; margin-top: 8px; text-decoration: underline; }
-.place-card a { color: #0b5cab; } /* links only appear on the "Visit website" text */
-.place-card a:visited { color: #6b4ea3; }
-                         
-/* --- Aster NYC Guide: list spacing & link styling --- */
-.grid.grid-gap { display: grid; gap: 12px; }
-.place-card { padding: 12px 14px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: #fff; }
-.place-card__row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 4px; }
-.place-card__title { font-weight: 600; color: #222; }
-.place-card__meta { color: #555; font-size: 0.95rem; white-space: nowrap; }
-.place-card__sub { color: #444; margin-bottom: 6px; }
-.place-card .chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; background: #f3f4f6; margin-right: 6px; margin-bottom: 6px; }
-.place-card .note { color: #333; margin-top: 6px; }
-.place-card .visit-link { display: inline-block; margin-top: 8px; text-decoration: underline; }
-.place-card a { color: #0b5cab; }
-.place-card a:visited { color: #6b4ea3; }
+
+/* Make location name bold */
+.place-card__title { font-weight:700; color:#222; } /* ← bold name */
+
+.place-card__meta { color:#555; font-size:0.95rem; white-space:nowrap; }
+.place-card__sub  { color:#444; margin-bottom:6px; }
+
+.place-card .chip{
+  display:inline-block; padding:2px 8px; border-radius:999px;
+  font-size:0.8rem; background:#f3f4f6;
+  margin-right:6px; margin-bottom:6px;
+}
+
+.place-card .note { color:#333; margin-top:6px; }
+.place-card .visit-link { display:inline-block; margin-top:8px; text-decoration:underline; }
+.place-card a { color:#0b5cab; } /* links only appear on the "Visit website" text */
+.place-card a:visited { color:#6b4ea3; }
+
+/* --- Responsive tweaks --- */
+@media (max-width:720px){
+  .header h1{ font-size:18px }
 }
