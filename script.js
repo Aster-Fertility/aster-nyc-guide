@@ -332,3 +332,34 @@
   window.AsterGuide = { loadPlaces, getNearbyPlaces, renderAll, state: STATE };
   if (document.getElementById('results')) loadPlaces();
 })();
+// --- Modal logic (Method & Reliability) ---
+const methodBtn = document.getElementById('methodBtn');
+const modal = document.getElementById('methodModal');
+const closeModal = document.getElementById('closeModal');
+
+if (methodBtn && modal && closeModal) {
+  methodBtn.addEventListener('click', () => {
+    modal.classList.add('is-visible');
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  closeModal.addEventListener('click', () => {
+    modal.classList.remove('is-visible');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('is-visible');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      modal.classList.remove('is-visible');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
