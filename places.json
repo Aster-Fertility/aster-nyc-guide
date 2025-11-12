@@ -1,22 +1,54 @@
 {
   "version": "2.0.0",
-  "generated_at_utc": "2025-11-12T21:15:57.925318Z",
+  "generated_at_utc": "2025-11-12T21:26:04.581131Z",
   "clinics": [
     {
-      "id": "nyu-kips-bay",
-      "name": "NYU Langone Fertility Center (Kips Bay)",
-      "address": "660 1st Ave, New York, NY 10016",
-      "lat": 40.7457441,
-      "lon": -73.971953,
+      "id": "nyu-fertility-center",
+      "name": "NYU Fertility Center",
+      "address": "159 E 53rd St 3rd Fl, New York, NY 10022",
+      "lat": 40.75713,
+      "lon": -73.97094,
       "website": "https://nyulangone.org/locations/fertility-center"
     },
     {
-      "id": "ccrm-new-york",
-      "name": "CCRM New York",
-      "address": "810 Seventh Ave, New York, NY 10019",
+      "id": "ccrm-fertility-nyc",
+      "name": "CCRM Fertility NYC",
+      "address": "810 7th Ave 21st Floor, New York, NY 10019",
       "lat": 40.7639,
       "lon": -73.9819,
       "website": "https://www.ccrmivf.com/nyc/"
+    },
+    {
+      "id": "rmany-east-side",
+      "name": "RMANY East Side",
+      "address": "635 Madison Avenue, 10th Floor, New York, NY 10022",
+      "lat": 40.76259,
+      "lon": -73.97283,
+      "website": "https://www.rmany.com/"
+    },
+    {
+      "id": "spring-fertility",
+      "name": "Spring Fertility",
+      "address": "114 W 41st Street, 2nd Floor, New York, NY 10036",
+      "lat": 40.75406,
+      "lon": -73.98469,
+      "website": "https://springfertility.com/"
+    },
+    {
+      "id": "kofinas-fertility",
+      "name": "Kofinas Fertility Group",
+      "address": "65 Broadway, 14th floor, New York, NY 10006",
+      "lat": 40.70746,
+      "lon": -74.01223,
+      "website": "https://www.kofinasfertility.com/"
+    },
+    {
+      "id": "weill-cornell-fertility",
+      "name": "Weill Cornell Medicine - Center for Reproductive Medicine",
+      "address": "1305 York Avenue, 6th Floor, New York, NY 10021",
+      "lat": 40.76577,
+      "lon": -73.95433,
+      "website": "https://ivf.org/"
     }
   ],
   "places": [
@@ -907,46 +939,6 @@
       "address": "1020 Lexington Ave, New York, NY 10021",
       "lat": 40.771055,
       "lon": -73.9620044
-    },
-    {
-      "id": "lolita",
-      "name": "Lolita",
-      "type": "restaurant",
-      "address": "45 W 45th St, New York, NY 10036",
-      "lat": 40.756359,
-      "lon": -73.9811027
-    },
-    {
-      "id": "the-original-little-italy",
-      "name": "The Original Little Italy",
-      "type": "pizza",
-      "address": "2 East 39th Street, 5th Ave Off, New York, NY 10016",
-      "lat": 40.7512625,
-      "lon": -73.9819407
-    },
-    {
-      "id": "napoli-pizza",
-      "name": "Napoli Pizza",
-      "type": "pizza",
-      "address": "1032 6th Ave, New York, NY 10018",
-      "lat": 40.7526973,
-      "lon": -73.9854014
-    },
-    {
-      "id": "isla-and-co-midtown",
-      "name": "Isla & Co - Midtown",
-      "type": "restaurant",
-      "address": "25 W 38th St, New York, NY 10018",
-      "lat": 40.7518125,
-      "lon": -73.9840589
-    },
-    {
-      "id": "boqueria-w40th",
-      "name": "Boqueria W40th",
-      "type": "restaurant",
-      "address": "260 W 40th St, New York, NY 10018",
-      "lat": 40.7554316,
-      "lon": -73.9900633
     }
   ]
 }
