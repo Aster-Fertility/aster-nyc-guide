@@ -143,3 +143,72 @@ button:hover{ filter:brightness(0.98) }
 .place-card .visit-link{
   display:inline-block; margin-top:8px; text-decoration:none; font-weight:600;
   color:#2b2a28; background:var(--accent-soft); border:1px solid #f2
+
+/* Method & Reliability button */
+.method-btn-container {
+  text-align: center;
+  margin: -8px 0 20px;
+}
+.btn-accent {
+  background: var(--accent);
+  color: #3a2b22;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all .2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+}
+.btn-accent:hover {
+  filter: brightness(0.95);
+}
+
+/* Modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal.is-visible {
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  position: relative;
+  animation: fadeInUp .25s ease-out;
+}
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #666;
+  cursor: pointer;
+}
+.close-modal:hover {
+  color: var(--brand);
+}
+.modal-body p {
+  margin-bottom: 10px;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
