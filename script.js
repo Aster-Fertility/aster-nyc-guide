@@ -1,7 +1,7 @@
 /**
  * Aster NYC Guide – nearest places engine
  * - Category + tag filters, nearby hotel/address search
- * - Method & Reliability modal
+ * - How to use + Method & Reliability modals
  * - Safe if a place lacks coords (shows without distance)
  */
 (function () {
@@ -381,35 +381,39 @@
   if (document.getElementById('results')) loadPlaces();
 })();
 
-// --- Method & Reliability modal (outside IIFE, no duplicate IDs) ---
+// --- How to use + Method & Reliability modals ---
 document.addEventListener('DOMContentLoaded', () => {
-  const methodModal = document.getElementById('methodModal');
-  const methodBtn = document.getElementById('methodBtn');
-  const closeModalBtn = document.getElementById('closeModal');
+  function wireModal(triggerId, modalId, closeId) {
+    const trigger = document.getElementById(triggerId);
+    const modal = document.getElementById(modalId);
+    const closeBtn = document.getElementById(closeId);
+    if (!trigger || !modal || !closeBtn) return;
 
-  if (!methodModal || !methodBtn || !closeModalBtn) return;
+    function closeModal() {
+      modal.classList.remove('is-visible');
+      modal.setAttribute('aria-hidden', 'true');
+    }
 
-  function closeModal() {
-    methodModal.classList.remove('is-visible');
-    methodModal.setAttribute('aria-hidden', 'true');
+    trigger.addEventListener('click', () => {
+      modal.classList.add('is-visible');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
   }
 
-  methodBtn.addEventListener('click', () => {
-    methodModal.classList.add('is-visible');
-    methodModal.setAttribute('aria-hidden', 'false');
-  });
-
-  closeModalBtn.addEventListener('click', closeModal);
-
-  methodModal.addEventListener('click', e => {
-    if (e.target === methodModal) {
-      closeModal();
-    }
-  });
-
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
-  });
+  wireModal('howtoBtn', 'howtoModal', 'closeHowto');
+  wireModal('methodBtn', 'methodModal', 'closeMethod');
 });
