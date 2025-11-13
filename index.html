@@ -15,30 +15,24 @@
   </header>
 
   <main class="container">
-
-    <!-- Intro -->
+    <!-- Intro / Blurb -->
     <section id="intro" class="card">
       <h2 class="section-title">Welcome to the Aster NYC Guide</h2>
       <p>
         The Aster NYC Guide is your insider’s compass to the city that never sleeps—designed just for you.
-        Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out
-        local favorites near your clinic and hotel: cozy cafés, peaceful parks, good eats, and restful spaces.
+        Whether you’re here for medical screening, medical appointments, or your IVF transfer, we’ve mapped out local favorites near
+        your clinic and hotel: cozy cafés, peaceful parks, good eats, and little ways to unwind between appointments. It’s our way
+        of helping you feel cared for, connected, and comfortable while you’re here—because even a medical trip deserves
+        a little <em>you-time</em>.
       </p>
     </section>
 
-    <!-- How to use -->
-    <section id="howtoBox" class="card">
-      <h3 class="section-title">How to use</h3>
-      <ol>
-        <li>Select your NYC clinic from the dropdown below.</li>
-        <li>Adjust the walking radius and (optionally) apply filters.</li>
-        <li>Browse curated spots that are closest to you.</li>
-      </ol>
-    </section>
-
-    <!-- Method & Reliability Button (centered) -->
-    <div class="method-btn-container">
-      <button id="methodBtn" type="button" class="btn-accent">
+    <!-- New info buttons: How to use + Method & Reliability -->
+    <div class="info-buttons">
+      <button id="howtoBtn" type="button" class="info-btn">
+        How to use
+      </button>
+      <button id="methodBtn" type="button" class="info-btn info-btn--ghost">
         Method &amp; Reliability
       </button>
     </div>
@@ -46,7 +40,6 @@
     <!-- Clinic dropdown -->
     <section id="clinicBox" class="card">
       <h3 class="section-title">Select a Clinic</h3>
-
       <div class="helper-row">
         <label class="sr-only" for="clinicSelect">Clinic</label>
         <select id="clinicSelect" aria-label="Select your clinic">
@@ -54,10 +47,11 @@
         </select>
       </div>
 
+      <!-- Controls: walking radius + filters -->
       <div class="controls">
         <div class="control-group">
           <label for="radiusInput"><strong>Walking radius:</strong></label><br>
-          <input id="radiusInput" type="range" min="300" max="2400" step="100" value="1200">
+          <input id="radiusInput" type="range" min="300" max="2400" step="100" value="1200" aria-label="Walking radius in meters">
           <span id="radiusValue" class="muted">~15 min</span>
         </div>
 
@@ -75,36 +69,79 @@
       </div>
     </section>
 
-    <!-- Nearby hotel/address -->
+    <!-- Hotel / address nearby search -->
     <section id="nearbyBox" class="card">
       <h3 class="section-title">Check what's near your hotel</h3>
       <div class="nearby-row">
-        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" autocomplete="off">
+        <label class="sr-only" for="userAddress">Hotel or address</label>
+        <input id="userAddress" type="text" placeholder="Enter your hotel or address…" aria-label="Enter your hotel or address" autocomplete="off">
         <button id="nearbyBtn" class="secondary" type="button">Find nearby</button>
       </div>
-      <p class="muted status" id="status"></p>
-      <div id="nearbyResults"></div>
+      <p class="muted" id="nearbyHint">
+        Enter the name of your hotel (e.g., New York Hilton Midtown) or the address. We’ll show curated Manhattan spots within a short walk!
+      </p>
+      <p class="muted status" id="status" aria-live="polite"></p>
+      <div id="nearbyResults" class="nearby-results"></div>
     </section>
 
-    <!-- Results container -->
+    <!-- Results container (clinic-curated lists render here) -->
     <section id="results" aria-live="polite"></section>
   </main>
 
-  <!-- Method & Reliability Modal -->
-  <div id="methodModal" class="modal" aria-hidden="true">
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <button class="close-modal" id="closeModal" aria-label="Close modal">×</button>
-      <h3>Method &amp; Reliability</h3>
-      <div class="modal-body">
-        <p><strong>Data Source:</strong> All locations are manually curated and stored in <code>places.json</code>.</p>
-        <p><strong>Geocoding:</strong> Addresses include latitude & longitude for distance calculations.</p>
-        <p><strong>Distance:</strong> Computed using the Haversine formula from clinic to destination.</p>
-        <p><strong>Walking Time:</strong> Estimated at 80 meters per minute.</p>
-        <p><strong>Filters:</strong> Locations can be narrowed by category and tags.</p>
-        <p><strong>Disclaimer:</strong> Always check hours and conditions before visiting.</p>
+  <!-- How to use Modal -->
+  <div id="howtoModal" class="modal" aria-hidden="true">
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="howtoTitle">
+      <div class="modal__header">
+        <h3 id="howtoTitle">How to use this guide</h3>
+        <button class="modal__close" id="closeHowto" aria-label="Close How to use panel">×</button>
+      </div>
+      <div class="modal__body">
+        <p>This guide is designed to make your time in NYC during treatment feel a little easier and more supported.</p>
+        <ol>
+          <li><strong>Choose your clinic:</strong> Use the dropdown to pick the clinic you’re visiting.</li>
+          <li><strong>Set your walking radius:</strong> Adjust the slider to choose how far you’d like to walk.</li>
+          <li><strong>Filter what you need:</strong> Use category and tag filters (e.g., cafés, vegetarian, quiet) to tailor the list.</li>
+          <li><strong>Explore nearby picks:</strong> Each section shows curated options within your chosen radius.</li>
+          <li><strong>Check near your hotel:</strong> Use the hotel search box to see what’s walkable from where you’re staying.</li>
+        </ol>
+        <p class="muted">Use this as a starting point, and always listen to your body and energy level during your visit.</p>
       </div>
     </div>
   </div>
 
+  <!-- Method & Reliability Modal -->
+  <div id="methodModal" class="modal" aria-hidden="true">
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="methodTitle">
+      <div class="modal__header">
+        <h3 id="methodTitle">Method &amp; Reliability</h3>
+        <button class="modal__close" id="closeMethod" aria-label="Close Method & Reliability panel">×</button>
+      </div>
+      <div class="modal__body">
+        <p><strong>Data source:</strong> All locations are manually curated and stored in <code>places.json</code>, grouped by proximity to clinics and by category.</p>
+        <p><strong>Geocoding:</strong> Addresses are paired with latitude and longitude so that distances can be estimated from each clinic or your entered address.</p>
+        <p><strong>Distance:</strong> Distances are calculated using the Haversine formula, which approximates the straight-line distance between two points on the earth.</p>
+        <p><strong>Walking time:</strong> Walking times are estimated at approximately 80 meters per minute. Actual times vary by pace, traffic lights, sidewalks, and weather.</p>
+        <p><strong>Filters:</strong> Category filters (e.g., cafés, shopping, things to do) and tags (e.g., vegetarian, gluten-free) narrow the list to what is most relevant for you.</p>
+        <p><strong>Limitations:</strong> Hours, menus, and conditions can change. This guide is meant to be supportive, not a guarantee. Please double-check details before visiting.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live update the "~min" label next to the radius slider -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const r = document.getElementById('radiusInput');
+      const rv = document.getElementById('radiusValue');
+      function updateLabel() {
+        if (!r || !rv) return;
+        const mins = (Number(r.value) / 80).toFixed(1);
+        rv.textContent = `~${mins} min`;
+      }
+      if (r) {
+        updateLabel();
+        r.addEventListener('input', updateLabel);
+      }
+    });
+  </script>
 </body>
 </html>
